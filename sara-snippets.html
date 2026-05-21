@@ -696,7 +696,7 @@ function onSearch(q) {
     </div>`;
   }).join('');
   document.querySelectorAll('.snip-card').forEach((c, i) => {
-    const col = results[i]?.color;
+    const col = results[i] && results[i].color;
     if (!col) return;
     c.style.borderLeftColor = col + '55';
     c.onmouseenter = () => { c.style.borderLeftColor = col; c.style.borderColor = col; };
