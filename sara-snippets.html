@@ -583,14 +583,24 @@ function applyName(text) {
 }
 
 function saveAgentName() {
-  const val = document.getElementById('nameInput').value.trim();
-  if (!val) return;
+  const input = document.getElementById('nameInput');
+  const val = input.value.trim();
+  if (!val) {
+    input.classList.remove('shake');
+    void input.offsetWidth;
+    input.classList.add('shake');
+    input.focus();
+    return;
+  }
   agentName = val;
   store.set('chat_agent_name', val);
   store.set('chat_last_seen', Date.now().toString());
   document.getElementById('nameModal').style.display = 'none';
   updateHeaderName();
   if (selId) showSection(selId);
+}
+function closeNameModal() {
+  if (agentName) document.getElementById('nameModal').style.display = 'none';
 }
 function promptChangeName() {
   const i = document.getElementById('nameInput');
@@ -763,8 +773,12 @@ function toggleThemePanel(e) {
   e.stopPropagation();
   document.getElementById('themePanel').classList.toggle('open');
 }
-document.addEventListener('click', () => document.getElementById('themePanel')?.classList.remove('open'));
-document.getElementById('themePanel')?.addEventListener('click', e => e.stopPropagation());
+document.addEventListener('click', () => {
+  var tp = document.getElementById('themePanel');
+  if (tp) tp.classList.remove('open');
+});
+var _tp = document.getElementById('themePanel');
+if (_tp) _tp.addEventListener('click', function(e) { e.stopPropagation(); });
 
 // ═══════════════════════════════════════════════
 // DOCK
@@ -802,24 +816,31 @@ document.getElementById('themePanel')?.addEventListener('click', e => e.stopProp
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
-applyTheme(); // applies both dark/light + color
+applyTheme();
 updateHeaderName();
 renderNav();
 (function() {
-  const EIGHT_HOURS = 8 * 60 * 60 * 1000;
-  const lastSeen = parseInt(store.get('chat_last_seen') || '0', 10);
-  const freshSession = !agentName || (Date.now() - lastSeen > EIGHT_HOURS);
+  var EIGHT_HOURS = 8 * 60 * 60 * 1000;
+  var lastSeen = parseInt(store.get('chat_last_seen') || '0', 10);
+  var freshSession = !agentName || (Date.now() - lastSeen > EIGHT_HOURS);
   if (freshSession) {
-    const input = document.getElementById('nameInput');
-    const btn   = document.getElementById('nameSaveBtn');
+    var input = document.getElementById('nameInput');
+    var btn   = document.getElementById('nameSaveBtn');
     input.value  = agentName;
     btn.disabled = !agentName;
     document.getElementById('nameModal').style.display = 'flex';
-    setTimeout(() => input.focus(), 100);
+    setTimeout(function() { input.focus(); }, 100);
   } else {
     document.getElementById('nameModal').style.display = 'none';
   }
 })();
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeNameModal();
+});
+document.getElementById('nameModal').addEventListener('click', function(e) {
+  if (e.target === this) closeNameModal();
+});
 </script>
 </body>
 </html>
