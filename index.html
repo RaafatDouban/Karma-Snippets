@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiseForce Snippets</title>
+  <style>
+    :root {
+      --pink: #FF00BF;
+      --pink-light: rgba(255,0,191,0.1);
+      --dark: #16162a;
+      --border: #e6e8ef;
+      --text: #1a1d2e;
+      --muted: #9097b0;
+      --success: #10b981;
+      --bg: #f2f4f8;
+      --surface: #ffffff;
+      --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+      --sidebar-w: 262px;
+    }
+    [data-theme="dark"] {
+      --border: #272742;
+      --text: #dde1f2;
+      --muted: #7070a0;
+      --bg: #0c0c1a;
+      --surface: #181828;
+      --pink-light: rgba(255,0,191,0.14);
+      --shadow: 0 1px 4px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2);
+    }
+    [data-theme="dark"] mark { background: rgba(255,0,191,0.28); color: var(--text); }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── SCROLLBARS ── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* ── HEADER ── */
+    .hdr {
+      background: var(--dark); color: white;
+      padding: 11px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; z-index: 300;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.45);
+      border-bottom: 2px solid rgba(255,0,191,0.45);
+    }
+    .hdr-left { display: flex; align-items: center; gap: 12px; }
+    .hdr h1 { font-size: 1.08rem; font-weight: 800; letter-spacing: -0.01em; }
+    .hdr h1 span { color: var(--pink); }
+    .hdr-sub { font-size: 0.62rem; color: rgba(255,255,255,0.38); margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .burger { background: none; border: none; color: white; cursor: pointer; font-size: 1.25rem; display: none; padding: 4px; }
+    .theme-btn { background: none; border: 1px solid rgba(255,255,255,0.18); color: white; cursor: pointer; font-size: 1rem; padding: 5px 10px; border-radius: 8px; transition: all 0.18s; line-height: 1; }
+    .theme-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
+    .agent-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px; padding: 5px 14px 5px 5px;
+      cursor: pointer; transition: all 0.18s; white-space: nowrap;
+    }
+    .agent-badge:hover { background: rgba(255,0,191,0.18); border-color: rgba(255,0,191,0.5); }
+    .av { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--pink) 0%, #a000ff 100%); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .agent-badge .aname { font-size: 0.82rem; font-weight: 600; color: white; }
+    .agent-badge .ahint { font-size: 0.6rem; color: rgba(255,255,255,0.38); }
+
+    /* ── BODY ── */
+    .body { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--surface); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+      transition: transform 0.25s ease;
+    }
+    .sidebar-search { padding: 12px 12px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .sidebar-search input {
+      width: 100%; padding: 8px 10px 8px 32px;
+      border: 1.5px solid var(--border); border-radius: 9px;
+      font-size: 0.83rem; outline: none; color: var(--text);
+      background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' fill='%239ca3af' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E") no-repeat 11px center;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .sidebar-search input::placeholder { color: var(--muted); }
+    .sidebar-search input:focus { border-color: var(--pink); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(255,0,191,0.1); }
+    .nav-tree { flex: 1; overflow-y: auto; padding: 8px 0 20px; }
+
+    /* tree items */
+    .lob-label {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 14px 14px 5px; display: flex; align-items: center;
+      justify-content: space-between; cursor: pointer; user-select: none;
+      transition: color 0.15s;
+    }
+    .lob-label:hover { color: var(--text); }
+    .lob-label .lob-icon { margin-right: 6px; }
+    .lob-label .chev { font-size: 0.6rem; transition: transform 0.2s; }
+    .lob-label .chev.open { transform: rotate(90deg); }
+    .lob-body { overflow: hidden; }
+
+    .ni {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 10px 7px 16px;
+      font-size: 0.84rem; cursor: pointer; border-radius: 8px;
+      margin: 1px 8px; transition: all 0.12s; user-select: none;
+      line-height: 1.35;
+    }
+    .ni:hover { background: var(--pink-light); color: var(--pink); }
+    .ni.active { background: rgba(255,0,191,0.16); color: var(--pink); font-weight: 700; box-shadow: inset 4px 0 0 var(--pink); border-radius: 4px 8px 8px 4px; }
+    .ni.indent1 { padding-left: 28px; font-size: 0.83rem; }
+    .ni.indent2 { padding-left: 40px; font-size: 0.81rem; }
+    .ni.indent3 { padding-left: 52px; font-size: 0.79rem; color: var(--muted); }
+    .ni.indent3:hover { color: var(--pink); }
+    .ni.disabled { opacity: 0.35; cursor: default; }
+    .ni.disabled:hover { background: none; color: inherit; }
+    .ni .chev { margin-left: auto; font-size: 0.6rem; flex-shrink: 0; transition: transform 0.2s; }
+    .ni .chev.open { transform: rotate(90deg); }
+    .ni .soon { font-size: 0.62rem; color: var(--muted); margin-left: auto; }
+
+    /* ── CONTENT ── */
+    .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .content-body { flex: 1; overflow-y: auto; padding: 22px 24px 60px; display: flex; flex-direction: column; }
+    .content-title {
+      font-size: 1.15rem; font-weight: 800; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 10px;
+      padding-bottom: 14px; border-bottom: 2px solid var(--border);
+      letter-spacing: -0.01em;
+    }
+    .content-title .icon { font-size: 1.4rem; }
+
+    /* snippet cards */
+    .snippet-group { margin-bottom: 22px; }
+    .snip-label {
+      font-size: 0.7rem; font-weight: 700; color: var(--pink);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 9px; padding-left: 2px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .snip-label::before { content: ''; display: block; width: 3px; height: 13px; background: var(--pink); border-radius: 2px; }
+    .snip-para {
+      padding: 13px 16px; border: 1.5px solid var(--border);
+      border-left: 3px solid rgba(255,0,191,0.3);
+      border-radius: 11px; cursor: pointer; transition: all 0.15s;
+      margin-bottom: 8px; background: var(--surface); position: relative;
+      box-shadow: var(--shadow);
+    }
+    .snip-para:hover { border-color: var(--pink); border-left-color: var(--pink); background: var(--pink-light); transform: translateX(4px); box-shadow: 0 4px 18px rgba(255,0,191,0.12); }
+    .snip-para:hover::after { content: '📋'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; opacity: 0.5; }
+    .snip-para.flashing { border-color: var(--success) !important; background: rgba(16,185,129,0.07) !important; box-shadow: 0 4px 16px rgba(16,185,129,0.18) !important; }
+    .snip-text { font-size: 0.9rem; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
+    .path-tag { font-size: 0.7rem; color: var(--muted); background: var(--bg); padding: 3px 10px; border-radius: 6px; border: 1px solid var(--border); display: inline-block; margin-bottom: 10px; }
+
+    /* breadcrumb */
+    .breadcrumb { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
+    .breadcrumb span { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+    .bc-sep { color: var(--border) !important; font-weight: 400 !important; margin: 0 1px; }
+
+    /* dock tooltip */
+    .dock-item[data-tooltip]::before {
+      content: attr(data-tooltip);
+      position: absolute; bottom: calc(100% + 10px); left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: rgba(8,8,8,0.92); color: white;
+      padding: 5px 11px; border-radius: 7px;
+      font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s, transform 0.18s;
+      border: 1px solid rgba(255,255,255,0.1);
+      letter-spacing: 0.02em;
+    }
+    .dock-item[data-tooltip]:hover::before { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* welcome */
+    .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--muted); }
+    .welcome .big { font-size: 3.2rem; margin-bottom: 18px; }
+    .welcome h2 { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em; }
+    .welcome p { font-size: 0.87rem; line-height: 1.7; }
+
+    /* empty search */
+    .no-results { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .no-results .big { font-size: 2.8rem; margin-bottom: 12px; }
+
+    /* toast */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--success); color: white;
+      padding: 10px 26px; border-radius: 30px;
+      font-weight: 700; font-size: 0.87rem;
+      opacity: 0; transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 600; pointer-events: none; white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(16,185,129,0.4);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+    .modal-box { background: var(--surface); border-radius: 22px; padding: 36px 32px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.3); border: 1px solid var(--border); }
+    .modal-box .big-icon { font-size: 2.8rem; margin-bottom: 12px; }
+    .modal-box h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
+    .modal-box p { font-size: 0.85rem; color: var(--muted); margin-bottom: 22px; line-height: 1.5; }
+    .modal-box input { width: 100%; padding: 12px 14px; border: 2px solid var(--border); border-radius: 11px; font-size: 0.98rem; outline: none; text-align: center; margin-bottom: 12px; transition: border-color 0.2s, box-shadow 0.2s; background: var(--bg); color: var(--text); }
+    .modal-box input::placeholder { color: var(--muted); }
+    .modal-box input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(255,0,191,0.12); }
+    .modal-box button { width: 100%; padding: 12px; background: var(--dark); color: white; border: none; border-radius: 11px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .modal-box button:hover { background: var(--pink); box-shadow: 0 4px 16px rgba(255,0,191,0.3); }
+    .modal-box button:disabled { background: var(--border); color: var(--muted); cursor: default; box-shadow: none; }
+
+    /* mobile sidebar overlay */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 250; }
+
+    @media (max-width: 640px) {
+      .burger { display: block; }
+      .sidebar {
+        position: fixed; top: 0; left: 0; bottom: 0;
+        z-index: 260; transform: translateX(-100%);
+        width: 280px;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .dock-wrapper { display: none; }
+    }
+
+    /* ── DOCK ── */
+    .dock-wrapper {
+      position: fixed; bottom: 15px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 2000; pointer-events: none;
+    }
+    .dock {
+      display: flex; align-items: center; justify-content: center;
+      gap: 15px; padding: 8px 24px;
+      background: #080808;
+      border-radius: 30px;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 0 4px rgba(0,0,0,0.5),
+                  0 15px 30px rgba(0,0,0,0.8),
+                  0 0 20px rgba(255,0,191,0.45);
+      pointer-events: auto; overflow: visible;
+      max-width: 90vw; flex-wrap: wrap;
+    }
+    .dock-item {
+      width: 34px; height: 34px;
+      background: transparent; border: none;
+      cursor: pointer; padding: 0; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: width 0.07s ease-out, height 0.07s ease-out;
+      position: relative; z-index: 5;
+    }
+    .dock-item img {
+      width: 100%; height: 100%; object-fit: contain;
+      user-select: none; -webkit-user-drag: none;
+      pointer-events: none;
+    }
+    .dock-item:active { filter: brightness(0.8); }
+    .dock-bounce { animation: dockBounce 0.4s cubic-bezier(0.36,0.07,0.19,0.97); }
+    @keyframes dockBounce {
+      0%,100% { transform: translateY(0); }
+      30%      { transform: translateY(-14px); }
+      60%      { transform: translateY(-4px); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Modal -->
+<div class="modal-overlay" id="nameModal">
+  <div class="modal-box">
+    <div class="big-icon">👋</div>
+    <h2>What's your name?</h2>
+    <p>We'll replace all agent name placeholders with your name automatically.</p>
+    <input type="text" id="nameInput" placeholder="e.g. Karma" maxlength="40"
+      oninput="document.getElementById('nameSaveBtn').disabled=!this.value.trim()"
+      onkeydown="if(event.key==='Enter')saveAgentName()">
+    <button id="nameSaveBtn" onclick="saveAgentName()" disabled>Let's go ✨</button>
+  </div>
+</div>
+
+<!-- Sidebar overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-left">
+    <button class="burger" onclick="toggleSidebar()">☰</button>
+    <div>
+      <h1>✨ RiseForce <span>Snippets</span></h1>
+      <div class="hdr-sub">Personalized Chat Flow</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
+    <div class="agent-badge" onclick="promptChangeName()">
+      <div class="av" id="agentAvatar">?</div>
+      <div>
+        <div class="aname" id="agentNameDisplay">...</div>
+        <div class="ahint">tap to change</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="body">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-search">
+      <input type="text" id="sideSearch" placeholder="Search snippets..." oninput="onSearch(this.value)" autocomplete="off">
+    </div>
+    <div class="nav-tree" id="navTree"></div>
+  </nav>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="content-body" id="contentBody">
+      <div class="welcome">
+        <div class="big">👈</div>
+        <h2>Pick a section from the sidebar</h2>
+        <p>Select any category on the left<br>to instantly see your snippets here.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"> Copied!</div>
+
+<!-- Dock -->
+<div class="dock-wrapper">
+  <div class="dock" id="dock">
+    <div class="dock-item" data-tooltip="USA Compliance" onclick="window.open('https://docs.google.com/document/d/14tD7AHvP6H_B3vSVA6h032LXZXmOesRYSdpP1f_6KUU/edit?tab=t.iah0hpoq3hm9','_blank')"><img src="https://drive.google.com/thumbnail?id=1QCd1II7UR2mCGFdzPFt9uBj_cJsF_ZoL&sz=w1000" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="Canada Compliance" onclick="window.open('https://docs.google.com/document/d/1uVodZwHy9CN5FVjOqvFBNmAJEK1jW4vzjK8_s5tG1vM/edit?tab=t.0','_blank')"><img src="https://drive.google.com/thumbnail?id=18BocyyO022oNBB0z7R6Ccvmgjj9EkgGX&sz=w1000" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="Compass" onclick="window.open('https://tom.lyft.net/compass','_blank')"><img src="https://lh3.googleusercontent.com/rd-d/ALs6j_HK8-dRI8DMhGYv_9coetXdrqwOnYh_QNvG2-1HAu14hoVFNQz92rkq7snZFCtdbGO574QA6t7QLDrHczMZh_5nFBG9iYmx4TfnqSArawsx2X4_UIzHPoqaFh_seq5pxD05nWIcTZGtnrypgmh9uTgk05GesfBbzHtgRqZ1jwv6TAe_14mh1mHLKNhgkgPv3L5ltScjVRE6ef2QvmR6BKzN3Oszms2WdFrw07hyl9taTVPCDQqQV8oDllNq4IOrzPgduo-YeHf0RUti_GHvuBuuL31Z9yTa0hqlxC7NZAFEAPNldIHxk7CzXLBrWS_lG5dAL4xQh1cfxdi5NUbIl7_L5qvNe3GlIGucCUeMqSmNpllI0AliheMGUgVQXNOao5kpJ2f0HFEOs6Ovx3mu70Fx5wTvvofGuzujKEqw4ZXHVRDlNNiJezzAb6EQ4iHgySwLgkK0hrgUka9KXGaY1tjToCsSg3vq-lrrCLETp00Cp2HWMXxXjUMNXeos87i9IEPS5HTLlXsUKzdpAdJoSJxlSF6E5EdDKjAFrgrLDB5nBGf7yr2ZrFPlHUNO5y06NvE3owQBpvZLjufbL9erpXOAU177uyrHTGmGiRw22u2NjEH8Bk2zi0pTtZbtOPX3bl2jiSer2uwS2_2R2WHm6uikAg1qTy_kvp2y8d2D9Va5G2eohvmg2i583ytT7R9gfqPLI5QFBejEgsSlE8VkweAkQxp38i1WoOwWLrdnFvlhi9s2F8OnhMY5Iv5HORk3-SD5R1_ytau6K2SXTiV79XNtdt049m2zhw1kabv1friHowuvdrF4DPqoAvIG9ig0e8oFax4137Q0GOgOjqc4D41Au4_bbxSAPS0z9UMYnV0IKXV4fMCMpaQxB2hk3V2VbTCks_lnk9boZlCskoqjrDoxbN9NooOuK3Aj32y51u_rKEgASLmhY88BqYqw7MqGOb6sZ62OLRrwQtTpXtMoHGr4gz7ikOD1PAVI9c8AYFE5d4K5rMfHmyH5Xgo4ca1K1Hf_XuPx1R3nh9kQvQRgVOlLUNkC-C95jSHforXo2gidhM2HPPuvulrsXe5ZBbM90ISKf-49-MU6lI19JcunpdFT=s16383-w100?authuser=0"></div>
+    <div class="dock-item" data-tooltip="Driver App" onclick="window.open('https://docs.google.com/document/d/1h7XTADbcChCU9Q1Y8aQUio0JE9yEea0QemocVH6PjP8/edit?tab=t.0','_blank')"><img src="https://drive.google.com/thumbnail?id=1FciYKTc_p27SGZcXVFnTSztvKmidvn5z&sz=w1001" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="BKN Compliance" onclick="window.open('https://docs.google.com/document/d/1CHvHU23PQiFQ7suFtsPq5BF3E9vwqnTJ0v9d1LO7SJk/edit?tab=t.0','_blank')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle'%3E%F0%9F%97%BD%3C/text%3E%3C/svg%3E"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const l = document.createElement('link');
+  l.rel = 'icon'; l.type = 'image/svg+xml';
+  l.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>";
+  document.head.appendChild(l);
+})();
+
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const D = {
+  driver: {
+    label: "Driver", icon: "🚗",
+    phases: {
+      greeting: {
+        label: "Greeting", icon: "👋",
+        snippets: [
+          { label: "First agent in the interaction", text: `Hello xxx. Thank you for contacting Lyft support team. My name is xxxxxx. It's my pleasure assisting you today in regards of *INSERT CONCERN HERE*
+
+I see that you are a *INSERT TIER* driver! Thank you for your hard work on the platform!
+
+I will do my best to get everything sorted out for you through this chat and won't end nor leave it unless you are completely satisfied with the resolution. 😊` },
+          { label: "Taking over from another agent", text: `Hello xxxx. Thank you for keeping in touch. My name is xxxx and I will be jumping on behalf of my colleague. I want to make sure I can assist you the best way possible. Please allow me a few moments to look into this for you.` }
+        ]
+      },
+      hold: {
+        label: "Hold", icon: "⏸️",
+        snippets: [
+          { label: "If you need the hold", text: `I am currently looking into your xxxx details to identify what could be done and get back to you with the best resolution possible, kindly allow me from 2 minutes on hold and I will be right back shortly.` },
+          { label: "Refreshing the hold", text: `I apologize if this is taking a little bit more time than expected, we are currently doing our best to provide the best resolution for you.
+
+Thanks for waiting. I'd like to let you know that I'm still here and I'm looking into this for you.` },
+          { label: "No hold needed", text: `Just for you to be aware of the situation, I am currently looking into your xxxx to identify what can be done and get back to you with the best resolution possible. In case I needed your assistance with anything, I will let you know immediately. In the meantime, let me ask you how is your day going so far?` },
+          { label: "Returning from hold", text: `Thank you again for your patience and we apologize for the slight delay!
+
+Thank you for waiting. I appreciate your patience.` }
+        ]
+      },
+      resolution: {
+        label: "Resolution Delivery", icon: "✅",
+        cases: {
+          lost_found: {
+            label: "Lost Or Found", icon: "🔍",
+            subcases: {
+              driver_chat: { label: "Driver Chat Flow", snippets: [{ label: "Returning item", text: `Thank you so much for bringing this to our attention. I really appreciate honesty.
+
+Thank you so much for your time and efforts on returning this xxxx, Mostly appreciated!!
+
+Thank you for letting us know, what is the best contact number we can share with XXX so they can call you regarding the lost XXX?
+
+So can you just help me with the exact date and time for this ride or this ride payment?
+
+And thank you so much for your efforts and hard work, we are very lucky having you one of our Lyft community!!` }] },
+              item_pending: { label: "Item Status Pending", snippets: [{ label: "Updates to driver", text: `I will be sure to let you know if we have any further updates and also if you can confirm upon having a contact from xxxxxx.
+
+In the meantime, I kindly request your attention to the phone that you shared its number with me you might get a phone call from XXX shortly.
+
+I want to assure you that we take lost items very seriously, We will definitely keep you updated once the rider respond back.
+
+If we hear anything from the rider you will be first one to know also I have shared your contact information with them.
+
+I hope we're able to coordinate a return with them soon, but please let me know here if you need any further assistance from us.
+
+Just an update, xxx has not yet answered but we were able to provide your contact information.
+If they are not able to answer quickly. Do not worry as we will contact you as soon as they do respond.` }] },
+              police_report: { label: "Police Report", snippets: [{ label: "Guidance", text: `We also encourage you to take any additional action you feel necessary to recover your item, such as reaching out to local authorities.
+
+If you decide to file a police report, we'll provide the law enforcement official with information they need as long as they provide Lyft with a valid subpoena, court order, or search warrant pursuant to Lyft's law enforcement request policy. Learn more here: bit.ly/police_request` }] },
+              return_fee: { label: "Return Fee", snippets: [
+                { label: "Fee already issued by system", text: `It is my pleasure to inform you that the $20 return fee has been added to your account.
+
+I know it's not reflecting in your earnings yet. However, I can assure you that it will reflect in your "Earnings" within 2-3 business days.
+
+Regarding how to see your fee once it reflected, Please open your app and tap the dollar amount ($) at the top of the home screen.
+
+From there, tap 'See weekly breakdown' to view your payment history in more details.
+
+Under 'Earnings summary' you will see 'Lost and Found' in the 'Tolls & other pass-throughs' section listed as a line item.
+
+Also in the future, if your fee was added to a ride from a previous week, all you have to do is to tap the back arrow next to the date to toggle to a different week.` },
+                { label: "Fee added manually by agent", text: `It is my pleasure to inform you that I've just added the $20 return fee in your Earnings.
+
+I know it's not reflecting in your earnings yet. However, I can assure you that it will reflect in your "Earnings" within 2-3 business days.` }
+              ] },
+              concierge: { label: "Concierge Ride", snippets: [{ label: "Insurance company ride", text: `At this time, we have not heard from the rider regarding the xxxx.
+
+Since this ride was requested through the insurance company. Because of this, we're unable to contact the rider directly.
+
+Just so you're aware of the next steps, we'll submit a report on our end confirming that you found this item and have attached your phone number so they can reach out to you.
+
+Kindly keep in mind that your rider can now contact you directly regarding the lost item, so please keep an eye out for any communication from them.
+
+Please keep the item for 7 days, If they fail to respond, feel free to store, discard, or donate the item at your discretion.` }] }
+            }
+          },
+          damage: {
+            label: "Damage", icon: "🔧",
+            subcases: {
+              empathy: { label: "Damage Empathy", snippets: [{ label: "Opening responses", text: `I understand your car is an investment and the passenger should've taken good care of it.
+
+I can imagine how frustrated you feel as I am a former driver so I encountered similar situations. What you are saying makes so much sense to me.
+
+We do apologize to hear that xxx. I can imagine how hard the situation is for you and I'll do my best to identify what can be done!
+
+We are truly sorry for everything that has happened to your car, since we know that you always try to ensure the safety and cleanliness of both your car and the rider.
+
+We know how hard you work to keep a clean vehicle for all your passengers, so I would like to apologize for the unnecessary stress this may have added to your day.
+
+I'm investigating the specifics of your ride as per our damage policy to determine the right amount to help make sure your car matches Lyft's requirements.
+
+I can only imagine how distressing it is to find your car in that condition. It's tough when unexpected things like this happen.
+
+We take reports of this kind very seriously, and we continuously strive to improve the quality of the Lyft platform.` }] },
+              requirements: { label: "Didn't Meet Requirements", snippets: [{ label: "Claim rejected", text: `I know this is not fun when someone made a mess in your vehicle and you always put extra efforts to keep your vehicle in the best condition.
+
+We use this information as evidence for rider legal purposes when they dispute these charges.
+
+To prevent future claim rejections, please adhere to these terms when a similar situation arises:
+
+- The claim is submitted within 24 hours
+- 3 clear photos are provided showing different angles of the mess or damage
+- The report includes details of how the mess or damage occurred
+- The ride or rider is clearly identified` }] },
+              suspicious: { label: "Suspicious Reporting", snippets: [{ label: "Claim denied", text: `We appreciate your understanding to our decision, Upon checking the information provided, we won't be able to move forward with your claim.
+
+Cleaning fees are designed to help maintain Lyft's standards for a clean and comfortable ride.
+
+There has been a significant number of claims that were submitted containing details that do not align.
+
+I can only imagine how you must be feeling, and I recognize that this wasn't the outcome you anticipated. This decision has been reviewed and will remain final.
+
+Upon thoroughly reviewing this case and multiple recent damage claims from your account, a significant number of claims contain details that do not align. We are unable to approve this or any further damage claims for reimbursement.` }] },
+              no_damage: { label: "No Damage", snippets: [{ label: "No damage determined", text: `It's perfectly understandable that you're very upset about what's happened. However, we set specific parameters for damage fee and we set an average for each damage claim.
+
+Cleaning fees are designed to help maintain Lyft's standards for a clean and comfortable ride. However, these fees do not cover normal wear and tear or unpleasant odors.
+
+Please be assured, that we are following our policy and trying to be fair for both sides.
+
+For more information, Please refer to that link: https://help.lyft.com/hc/en-us/all/articles/115012925927-How-to-report-damage-caused-by-passengers#reportingdamage` }] },
+              negative_balance: { label: "Negative Balance Dispute", snippets: [{ label: "Dispute response", text: `I am deeply sorry to read that you are having this inconvenience with the negative balance on your account.
+
+After a further review upon your request for the cleaning fee submitted on the xxx and evaluated all the feedback provided.
+
+We set specific parameters that must be met before charging a damage fee and only if those are met, we take action.
+
+It's perfectly understandable that you're very upset about what's happened. We really appreciate your understanding on damage policy.` }] },
+              unsatisfied_amount: { label: "Unsatisfied with Amount", snippets: [{ label: "Driver unhappy with fee amount", text: `I know that every dollar matters and I understand how hard you work really is.
+
+We have determined that we have issued the appropriate fee to help ensure your vehicle meets Lyft's standards for a clean and comfortable ride.
+
+However let me assure you that we'll be always offering you more bonuses, challenges and ways to increase your earnings.
+
+Please be aware that the amount is based on the extent and nature of the damage.
+
+You can also check the following link for more information: https://help.lyft.com/hc/en-us/all/articles/115012925927-How-to-report-damage-caused-by-passengers#reportingdamage` }] }
+            }
+          },
+          additional_docs: { label: "Additional Driving History Docs", icon: "📄", snippets: [{ label: "Driver needs additional docs", text: `I completely understand how confusing it feels to suddenly be unable to go online, especially when you've been approved to drive without any issues before.
+
+Running into something unexpected like this can be really disturbing, and I'm truly sorry for the inconvenience it's causing you.
+
+Upon a quick yet careful review, I can confirm that in order to continue driving with Lyft, all drivers are required to have at least XXXX years of driving history. So we now need a bit more information from you so we can verify your driving experience as per your region requirements.
+
+To help you move forward, we'll need the following documents: [XXXX].
+
+When you upload your document, please make sure it's clear, readable, and not an international license. This helps the review team process it quickly and avoid delays.
+
+If you'd like to learn more about the driving history requirements in your area, you can check the links below:
+US: lft.to/drvhstry — Canada: lft.to/cdhrqmnts
+
+I know it's disappointing to run into this requirement after being approved successfully, and your frustration is completely understandable. This isn't a reflection of your performance — it's simply part of your region process and all drivers go through it. 😊
+
+The good part is that once you upload the requested document(s), the concerned team will review them as quickly as possible. You'll see an update in the app as soon as the review is complete 🎉.
+
+Thank you for your patience while we work through this with you. I'm here for you if you need anything else along the way ✨` }] },
+          docs_not_authorized: { label: "Documents Not Authorized to Approve", icon: "📋", snippets: [{ label: "Pending specialized review", text: `Great news - your document was successfully uploaded, and everything reached us correctly 🎉.
+
+Thank you for taking the time to submit it. I know how important this step is for you, and you've done everything right on your end. ✨
+
+Rest assured, your document is now with our specialized review team. They're the only team authorized to approve these documents to ensure correct and timely approvals, so we're not able to complete the approval from our side.
+
+I completely understand you may have hoped for an immediate approval, the good part is that you overcame the hardest parts and the remaining process is very simple.
+
+The review process can take up to 12 hours. I know waiting isn't easy, especially when you're eager to get back on the road — we're even more excited to have you on the road with Lyft 😊 but your document is already in the queue and will be reviewed as soon as possible.
+
+If anything is missing or additional documents are required, you'll see an update in the app right away.
+
+Thank you again for your patience, we can't wait to see you rocking the road 🎉. I'm here for you if you need anything while you wait.` }] },
+          underpaid_ride: { label: "Underpaid or Unpaid Single Ride", icon: "💰",
+            subcases: {
+              dissatisfied: { label: "Dissatisfied with Earnings vs. Passenger Paid", snippets: [{ label: "Earnings vs. passenger fare explanation", text: `I completely understand your concern and how frustrating it might feel to see a difference between what the rider paid and what you received. You put in the effort and time on the road, and you deserve full clarity on your earnings.
+
+I want to assure you that I've looked into the details of this ride, and I'd be happy to explain.
+
+The total fare a rider pays may include several components, such as taxes, airport or city fees, tolls, and Lyft's service fee, which helps us maintain the platform, provide driver and rider support, and invest in improvements to create more earning opportunities.
+
+What you see in your earnings is your guaranteed driver pay after all the relevant fees are applied. We're always working to make the breakdown as transparent as possible, and I'm here to clarify any part of it for you.
+
+If you have questions about a specific trip or would like me to walk you through the full fare breakdown, just let me know — I'd be more than happy to assist further.
+
+Thank you for your continued efforts on the road. Your dedication doesn't go unnoticed and I can assure you that your feedback regarding your earnings is highly noted and taken seriously!` }] },
+              no_concession: { label: "No Concession Issued", snippets: [{ label: "Underpaid / unpaid — no concession", text: `As I know how hard you work and how important it is for you to be paid fairly according to your time and efforts, I carefully looked into your ride details as well as our earnings system to identify what could be done and advise about it.
+
+And upon checking, I can confirm that *Insert resolution here*
+
+As a fellow employee, I truly understand how important every ride, and every dollar, can be. Please know I wouldn't hesitate to take further action if it were possible.
+
+I made sure to note your feedback regarding our earnings rate to be heard and taken into consideration moving forward.
+
+We take reports of this kind very seriously, and we continuously strive to improve the quality of the Lyft platform. Your feedback is an integral part of making this possible.
+
+For more information concerning our upfront earnings calculation, please refer to this link: https://help.lyft.com/hc/en-us/all/articles/8668928544` }] },
+              concession_issued: { label: "Concession Issued", snippets: [{ label: "Underpaid / unpaid — bonus issued", text: `As I understand how hard you work and how important it is for you to be paid fairly according to your time and efforts, I carefully looked into your ride details as well as our earnings system to identify what could be done.
+
+And after carefully checking, kindly allow me to clarify to you what I was able to identify: *Insert resolution here*
+
+However, to turn this situation around for you, I was able to issue a bonus of $xxx as compensation for your efforts on the platform.
+
+Wishing you many smooth, 5-star rides ahead! Thank you for driving with Lyft! ⭐️` }] }
+            }
+          },
+          cancel_noshow: { label: "Cancel or No Show Not Received", icon: "❌",
+            subcases: {
+              bonus_issued: { label: "Bonus Issued", snippets: [{ label: "Cancel / no show — bonus issued as goodwill", text: `I truly appreciate the dedication you bring to every ride and understand how important it is for you to be compensated fairly for your time.
+
+After carefully reviewing your ride details and our cancellation fee policy, I'm pleased to confirm that I've issued a bonus of $XXX as a gesture of goodwill for your efforts.
+
+Kindly allow me to clarify the cancel or no show fee requirements so you don't face similar situations moving forward:
+
+- Tap to arrive at the pickup location
+- Wait for the timer to count down to 0:00
+- Attempt to contact the passenger through the app (or the passenger contacts you)
+- Cancel the ride by tapping 'Passenger is no-show,' then 'Confirm no-show'
+- If you arrive at the pick-up location 5 minutes or more after the estimated arrival time, you will not receive a no-show fee.` }] },
+              bonus_not_issued: { label: "Bonus Not Issued", snippets: [{ label: "Cancel / no show — bonus not issued", text: `I recognize how much effort you put into providing reliable service, and I want to ensure you're compensated appropriately. After reviewing your ride, I'd like to clarify why the cancellation fee wasn't applied:
+
+*INSERT SNIPPETS HERE*
+
+As an employee, I fully understand the value of every dollar earned. While I'm unable to issue a bonus in this case, I've documented your concern to be taken into consideration moving forward. Your feedback is vital to making Lyft better for all drivers.
+
+We take reports of this kind very seriously, and we continuously strive to improve the quality of the Lyft platform. Your feedback is an integral part of making this possible.
+
+In the meantime, kindly allow me to clarify the cancel or no show fee requirements so you don't face similar situations moving forward:
+
+- Tap to arrive at the pickup location
+- Wait for the timer to count down to 0:00
+- Attempt to contact the passenger through the app (or the passenger contacts you)
+- Cancel the ride by tapping 'Passenger is no-show,' then 'Confirm no-show'
+- If you arrive at the pick-up location 5 minutes or more after the estimated arrival time, you will not receive a no-show fee.` }] }
+            }
+          },
+          scheduled_rides: { label: "Scheduled Rides", icon: "📅",
+            subcases: {
+              not_received: { label: "Scheduled Ride Not Received", snippets: [{ label: "Scheduled ride not received", text: `I understand that you got ready for your scheduled ride and made sure to be at the pickup location on time.
+
+I can genuinely imagine how disappointing not receiving the scheduled ride must have been, and I would feel the same way if I were in your position.
+
+That's why I made sure to promptly and carefully look into your account and our scheduled rides policy to identify what happened and what could be done.
+
+After checking, here's what I was able to identify regarding your case:
+
+*INSERT SNIPPETS HERE*
+
+As a fellow employee, I truly understand how important every ride, and every dollar, can be. Please know I wouldn't hesitate to take further action if it were possible.
+
+I've also made sure to document your feedback so it can be considered as we continuously work to improve our service.
+
+At Lyft, we take these reports seriously. Your feedback plays a vital role in helping us enhance the platform for all drivers.
+
+For more information concerning our scheduled rides, feel free to check the following link: https://help.lyft.com/hc/en-us/all/articles/115012924387-Scheduled-pickups-for-drivers` }] },
+              reduced_access: { label: "Reduced Access to Scheduled Rides", snippets: [{ label: "Temporary reduction in scheduled ride access", text: `I'm sorry to hear that you're currently unable to receive scheduled rides. I understand how frustrating this situation must be, and I truly appreciate your patience.
+
+To provide you with a clear explanation, I took the time to thoroughly review your account along with our scheduled rides policy.
+
+After investigating, I can confirm that *INSERT SNIPPETS HERE*
+
+The good news is that this limitation on scheduled rides is only temporary. You will regain access to scheduled rides shortly.
+
+I've also documented your feedback regarding this feature to ensure your concerns are acknowledged and considered as we move forward.
+
+We take reports like yours very seriously. Your input plays an essential role in helping us enhance the quality of the Lyft platform. ✨
+
+For more information concerning our scheduled rides, feel free to check the following link: https://help.lyft.com/hc/en-us/all/articles/115012924387-Scheduled-pickups-for-drivers` }] }
+            }
+          },
+          driver_check: { label: "Driver and Applicants Check", icon: "🔎",
+            subcases: {
+              idv_failed: { label: "IDV Failed", snippets: [{ label: "IDV check failed — next steps", text: `As I know how worried you are regarding your account, I made sure to carefully yet quickly investigate your account to avoid wasting your time.
+
+Upon checking, I could see that everything is set from your side since you have provided all of the needed documents — thank you so much for your efforts, *CUSTOMER NAME*!
+
+Now it's our turn to validate the information and documents that you've provided. So everything is done from your side — now we will work on your account to get it ready to go online!
+
+Thank you for your patience while we complete the ID verification process. We understand how eager you are to get started, and we truly appreciate your commitment to joining Lyft.
+
+Verifying IDs is an important step to ensure the security of our platform, and we're working hard to get this completed as soon as possible.
+
+Just to clarify, your account status will be on hold until we finish the process to get your account ready to go online.
+
+Stay tuned for more exciting opportunities and rewards as you continue your journey with us. We're thrilled to have you onboard and can't wait to see you thrive!` }] },
+              pending: { label: "Pending", snippets: [{ label: "Check in progress — almost done", text: `I understand how important it is for you to get on the road as soon as possible, so I made sure to thoroughly review your account details to identify what's missing and provide clarity.
+
+Upon review, I can confirm that everything in your account is in order and functioning properly. The only remaining requirement is the completion of your (TYPE OF CHECK).
+
+I can assure you that this check is currently in progress and nearing completion, which means you'll be able to go online very soon.
+
+To provide even more clarity, please let me clarify it further: *INSERT SNIPPETS HERE*
+
+In the meantime, please rest assured that once the check is finalized, you'll be fully cleared to hit the road and start providing top-rated rides!
+
+We're excited to see you on the road with Lyft! ✨
+
+For more information about the required checks, feel free to review this article: https://help.lyft.com/hc/en-us/all/sections/4412323578-Driving-requirements` }] },
+              failed_legal: { label: "Failed (Legal Macro)", snippets: [{ label: "Check failed — legal macro", text: `I'm truly sorry to hear that you're currently unable to go online. I understand how important it is for you to hit the road.
+
+That's why I took the time to carefully review your account details along with our driving requirements to determine what might have caused the issue and how we can move forward.
+
+After reviewing your account, here's what I found:
+*INSERT LEGAL MACRO AS IT IS*
+
+I completely understand your expectation for a quick resolution, and I assure you that if there were anything further I could do on my end, I would absolutely take action to help.
+
+I genuinely hope this issue is resolved as soon as possible so we can officially welcome you to the Lyft driver community. ✨
+
+For more information about the required checks, feel free to review this article: https://help.lyft.com/hc/en-us/all/sections/4412323578-Driving-requirements` }] }
+            }
+          },
+          bkn_waitlist: { label: "BKN Waitlist", icon: "⏳", snippets: [{ label: "NYC / BKN Waitlist", text: `I completely understand how important it is for you to complete your application and start driving in New York City. That's why I carefully reviewed your account details to identify what's needed and how I can assist you further.
+
+After checking, I can confirm that all of your documents have been successfully approved, and your account is ready. The only remaining step is the city waitlist. Currently, you're on the waitlist for New York City, and I'd be happy to explain what that means.
+
+*INSERT SNIPPETS HERE*
+
+I understand how eager you are to get on the road right away, and I truly wish I could fast-track this for you. While I can't remove the waitlist myself, I want to reassure you that it typically doesn't take long, and you'll be able to go online very soon! ✨
+
+To help you get started even faster, you may also consider switching to a nearby region that doesn't have a waitlist. If you'd like to explore that option, just let me know — I'd be more than happy to assist in updating your region and guiding you through it!
+
+For more information about New York City's driver requirements, feel free to check out this link:
+https://help.lyft.com/hc/en-us/all/articles/115012929447-New-York-City-Driver-Information#move` }] },
+          mandatory_break: { label: "Mandatory Break", icon: "☕", snippets: [{ label: "Mandatory break explanation", text: `I completely understand how disappointing it can feel to be unable to go online when you're ready to drive and earn. I can imagine how this unexpected pause might disrupt your flow, especially if you had a schedule in mind.
+
+Kindly allow me to clarify your region's break requirements for you: *INSERT SNIPPETS HERE*
+
+Please note that this offline period is designed by your region to ensure our drivers get the rest they need before heading back on the road. This helps protect not only you but also everyone around you.
+
+To clarify, the system tracks your total online hours even if they're not consecutive. For example, if you go online for 3 hours, then take a break and go back online for 4 more hours, the system will count that as 7 total hours online. It keeps adding up your online time until you reach 12 hours, even if it's spread out across the day.
+
+So a helpful tip: to avoid being stopped from going online due to this break rule, the best thing to do is make sure to take a full, uninterrupted 6-hour break once you've been online for a total of 12 hours. When you take this 6-hour break all at once, the app will reset the counter and allow you to go online again smoothly.
+
+I know you're doing your best to maximize your hours and income, and this may not be the message you wanted to hear right now. Please rest assured this rule is applied across the board to prioritize your safety and long-term well-being.
+
+I've also noted your feedback and will make sure it's passed on. We genuinely appreciate your dedication and drive, and I want to make sure your voice is heard.` }] },
+          rides_not_received: { label: "Rides Not Received", icon: "🚫", snippets: [{ label: "No rides coming through — troubleshooting", text: `I am extremely sorry to hear that you've been waiting for too long without receiving any rides. I can imagine how disappointing this might feel.
+
+That's why I carefully looked into your account details to identify the issue. And upon checking, I would like to reassure you that your account is perfectly working and there's nothing wrong with it.
+
+It's just a matter of demand and ride availability. Kindly allow me to clarify that we take many factors into account when making matching decisions. This includes the distance between the rider's and driver's locations, driver ride preferences, and expected benefits and costs to drivers, riders, and Lyft.
+
+However, as per my experience with Lyft, and since I don't want you to face similar situations moving forward, kindly allow me to share with you some steps that may help:
+- Make sure all filters (like destination mode or ride type) are turned off
+- Go closer to areas of high demand
+- Keep phone interactions to a minimum
+- Drive safely in accordance with local traffic laws and follow Lyft's Community Guidelines here: lft.to/scomm
+
+I assure you that since I am an employee myself, I understand how urgent it is for you to receive as many rides as possible to increase your earnings. I wouldn't hesitate taking further actions to let you receive rides if I was able to do so.
+
+I hope you will receive as many rides as possible! ✨` }] },
+          age_requirements: { label: "Driver Not Meeting Age Requirements", icon: "🎂", snippets: [{ label: "Minimum age requirement not met", text: `As I understand how urgent it is for you to complete your application and how excited you are to hit the road — we are even more excited to have you on the road with Lyft as soon as possible!
+
+That's why I carefully looked into your account details as well as our driving requirements to identify what's missing and advise about it.
+
+And upon checking, I can confirm that the only issue is your age. At this time, all Drivers on the Lyft platform in your region must meet the minimum age requirement of [REGION SPECIFIC AGE].
+
+I understand that you expected to proceed with your application immediately and I assure you I wouldn't hesitate assisting you further if I was able to do so. However, I can assure you that once you hit [REGION SPECIFIC AGE], you will be able to go online immediately.
+
+We are looking forward to having you among our drivers team and I am sure you are going to be one of our best drivers in no time!
+
+For more information concerning our driving requirements, please refer to the following link: https://help.lyft.com/hc/en-us/all/articles/115012925687#age` }] },
+          low_ratings: { label: "Low Ratings Deactivation", icon: "⭐", snippets: [{ label: "Account deactivated — low ratings", text: `I completely understand how frustrating and disappointing your account deactivation must be for you. I know how much effort it takes to drive and support yourself, and I can only imagine how upsetting it is to receive this news.
+
+That's why I carefully reviewed your account details to ensure everything was taken into full consideration before reaching a final resolution. Please know this was not a decision made lightly.
+
+Upon checking, kindly allow me to clarify what I was able to identify: *INSERT SNIPPETS HERE*
+
+Please know that this decision was not made lightly. It's based on a pattern over time and not a single incident. I know this doesn't reflect all the effort and good rides you've had, and I'm truly sorry for how this may feel.
+
+Kindly know that your feedback and experience matter deeply, and it is documented to be taken into consideration.
+
+Even though this is the final outcome, I want to thank you for reaching out and giving me the chance to look into this for you. I hope things take a better turn for you moving forward, and I'm wishing you the very best.` }] },
+          not_black: { label: "Not Eligible for Black Rides", icon: "🚙", snippets: [{ label: "Not eligible for Black rides", text: `*CHECK THE REASON WHY THE DRIVER IS NOT ELIGIBLE AS PER COMPASS AND INCLUDE IN THE SNIPPETS BELOW*
+
+Thank you so much for reaching out about your ride type eligibility. I completely understand how appealing Black rides are and how important it is to access higher-earning opportunities like this.
+
+If I were in your place, I'd be just as eager as you are to unlock this ride type — it's a great way to offer premium service and boost income.
+
+That's why, after carefully reviewing your account and vehicle details, I can confirm that your current setup does not meet the requirements for Black rides because *INSERT INELIGIBILITY REASON AS PER COMPASS*.
+
+To qualify for Black, your vehicle must have both a black interior and exterior, and it must be on the approved list of luxury models that meet Lyft's premium standards. You also need to be in a region that offers Black rides, have a rating of 4.85 or higher, and have not received more than 2 service flags in the last 50 rides.
+
+While Black rides aren't currently available on your profile, I want to reassure you that we're always evaluating opportunities to expand access and features, so your feedback and interest in Black rides has been noted and appreciated.
+
+Thanks again for checking in on this. Your professionalism and commitment to offering top-tier service truly stand out. If you ever update your vehicle or want to revisit eligibility in the future, feel free to reach out — we'll be more than happy to assist again.` }] },
+          account_deletion: { label: "Driver Requesting Account Deletion", icon: "🗑️", snippets: [{ label: "Account deletion request", text: `I'm truly sorry to hear that you're considering deleting your account. We genuinely value you as a part of our community, and we'd be sad to see you go.
+
+If there's anything I can do to assist or improve your experience — whether it's resolving an issue, clarifying information, or supporting you in any way — I'd love the chance to help before you decide to leave the platform.
+
+That said, I completely understand and respect your decision. Since this is your initial request, I'm here to guide you through the process of deleting your account.
+
+Please note that we don't have the option to delete the accounts from our end. To proceed, you can submit a deletion request by visiting the following link: lyft.to/priv-data
+
+Please note:
+• Once submitted, deletion requests cannot be cancelled.
+• It may take a few days for the request to be processed.
+• This action will apply to both your Rider and Driver accounts, including any linked applications or profiles.
+
+If you'd prefer to deactivate your account instead of deleting it permanently, just let me know — I'd be happy to help with that too.
+
+I truly appreciate the time you've spent with us. I only wish there was something more I could do to change your mind, but either way, I'm here for anything you need.` }] },
+          dnr_list: { label: "Do Not Rent List", icon: "🚷", snippets: [{ label: "Express Drive ineligible — DNR", text: `Thank you so much for reaching out. I completely understand your interest in renting a vehicle through our Express Drive program, and I truly appreciate your dedication to getting on the road as soon as possible.
+
+After carefully reviewing your account, I can confirm that you're currently not eligible to rent through Express Drive at this time.
+
+Please know that I did my absolute best to explore every possible option to support you, and I wouldn't hesitate to assist you further if there was anything more I could do from my end.
+
+That said, you're absolutely still welcome to drive using your personal vehicle if you prefer to continue driving that way.
+
+As a helpful tip, since Express Drive operates through two rental partners, Hertz and Flexdrive, you may still be able to rent through the alternate provider in your area. If one option isn't available, the other might still be able to support you.
+
+Hence, I recommend visiting the nearest Flexdrive or Hertz location depending on your current status, and I'd be more than happy to assist you in finding the closest one!
+
+If you have any questions or would like help exploring other options, I'm always here for you.` }] },
+          no_challenges: { label: "No Ride Challenges Received", icon: "🎯", snippets: [{ label: "Driver not receiving ride challenges", text: `Thank you so much for reaching out regarding not receiving ride challenges. We totally understand that ride challenges contribute to increasing your earnings and help you stay on the road — we can imagine the disappointment when challenges don't show up.
+
+Just to clarify, ride challenges usually vary from one driver to another. They're based on a mix of factors like recent driving activity, location, demand, and performance.
+
+So even if everything looks fine on your end, it doesn't always mean a challenge will be available right away.
+
+I carefully checked your account details and I can confirm that there's nothing wrong with it, and you're not missing anything specific — it's just that challenges are offered dynamically and may not appear for everyone at the same time.
+
+On top of that, please note that we're always working to make our hard working drivers' experience better, and your feedback helps.
+
+You are doing an amazing job, so please keep driving when you can, and stay tuned — new opportunities can pop up anytime! 🚗` }] },
+          express_payout: { label: "Express Payout Delayed", icon: "💸", snippets: [{ label: "Express payout delayed", text: `First of all, we would like to thank you so much for taking the time to reach out regarding your payout. I totally get how hard you work and how frustrating it can be when a payout doesn't show up right away.
+
+That's why I've carefully checked your account, and I can confirm that your Express Pay transfer was successfully initiated from our end on [insert date & time]. That means the funds are already on their way.
+
+Rest assured, it's just a matter of processing time on your bank's side. Based on my experience with Lyft, sometimes it can take 1–2 business days for the amount to reflect, depending on your bank's processing speed.
+
+Please be assured there's nothing wrong with your account, and no issues on our end either — it's just a short wait while your bank completes the transfer.
+
+We really appreciate your patience, and I assure you the payout is in motion. If it still hasn't shown up after a couple of days, it's a good idea to check with your bank directly to confirm there are no delays on their side.
+
+And of course feel free to reach us out again, we are always happy to help! 😊` }] },
+          ptc_license: { label: "PTC License Delay", icon: "📝", snippets: [{ label: "PTC license pending with ML&S", text: `As I know how urgent it is for you to hit the road, I carefully looked into your account, and I'm glad to share that everything on your account has already been approved — you're all set from our side.
+
+The only thing still pending is the PTC license approval with ML&S. I truly appreciate your patience while waiting for its approval. I know this process can feel longer than expected, and I don't want you to miss out on valuable time on the road.
+
+Please note that we cannot manually add the PTC license — once finalized by ML&S, the results will automatically reflect on your account.
+
+So kindly rest assured, there's no further action required from your end at this point. Once ML&S finalizes the license, your account will be automatically updated and you'll be ready to drive in Toronto.
+
+Another good alternative is that you may be able to drive in nearby areas that don't require a PTC license while your application is still pending 🚗
+
+If that works for you, just let me know and I'd be happy to help by updating your region so you can get started sooner!
+
+In the meantime, I really hope the check will be done as soon as possible — we're excited to see you on the road with Lyft! ✨` }] },
+          airport_wait: { label: "Long Wait Time In The Airport", icon: "✈️", snippets: [{ label: "Long airport wait — no rides received", text: `I completely understand how frustrating it must have felt to wait [WAIT_TIME] at the airport on [DATE] without receiving a ride.
+
+I know many drivers count on airport trips because of their higher fares, and it can be really discouraging when the wait turns out longer than expected.
+
+Please know this isn't a reflection of anything you did wrong. Airport ride requests depend on both rider demand and your position in the queue, which can sometimes move slower than usual.
+
+I truly value the time you're spending waiting, and we don't want you to feel stuck without options.
+
+If you ever notice the queue isn't moving as quickly as you'd like, you're always encouraged to do what's best for you — even if that means leaving the airport to head toward a busier area where ride requests may come faster.
+
+Here's a little tip that might help: checking your airport's arrivals schedule can give you an idea of how busy it may get. If flights are delayed, requests usually slow down until passengers land.
+
+In the meantime, please note that I have documented your feedback regarding the wait time in the airport to be taken into consideration and heard.
+
+I know your time is valuable, and I truly appreciate your patience and commitment. Please know that I'll always do my best to share tips that can help you maximize your time on the road.` }] },
+          safety_flags: { label: "Safety Flags", icon: "🚩", snippets: [{ label: "Safety flag query", text: `I completely understand how concerning it can be to receive a safety flag, especially when the reason isn't immediately clear.
+
+To clarify, safety flags are anonymous feedbacks submitted by passengers after a ride is completed. Unfortunately, we're unable to see who left the feedback or provide specific details about the flag itself.
+
+We know this can be frustrating, but please know that these flags are part of our broader effort to ensure safety and quality across the platform.
+
+That said, it's important to recognize that feedback can sometimes reflect a passenger's personal perception rather than a direct issue with your driving. Factors like traffic delays, unexpected detours, road accidents, or even external events can influence how a ride is experienced — and occasionally, that may result in a lower rating or a safety flag.
+
+After reviewing your account, I want to highlight that you've consistently demonstrated exceptional performance. Your 5-star rating and positive feedback from riders speak volumes about your professionalism and dedication. One isolated flag definitely does not define your overall contribution, and we absolutely take your strong track record into account.
+
+In the meantime, please note that the score is calculated over a rolling 100 completed-ride window. So please continue accepting rides as usual and the flag will automatically fall off once you complete another 100 rides — your account remains in good standing, and there's no action needed on your part.
+
+For more information concerning safety flags and account standing scores, please refer to the following link: https://help.lyft.com/hc/en-us/all/articles/360035885974-Lyft-Rewards#safety` }] },
+          poor_pax_warning: { label: "Poor Passenger Experience Warning", icon: "⚠️", snippets: [{ label: "Poor passenger experience warning", text: `I completely understand how frustrating it can feel to receive an alert, especially when many incidents are outside your control. I know you're doing your best to provide a reliable experience for your riders, and I truly appreciate the effort you put into every trip. 😊
+
+That's why I made sure to carefully review your account as well as our guidelines. I can see that our system noticed that some of your recent rides received feedback indicating there have been several recent incidents — whether from your side or the rider's side — and opportunities to enhance the passenger experience, in line with our Lyft Terms of Service at lyft.com/terms.
+
+As you know, our community thrives when everyone feels safe, supported, and satisfied. Your continued efforts play a vital role in maintaining that positive environment. ✨
+
+Please check your email for further details regarding the feedback and insights into what may have contributed to these instances. We're here to help you improve and succeed.
+
+Kindly note that our system automatically issues feedbacks to ensure consistency and fairness. Moving forward, addressing these situations promptly will help maintain your account's good standing — and I assure you your account remains in good condition, there's no need to worry! 😊
+
+I know situations come up that make some cancellations or specific incidents unavoidable, and that's completely understandable. So rest assured, this message is simply meant to help you stay aware so you can avoid any future issues.
+
+And while we're not able to manually remove or override system feedbacks, keeping an eye on your cancellations and customer experience patterns will help prevent further alerts.
+
+You're an important part of our community, and we genuinely value the work you do. If there's anything specific that's been causing these incidents, I'm here to note everything so we can improve our service for you.` }] },
+          poor_pax_suspension: { label: "Poor Passenger Experience Suspension", icon: "🔴", snippets: [{ label: "Temporary suspension — poor passenger experience", text: `I understand how discouraging it can feel to be unable to go online, especially when driving may be an essential source of income for you. It makes complete sense that this situation feels stressful, and I'm truly sorry you're going through this. 😊
+
+That's why I took the time to carefully review your account and the suspension details so I could give you the clearest explanation possible.
+
+First and foremost, I want to reassure you that the suspension is only temporary. You will be able to go online normally very soon. 🎉
+
+Please allow me to clarify that the suspension you're seeing is automatically applied when the system detects a pattern of repeated cancellations or low customer experiences over time. You can find more information about these guidelines in the Lyft Terms of Service at lyft.com/terms.
+
+I also know that many incidents can happen for reasons outside your control, and this isn't a reflection of your effort or the quality of your work. It's completely understandable to feel frustrated when something like this interrupts your ability to drive. 🚗
+
+I really wish I could adjust the suspension for you, yet the good news is that this suspension is temporary. Once the suspension period ends, your account will automatically return to normal, and you'll be able to go online again without needing to take any additional steps. 🎉
+
+We're here to support you through this, and I'm confident you'll be back on the road soon, providing top-rated rides! 🎉` }] },
+          docs_rejected: { label: "Documents Rejected (Valid Doc)", icon: "📑", snippets: [{ label: "Valid document rejected — escalation", text: `I can see that your account is all set and everything is in order. The only remaining requirement is the approval of your *insert document type*.
+
+I understand how excited you are to hit the road, continue earning and providing top-rated rides. ✨ It makes sense that you were hoping this would be completed sooner, and I'm really sorry for the delay.
+
+We would like to thank you for taking the time to submit your document. As I want to ensure that your document is approved correctly and in a timely manner, I've made sure it's been escalated to our specialized document review team. They handle all document approvals to ensure all the details meet the required standards, and approvals can only be completed on their side.
+
+I know how urgent the situation is for you and I truly wish I could speed things up for you, but the final decision has to come from their team. What I can assure you is that your document is already in their queue, and they'll review it as soon as possible — typically within 2 hours.
+
+If anything is missing or if they need additional information, you'll see an update in the app as soon as the review is complete.
+
+You've done your part by submitting the document, and from our end, we're doing everything we can to make sure it's reviewed and approved correctly for you. 😊
+
+Thank you again for your patience. We can't wait to see you on the road with Lyft shortly! 🚗 I'm here for you if you need anything else in the meantime ✨` }] }
+        }
+      },
+      closure: {
+        label: "Further Assistance / Closure", icon: "🎯",
+        snippets: [{ label: "Closure", text: `I hope I have fully answered your questions and that the information I provided has been clear. 😊
+
+On top of that, is there anything else you'd like me to assist you with today? Just let me know and it'd be a huge pleasure for me to continue helping you!
+
+Thank you for contacting Lyft support team. Always remember your satisfaction is our top priority so if you need assistance, don't hesitate to reach out to us.
+
+Thank you as well for playing an integral part in the Lyft community, we value and appreciate your continued support. Have a wonderful day ahead! 🤩` }]
+      },
+      emails: {
+        label: "Emails", icon: "📧",
+        snippets: [{ label: "Email Template", text: `Hi xxxx,
+
+Thank you for contacting Lyft support team. I hope you and your loved ones are doing great! ✨
+
+AER + Resolution with handling if needed
+
+Always remember, your satisfaction is our top priority so whenever you need assistance, don't hesitate to reach out to us directly.
+
+We also recommend you to visit our website where you can read about the frequently asked questions, you'll find it super helpful with any concern you might have!
+
+Have a wonderful day ahead! 🤩
+
+Best regards,` }]
+      }
+    }
+  },
+
+  safety: {
+    label: "Safety", icon: "🛡️",
+    phases: {
+      greeting: {
+        label: "Greeting", icon: "👋",
+        snippets: [
+          { label: "First agent — Driver reached out", text: `Hello ( Customer's name ), I'm ( Agent's name ) from Lyft's Safety Team. Thank you for contacting us, I will be glad to personally make sure your concerns are addressed promptly for today.` },
+          { label: "First agent — Following up on poor rating", text: `Greetings ( Customer's name ), My name is ( Agent's name ), representing Lyft's Safety Team. Your wellbeing is our priority, and I'm here to provide dedicated support regarding your recent experience.` },
+          { label: "Taking over from another agent / LOB", text: `Hello xxxxxxx, My name is ( Agent's name ) from Lyft's safety team, and I'm reaching out on behalf of my colleague. As you mentioned that (CX concern), I'll be assisting you today to ensure your concerns are addressed with care.` }
+        ]
+      },
+      hold: {
+        label: "Hold", icon: "⏸️",
+        snippets: [
+          { label: "Placing on hold", text: `Please allow me a brief hold of two minutes to review the case and ensure that all pertinent details are accurately documented.` },
+          { label: "Extended hold", text: `Thank you for your patience. I am still reviewing this matter, and it is taking slightly longer than anticipated. Please allow me an additional two minutes.` },
+          { label: "After the hold", text: `Thank you for your patience and understanding. I apologize for any delay. After double-checking, I have found that [xxxx].` }
+        ]
+      },
+      resolution: {
+        label: "Resolution Delivery", icon: "✅",
+        cases: {
+          underage: {
+            label: "Underage Passenger", icon: "👶",
+            snippets: [
+              { label: "Ride was completed — Recommended responses", text: `We'll review this on our end and take the appropriate steps so you're supported and protected. Please know that your safety and comfort matter to us, and we never want you to feel pressured to complete a ride with an unaccompanied minor which doesn't meet our guidelines. We will back you up.
+
+We'll take it from here and make sure the appropriate steps are taken. Please know we fully support you declining any ride that doesn't meet Lyft's safety guidelines and terms of service. Your safety and peace of mind matter, and we're here to back you up.` },
+              { label: "Ride was cancelled by driver", text: `Thank you for bringing this to our attention. I understand how important it is to ensure riders meet age requirements, and I appreciate you taking the appropriate steps to keep the platform safe by cancelling the ride.
+
+I appreciate your proactive approach in reporting this. Situations involving unaccompanied minors require careful handling, and your actions reflect a strong commitment to safety.` }
+            ]
+          },
+          unpleasant: {
+            label: "Unpleasant Experience", icon: "😔",
+            snippets: [
+              { label: "Customer IS eligible for a concession", text: `We recognize that this situation impacted your ride experience. As a gesture of care, I've issued ($x) Lyft cash which reflected in your 'payment' section in Lyft application.
+
+Your comfort and trust are important to us. To help make this right, I've authorized ($x) as a Lyft cash which reflected in your 'payment' section in Lyft application.
+
+We truly value your feedback and look forward to ensuring that all of your future experiences with Lyft are smooth and enjoyable. There is ($x) had been authorized which reflected in your 'payment' section in Lyft application.` },
+              { label: "Customer is NOT eligible for a concession", text: `We value the trust you place in Lyft and regret that this ride fell short. While (Refund/Credit) is not possible here, we are committed to reviewing this matter carefully to ensure better experiences moving forward.
+
+Although we cannot offer (Refund/Credit), your feedback is essential, and we'll take steps to address this so future rides reflect the quality you deserve.
+
+I hear your frustration (Customer's name), I apologize (Refund/Credit) cannot be issued, and we remain focused on taking all the proper and corrective actions to avoid any future incidents with you as your satisfaction is our top priority.
+
+While (Refund/Credit) isn't available as outlined in our Terms of Service and Help Center, there are immediate serious actions had been taken to ensure your satisfaction in the upcoming rides.` },
+              { label: "Customer NOT satisfied with concession amount", text: `We recognize your concern about the amount. The issued amount is aligned with our policy, and while we cannot adjust it further, we value your input and are committed to enhancing future rides.
+
+I do apologize that the credit amount issued is the maximum permitted under our policy. Although we cannot adjust it further, we value your input and remain committed to improving your experience.
+
+We understand this may feel less than expected. While we're unable to increase the amount, rest assured that this is the maximum amount that can be issued and your feedback helps us strengthen our service so future rides are more reliable and comfortable.
+
+I hear your concern regarding the credit amount. While we cannot increase it, as it represents the maximum resolution permitted under our guidelines, please know it was issued to acknowledge the inconvenience you faced.
+
+I totally understand that you're expecting a refund, but all the charges on Lyft platform are non-refundable as outlined in our Terms of Service and Help Center. However to ensure your satisfaction, I insisted to issue the maximum permitted under our policy.` }
+            ]
+          }
+        }
+      },
+      closure: {
+        label: "Further Assistance / Closure", icon: "🎯",
+        snippets: [
+          { label: "Customer is 100% satisfied", text: `Is there anything else I can assist you with today?
+
+Since I noticed you're not online right now, I want to provide you with a quick recap: Today, we XXX
+
+Thank you for reaching out to Lyft's safety team, Stay safe and have a great rest of day!` },
+          { label: "Customer is not fully satisfied", text: `Since I see you've completed XXX rides on Lyft platform, I want to assure you that I will do whatever it takes to keep you satisfied. Is there anything else I can assist you with?
+
+Thank you for reaching Lyft's safety team. If there are any other questions feel free to reach us back, We are here 24/7 to assist you with any concern you have.` }
+        ]
+      }
+    }
+  }
+};
+
+// ═══════════════════════════════════════════════
+// STORAGE (safe — GAS iframes block localStorage)
+// ═══════════════════════════════════════════════
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch(e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+};
+
+// ═══════════════════════════════════════════════
+// AGENT NAME
+// ═══════════════════════════════════════════════
+let agentName = store.get('riseforce_agent_name') || '';
+
+function saveAgentName() {
+  const val = document.getElementById('nameInput').value.trim();
+  if (!val) return;
+  agentName = val;
+  store.set('riseforce_agent_name', val);
+  store.set('riseforce_last_seen', Date.now().toString());
+  document.getElementById('nameModal').style.display = 'none';
+  updateHeaderName();
+  renderTree();
+  if (selPath) showSnippets(selPath);
+}
+function promptChangeName() {
+  const m = document.getElementById('nameModal');
+  const i = document.getElementById('nameInput');
+  i.value = agentName;
+  document.getElementById('nameSaveBtn').disabled = !agentName;
+  m.style.display = 'flex';
+  setTimeout(() => i.focus(), 50);
+}
+function updateHeaderName() {
+  document.getElementById('agentNameDisplay').textContent = agentName || '...';
+  document.getElementById('agentAvatar').textContent = agentName ? agentName.charAt(0).toUpperCase() : '?';
+}
+function applyName(text) {
+  if (!agentName) return text;
+  return text
+    .replace(/\( Agent's name \)/g, agentName)
+    .replace(/xxxxxx/g, agentName)
+    .replace(/(My name is )xxxx\b/g, `$1${agentName}`)
+    .replace(/(name is )xxxx\b/g, `$1${agentName}`);
+}
+
+// ═══════════════════════════════════════════════
+// NAV STATE
+// ═══════════════════════════════════════════════
+let selPath = null;
+let expLobs   = new Set(['driver']);
+let expPhases = new Set();
+let expCases  = new Set();
+
+function toggleLob(k) {
+  expLobs.has(k) ? expLobs.delete(k) : expLobs.add(k);
+  renderTree();
+}
+function togglePhase(k) {
+  expPhases.has(k) ? expPhases.delete(k) : expPhases.add(k);
+  renderTree();
+}
+function toggleCase(k) {
+  expCases.has(k) ? expCases.delete(k) : expCases.add(k);
+  renderTree();
+}
+
+function selectPath(path) {
+  selPath = path;
+  // auto-expand parents
+  const parts = path.split('.');
+  expLobs.add(parts[0]);
+  if (parts[2]) expPhases.add(parts[0] + '.' + parts[1]);
+  if (parts[3]) expCases.add(parts[0] + '.' + parts[1] + '.' + parts[2]);
+  renderTree();
+  showSnippets(path);
+  closeSidebar();
+}
+
+// ═══════════════════════════════════════════════
+// SIDEBAR TREE
+// ═══════════════════════════════════════════════
+function renderTree() {
+  let h = '';
+  Object.entries(D).forEach(([lk, lob]) => {
+    const lobOpen = expLobs.has(lk);
+    h += `<div class="lob-label" onclick="toggleLob('${lk}')">
+      <span><span class="lob-icon">${lob.icon}</span>${lob.label}</span>
+      <span class="chev ${lobOpen ? 'open' : ''}">▶</span>
+    </div>`;
+    if (lobOpen) {
+      h += `<div class="lob-body">`;
+      Object.entries(lob.phases).forEach(([pk, phase]) => {
+        const phKey = lk + '.' + pk;
+        if (phase.snippets) {
+          const active = selPath === phKey;
+          h += ni(phase.icon + ' ' + phase.label, `selectPath('${phKey}')`, 'indent1', active);
+        } else if (phase.cases) {
+          const phOpen = expPhases.has(phKey);
+          h += ni(phase.icon + ' ' + phase.label + `<span class="chev ${phOpen?'open':''}" style="margin-left:auto;font-size:.6rem">▶</span>`,
+            `togglePhase('${phKey}')`, 'indent1', false, true);
+          if (phOpen) {
+            Object.entries(phase.cases).forEach(([ck, c]) => {
+              const cKey = phKey + '.' + ck;
+              if (c._empty) {
+                h += `<div class="ni indent2 disabled">${c.icon||'📌'} ${c.label}<span class="soon">soon</span></div>`;
+              } else if (c.snippets) {
+                const active = selPath === cKey;
+                h += ni((c.icon||'📌') + ' ' + c.label, `selectPath('${cKey}')`, 'indent2', active);
+              } else if (c.subcases) {
+                const cOpen = expCases.has(cKey);
+                h += ni((c.icon||'📌') + ' ' + c.label + `<span class="chev ${cOpen?'open':''}" style="margin-left:auto;font-size:.6rem">▶</span>`,
+                  `toggleCase('${cKey}')`, 'indent2', false, true);
+                if (cOpen) {
+                  Object.entries(c.subcases).forEach(([sk, sub]) => {
+                    const sKey = cKey + '.' + sk;
+                    const active = selPath === sKey;
+                    h += ni('📋 ' + sub.label, `selectPath('${sKey}')`, 'indent3', active);
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+      h += `</div>`;
+    }
+  });
+  document.getElementById('navTree').innerHTML = h;
+}
+
+function ni(label, onclick, cls, active, noHover) {
+  return `<div class="ni ${cls}${active ? ' active' : ''}" onclick="${onclick}">${label}</div>`;
+}
+
+// ═══════════════════════════════════════════════
+// WELCOME
+// ═══════════════════════════════════════════════
+function buildBreadcrumb(path) {
+  const [lk, pk, ck, sk] = path.split('.');
+  const crumbs = [D[lk].label];
+  if (pk) crumbs.push(D[lk].phases[pk].label);
+  if (ck && D[lk].phases[pk].cases) crumbs.push(D[lk].phases[pk].cases[ck].label);
+  if (sk && D[lk].phases[pk].cases[ck].subcases) crumbs.push(D[lk].phases[pk].cases[ck].subcases[sk].label);
+  return crumbs;
+}
+
+// ═══════════════════════════════════════════════
+// CONTENT
+// ═══════════════════════════════════════════════
+function showSnippets(path) {
+  const parts = path.split('.');
+  const [lk, pk, ck, sk] = parts;
+  const lob = D[lk];
+  const phase = lob.phases[pk];
+
+  let snips, title, icon;
+  if (phase.snippets) {
+    snips = phase.snippets; title = phase.label; icon = phase.icon;
+  } else {
+    const c = phase.cases[ck];
+    if (c._empty) {
+      document.getElementById('contentBody').innerHTML = `
+        <div class="welcome">
+          <div class="big">🚧</div>
+          <h2>${c.label}</h2>
+          <p>Snippets for this case haven't been loaded yet.<br>Ask your manager to add them!</p>
+        </div>`;
+      return;
+    }
+    if (c.snippets) {
+      snips = c.snippets; title = c.label; icon = c.icon || '📌';
+    } else {
+      const sub = c.subcases[sk];
+      snips = sub.snippets; title = sub.label; icon = '📋';
+    }
+  }
+
+  const cards = snips.map(s => {
+    const paras = applyName(s.text).split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+    return `<div class="snippet-group">
+      <div class="snip-label">${esc(s.label)}</div>
+      ${paras.map(p => `<div class="snip-para" onclick="copyPara(this)" data-text="${escAttr(p)}"><div class="snip-text">${esc(p)}</div></div>`).join('')}
+    </div>`;
+  }).join('');
+
+  const crumbs = buildBreadcrumb(path);
+  const bc = `<div class="breadcrumb">${crumbs.map((c, i) =>
+    `<span>${esc(c)}</span>${i < crumbs.length - 1 ? '<span class="bc-sep">›</span>' : ''}`
+  ).join('')}</div>`;
+
+  document.getElementById('contentBody').innerHTML = `
+    ${bc}
+    <div class="content-title"><span class="icon">${icon}</span>${esc(title)}</div>
+    ${cards}`;
+}
+
+// ═══════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════
+function onSearch(q) {
+  if (!q.trim()) {
+    // restore content if there's a selected path
+    if (selPath) showSnippets(selPath);
+    else document.getElementById('contentBody').innerHTML = `<div class="welcome"><div class="big">👈</div><h2>Pick a section from the sidebar</h2><p>Select any category on the left<br>to instantly see your snippets here.</p></div>`;
+    return;
+  }
+  const lq = q.toLowerCase();
+  const results = [];
+  function scan(snips, path, icon) {
+    snips.forEach(s => {
+      const applied = applyName(s.text);
+      if (s.label.toLowerCase().includes(lq) || applied.toLowerCase().includes(lq))
+        results.push({ label: s.label, text: s.text, path, icon });
+    });
+  }
+  Object.entries(D).forEach(([,lob]) =>
+    Object.entries(lob.phases).forEach(([,ph]) => {
+      const base = `${lob.label} › ${ph.label}`;
+      if (ph.snippets) { scan(ph.snippets, base, ph.icon); return; }
+      Object.entries(ph.cases).forEach(([,c]) => {
+        const cp = `${base} › ${c.label}`;
+        if (c.snippets) { scan(c.snippets, cp, c.icon || '📌'); return; }
+        if (c.subcases) Object.entries(c.subcases).forEach(([,sc]) => scan(sc.snippets, `${cp} › ${sc.label}`, '📋'));
+      });
+    })
+  );
+
+  if (!results.length) {
+    document.getElementById('contentBody').innerHTML = `<div class="no-results"><div class="big">🔍</div><p>No snippets found for "<strong>${esc(q)}</strong>"</p></div>`;
+    return;
+  }
+  document.getElementById('contentBody').innerHTML = results.map(r => {
+    const paras = applyName(r.text).split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+    return `<div class="snippet-group">
+      <div class="path-tag">${esc(r.path)}</div>
+      <div class="snip-label" style="margin-top:8px">${esc(r.label)}</div>
+      ${paras.map(p => `<div class="snip-para" onclick="copyPara(this)" data-text="${escAttr(p)}"><div class="snip-text">${hi(esc(p), lq)}</div></div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+// COPY
+// ═══════════════════════════════════════════════
+let toastTimer;
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+function copyPara(el) {
+  const text = el.dataset.text;
+  el.classList.add('flashing');
+  setTimeout(() => el.classList.remove('flashing'), 500);
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(showToast);
+  } else {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// MOBILE SIDEBAR
+// ═══════════════════════════════════════════════
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(t) { return t.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function hi(text, q) {
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+// ═══════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════
+let isDark = store.get('riseforce_theme') === 'dark';
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+}
+function toggleTheme() {
+  isDark = !isDark;
+  store.set('riseforce_theme', isDark ? 'dark' : 'light');
+  applyTheme();
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+applyTheme();
+updateHeaderName();
+(function() {
+  const EIGHT_HOURS = 8 * 60 * 60 * 1000;
+  const lastSeen = parseInt(store.get('riseforce_last_seen') || '0', 10);
+  const freshSession = !agentName || (Date.now() - lastSeen > EIGHT_HOURS);
+  if (freshSession) {
+    const modal = document.getElementById('nameModal');
+    const input = document.getElementById('nameInput');
+    const btn   = document.getElementById('nameSaveBtn');
+    input.value  = agentName;
+    btn.disabled = !agentName;
+    modal.style.display = 'flex';
+    setTimeout(() => input.focus(), 100);
+  } else {
+    document.getElementById('nameModal').style.display = 'none';
+  }
+})();
+renderTree();
+
+// ═══════════════════════════════════════════════
+// DOCK MAGNIFICATION
+// ═══════════════════════════════════════════════
+(function() {
+  const dock = document.getElementById('dock');
+  if (!dock) return;
+  const BASE = 34, MAX = 58, SPREAD = 90;
+
+  function ease(t) { return t * t * (3 - 2 * t); } // smoothstep
+
+  dock.addEventListener('mousemove', e => {
+    dock.querySelectorAll('.dock-item').forEach(item => {
+      const r = item.getBoundingClientRect();
+      const dist = Math.abs(e.clientX - (r.left + r.width / 2));
+      const size = BASE + ease(Math.max(0, 1 - dist / SPREAD)) * (MAX - BASE);
+      item.style.width  = size + 'px';
+      item.style.height = size + 'px';
+    });
+  });
+
+  dock.addEventListener('mouseleave', () => {
+    dock.querySelectorAll('.dock-item').forEach(item => {
+      item.style.width = BASE + 'px';
+      item.style.height = BASE + 'px';
+    });
+  });
+
+  dock.querySelectorAll('.dock-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.remove('dockBounce');
+      void item.offsetWidth;
+      item.classList.add('dock-bounce');
+      item.addEventListener('animationend', () => item.classList.remove('dock-bounce'), { once: true });
+    });
+  });
+})();
+</script>
+</body>
+</html>

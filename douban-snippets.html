@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Douban Snippets</title>
+  <style>
+    :root {
+      --accent:  #8b5cf6;
+      --accent2: #ec4899;
+      --grad:    linear-gradient(135deg, #8b5cf6, #ec4899);
+      --bg:      #faf5ff;
+      --surface: #ffffff;
+      --border:  #ede9fe;
+      --text:    #1e1040;
+      --muted:   #7c6a9a;
+      --shadow:  0 4px 20px rgba(139,92,246,0.1);
+      --sidebar-w: 245px;
+    }
+    [data-color="ocean"]  { --accent:#0ea5e9; --accent2:#06b6d4; --grad:linear-gradient(135deg,#0ea5e9,#06b6d4); --bg:#f0f9ff; --border:#bae6fd; --muted:#5b8fa8; --shadow:0 4px 20px rgba(14,165,233,0.1); }
+    [data-color="sunset"] { --accent:#f97316; --accent2:#ef4444; --grad:linear-gradient(135deg,#f97316,#ef4444); --bg:#fff7ed; --border:#fed7aa; --muted:#a87050; --shadow:0 4px 20px rgba(249,115,22,0.1); }
+    [data-color="forest"] { --accent:#10b981; --accent2:#059669; --grad:linear-gradient(135deg,#10b981,#059669); --bg:#f0fdf4; --border:#bbf7d0; --muted:#507a60; --shadow:0 4px 20px rgba(16,185,129,0.1); }
+    [data-color="rose"]   { --accent:#f43f5e; --accent2:#fb7185; --grad:linear-gradient(135deg,#f43f5e,#fb7185); --bg:#fff1f2; --border:#fecdd3; --muted:#a05060; --shadow:0 4px 20px rgba(244,63,94,0.1); }
+    [data-theme="dark"]                { --bg:#0c0a18; --surface:#160f2e; --border:#2a1f4a; --text:#e8e0ff; --muted:#7060a0; --shadow:0 4px 20px rgba(0,0,0,0.4); }
+    [data-theme="dark"][data-color="ocean"]  { --bg:#020d18; --surface:#0a1e2e; --border:#0d3050; --muted:#4080a0; }
+    [data-theme="dark"][data-color="sunset"] { --bg:#18080a; --surface:#2a120c; --border:#502010; --muted:#a06040; }
+    [data-theme="dark"][data-color="forest"] { --bg:#02100a; --surface:#0a2018; --border:#0d4025; --muted:#40806a; }
+    [data-theme="dark"][data-color="rose"]   { --bg:#18080e; --surface:#2a0f18; --border:#501030; --muted:#a05070; }
+    [data-theme="dark"] mark { background: rgba(139,92,246,0.3); color: var(--text); }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    .hdr { background: var(--grad); color: white; padding: 11px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; box-shadow: 0 4px 24px rgba(139,92,246,0.45); }
+    .hdr-left { display: flex; align-items: center; gap: 12px; }
+    .hdr h1 { font-size: 1.08rem; font-weight: 800; letter-spacing: -0.01em; }
+    .hdr-sub { font-size: 0.62rem; color: rgba(255,255,255,0.6); margin-top: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .burger { background: none; border: none; color: white; cursor: pointer; font-size: 1.25rem; display: none; padding: 4px; }
+    .agent-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25); border-radius: 24px; padding: 5px 14px 5px 5px; cursor: pointer; transition: all 0.18s; }
+    .agent-badge:hover { background: rgba(255,255,255,0.3); }
+    .av { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .aname { font-size: 0.82rem; font-weight: 600; color: white; }
+    .ahint { font-size: 0.6rem; color: rgba(255,255,255,0.6); }
+
+    /* theme picker */
+    .theme-picker-wrap { position: relative; }
+    .palette-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; font-size: 1rem; padding: 5px 10px; border-radius: 20px; transition: all 0.18s; line-height: 1; }
+    .palette-btn:hover { background: rgba(255,255,255,0.35); }
+    .theme-panel { position: absolute; top: calc(100% + 10px); right: 0; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 14px 16px; display: none; flex-direction: column; gap: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.5); z-index: 500; min-width: 160px; }
+    .theme-panel.open { display: flex; }
+    .theme-panel-label { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+    .swatches { display: flex; gap: 8px; align-items: center; }
+    .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s, box-shadow 0.15s; flex-shrink: 0; }
+    .swatch:hover { transform: scale(1.15); }
+    .swatch.active { box-shadow: 0 0 0 2px #1a1a2e, 0 0 0 4px white; }
+    .dark-toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .dark-toggle span { font-size: 0.78rem; color: rgba(255,255,255,0.7); font-weight: 600; }
+    .toggle-track { width: 38px; height: 20px; border-radius: 10px; background: rgba(255,255,255,0.15); position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+    .toggle-track.on { background: rgba(255,255,255,0.4); }
+    .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: white; transition: left 0.2s; }
+    .toggle-track.on .toggle-thumb { left: 20px; }
+
+    .body { display: flex; flex: 1; overflow: hidden; }
+    .sidebar { width: var(--sidebar-w); flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; transition: transform 0.25s ease; }
+    .sidebar-search { padding: 12px; border-bottom: 1px solid var(--border); }
+    .sidebar-search input { width: 100%; padding: 9px 12px 9px 34px; border: 2px solid var(--border); border-radius: 20px; font-size: 0.83rem; outline: none; color: var(--text); background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' fill='%238b5cf6' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E") no-repeat 12px center; transition: border-color 0.15s, box-shadow 0.15s; }
+    .sidebar-search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
+    .sidebar-search input::placeholder { color: var(--muted); }
+    .nav-list { flex: 1; overflow-y: auto; padding: 8px 10px 20px; }
+    .nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 12px; cursor: pointer; transition: all 0.15s; margin-bottom: 2px; font-size: 0.86rem; font-weight: 600; user-select: none; }
+    .nav-item:hover { background: rgba(139,92,246,0.09); color: var(--accent); }
+    .nav-item.active { background: var(--grad); color: white; box-shadow: 0 4px 14px rgba(139,92,246,0.3); }
+    .nav-icon { width: 26px; height: 26px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; transition: background 0.15s; }
+    .nav-item.active .nav-icon { background: rgba(255,255,255,0.25); }
+    .nav-count { margin-left: auto; font-size: 0.65rem; font-weight: 700; background: var(--bg); color: var(--muted); padding: 2px 7px; border-radius: 10px; flex-shrink: 0; }
+    .nav-item.active .nav-count { background: rgba(255,255,255,0.25); color: white; }
+
+    .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .content-body { flex: 1; overflow-y: auto; padding: 22px 24px 40px; display: flex; flex-direction: column; }
+    .section-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+    .section-icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+    .section-title { font-size: 1.12rem; font-weight: 800; letter-spacing: -0.01em; }
+    .section-count { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    .snip-grid { display: flex; flex-direction: column; gap: 9px; }
+    .snip-card { padding: 13px 16px 13px 20px; border: 2px solid var(--border); border-radius: 14px; cursor: pointer; transition: all 0.16s; background: var(--surface); position: relative; overflow: hidden; }
+    .snip-card:hover { transform: translateX(5px); box-shadow: var(--shadow); }
+    .snip-card:hover::after { content: '📋'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; opacity: 0.45; }
+    .snip-card.flashing { border-color: #10b981 !important; background: rgba(16,185,129,0.07) !important; }
+    .snip-text { font-size: 0.88rem; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
+
+    .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--muted); }
+    .welcome .big { font-size: 4rem; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .welcome h2 { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .welcome p { font-size: 0.87rem; line-height: 1.7; }
+
+    .path-tag { font-size: 0.68rem; font-weight: 700; color: var(--muted); background: var(--bg); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); display: inline-block; margin-bottom: 8px; letter-spacing: 0.02em; }
+    .no-results { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .no-results .big { font-size: 2.8rem; margin-bottom: 12px; }
+
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--grad); color: white; padding: 10px 28px; border-radius: 30px; font-weight: 700; font-size: 0.87rem; opacity: 0; transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1); z-index: 600; pointer-events: none; white-space: nowrap; box-shadow: 0 6px 24px rgba(139,92,246,0.4); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+    .modal-box { background: var(--surface); border-radius: 24px; padding: 36px 32px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.25), 0 0 0 1px var(--border); }
+    .modal-box .big-icon { font-size: 3rem; margin-bottom: 14px; }
+    .modal-box h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
+    .modal-box p { font-size: 0.85rem; color: var(--muted); margin-bottom: 22px; line-height: 1.5; }
+    .modal-box input { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 14px; font-size: 0.98rem; outline: none; text-align: center; margin-bottom: 12px; background: var(--bg); color: var(--text); transition: border-color 0.2s, box-shadow 0.2s; }
+    .modal-box input::placeholder { color: var(--muted); }
+    .modal-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(139,92,246,0.15); }
+    .modal-box button { width: 100%; padding: 13px; background: var(--grad); color: white; border: none; border-radius: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(139,92,246,0.35); }
+    .modal-box button:hover { opacity: 0.9; transform: translateY(-1px); }
+    .modal-box button:disabled { background: var(--border); color: var(--muted); cursor: default; box-shadow: none; transform: none; opacity: 1; }
+
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 250; }
+    @media (max-width: 640px) {
+      .burger { display: block; }
+      .sidebar { position: fixed; top: 0; left: 0; bottom: 0; z-index: 260; transform: translateX(-100%); width: 280px; }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .dock-wrapper { display: none; }
+    }
+
+    /* ── DOCK ── */
+    .dock-wrapper { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 2000; pointer-events: none; }
+    .dock { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 8px 24px; background: #080808; border-radius: 30px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 0 0 4px rgba(0,0,0,0.5), 0 15px 30px rgba(0,0,0,0.8), 0 0 20px rgba(139,92,246,0.5); pointer-events: auto; overflow: visible; max-width: 90vw; flex-wrap: wrap; }
+    .dock-item { width: 34px; height: 34px; background: transparent; border: none; cursor: pointer; padding: 0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: width 0.07s ease-out, height 0.07s ease-out; position: relative; z-index: 5; }
+    .dock-item img { width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+    .dock-item:active { filter: brightness(0.8); }
+    .dock-item[data-tooltip]::before { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(4px); background: rgba(8,8,8,0.92); color: white; padding: 5px 11px; border-radius: 7px; font-size: 0.7rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.18s, transform 0.18s; border: 1px solid rgba(255,255,255,0.1); letter-spacing: 0.02em; }
+    .dock-item[data-tooltip]:hover::before { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .dock-bounce { animation: dockBounce 0.4s cubic-bezier(0.36,0.07,0.19,0.97); }
+    @keyframes dockBounce { 0%,100% { transform: translateY(0); } 30% { transform: translateY(-14px); } 60% { transform: translateY(-4px); } }
+  </style>
+</head>
+<body>
+
+<div class="modal-overlay" id="nameModal">
+  <div class="modal-box">
+    <div class="big-icon">✨</div>
+    <h2>Hey! What's your name?</h2>
+    <p>We'll swap your name into snippets automatically.</p>
+    <input type="text" id="nameInput" placeholder="e.g. Raafat" maxlength="40"
+      oninput="document.getElementById('nameSaveBtn').disabled=!this.value.trim()"
+      onkeydown="if(event.key==='Enter')saveAgentName()">
+    <button id="nameSaveBtn" onclick="saveAgentName()" disabled>Let's go! 🚀</button>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <button class="burger" onclick="toggleSidebar()">☰</button>
+    <div>
+      <h1>✨ Douban Snippets</h1>
+      <div class="hdr-sub">Quick copy · Support flow</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="theme-picker-wrap">
+      <button class="palette-btn" onclick="toggleThemePanel(event)">🎨</button>
+      <div class="theme-panel" id="themePanel">
+        <div class="theme-panel-label">Color</div>
+        <div class="swatches">
+          <div class="swatch" data-color="violet" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)" title="Violet" onclick="setColor('violet')"></div>
+          <div class="swatch" data-color="ocean"  style="background:linear-gradient(135deg,#0ea5e9,#06b6d4)" title="Ocean"  onclick="setColor('ocean')"></div>
+          <div class="swatch" data-color="sunset" style="background:linear-gradient(135deg,#f97316,#ef4444)" title="Sunset" onclick="setColor('sunset')"></div>
+          <div class="swatch" data-color="forest" style="background:linear-gradient(135deg,#10b981,#059669)" title="Forest" onclick="setColor('forest')"></div>
+          <div class="swatch" data-color="rose"   style="background:linear-gradient(135deg,#f43f5e,#fb7185)" title="Rose"   onclick="setColor('rose')"></div>
+        </div>
+        <div class="theme-panel-label">Mode</div>
+        <div class="dark-toggle" onclick="toggleTheme()">
+          <span>Dark mode</span>
+          <div class="toggle-track" id="darkTrack"><div class="toggle-thumb"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="agent-badge" onclick="promptChangeName()">
+      <div class="av" id="agentAvatar">?</div>
+      <div>
+        <div class="aname" id="agentNameDisplay">...</div>
+        <div class="ahint">tap to change</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="body">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-search">
+      <input type="text" id="sideSearch" placeholder="Search snippets..." oninput="onSearch(this.value)" autocomplete="off">
+    </div>
+    <div class="nav-list" id="navList"></div>
+  </nav>
+  <div class="content">
+    <div class="content-body" id="contentBody">
+      <div class="welcome">
+        <div class="big">💬</div>
+        <h2>Pick a section to get started</h2>
+        <p>Select any category from the sidebar<br>to instantly copy your snippets.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Copied!</div>
+
+<div class="dock-wrapper">
+  <div class="dock" id="dock">
+    <div class="dock-item" data-tooltip="US Compliance" onclick="window.open('https://docs.google.com/document/d/14tD7AHvP6H_B3vSVA6h032LXZXmOesRYSdpP1f_6KUU/edit?tab=t.iah0hpoq3hm9','_blank')"><img src="https://drive.google.com/thumbnail?id=1QCd1II7UR2mCGFdzPFt9uBj_cJsF_ZoL&sz=w1000" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="Canada Compliance" onclick="window.open('https://docs.google.com/document/d/1uVodZwHy9CN5FVjOqvFBNmAJEK1jW4vzjK8_s5tG1vM/edit?tab=t.0','_blank')"><img src="https://drive.google.com/thumbnail?id=18BocyyO022oNBB0z7R6Ccvmgjj9EkgGX&sz=w1000" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="Compass" onclick="window.open('https://tom.lyft.net/compass','_blank')"><img src="https://lh3.googleusercontent.com/rd-d/ALs6j_HK8-dRI8DMhGYv_9coetXdrqwOnYh_QNvG2-1HAu14hoVFNQz92rkq7snZFCtdbGO574QA6t7QLDrHczMZh_5nFBG9iYmx4TfnqSArawsx2X4_UIzHPoqaFh_seq5pxD05nWIcTZGtnrypgmh9uTgk05GesfBbzHtgRqZ1jwv6TAe_14mh1mHLKNhgkgPv3L5ltScjVRE6ef2QvmR6BKzN3Oszms2WdFrw07hyl9taTVPCDQqQV8oDllNq4IOrzPgduo-YeHf0RUti_GHvuBuuL31Z9yTa0hqlxC7NZAFEAPNldIHxk7CzXLBrWS_lG5dAL4xQh1cfxdi5NUbIl7_L5qvNe3GlIGucCUeMqSmNpllI0AliheMGUgVQXNOao5kpJ2f0HFEOs6Ovx3mu70Fx5wTvvofGuzujKEqw4ZXHVRDlNNiJezzAb6EQ4iHgySwLgkK0hrgUka9KXGaY1tjToCsSg3vq-lrrCLETp00Cp2HWMXxXjUMNXeos87i9IEPS5HTLlXsUKzdpAdJoSJxlSF6E5EdDKjAFrgrLDB5nBGf7yr2ZrFPlHUNO5y06NvE3owQBpvZLjufbL9erpXOAU177uyrHTGmGiRw22u2NjEH8Bk2zi0pTtZbtOPX3bl2jiSer2uwS2_2R2WHm6uikAg1qTy_kvp2y8d2D9Va5G2eohvmg2i583ytT7R9gfqPLI5QFBejEgsSlE8VkweAkQxp38i1WoOwWLrdnFvlhi9s2F8OnhMY5Iv5HORk3-SD5R1_ytau6K2SXTiV79XNtdt049m2zhw1kabv1friHowuvdrF4DPqoAvIG9ig0e8oFax4137Q0GOgOjqc4D41Au4_bbxSAPS0z9UMYnV0IKXV4fMCMpaQxB2hk3V2VbTCks_lnk9boZlCskoqjrDoxbN9NooOuK3Aj32y51u_rKEgASLmhY88BqYqw7MqGOb6sZ62OLRrwQtTpXtMoHGr4gz7ikOD1PAVI9c8AYFE5d4K5rMfHmyH5Xgo4ca1K1Hf_XuPx1R3nh9kQvQRgVOlLUNkC-C95jSHforXo2gidhM2HPPuvulrsXe5ZBbM90ISKf-49-MU6lI19JcunpdFT=s16383-w100?authuser=0"></div>
+    <div class="dock-item" data-tooltip="Driver App" onclick="window.open('https://docs.google.com/document/d/1h7XTADbcChCU9Q1Y8aQUio0JE9yEea0QemocVH6PjP8/edit?tab=t.0','_blank')"><img src="https://drive.google.com/thumbnail?id=1FciYKTc_p27SGZcXVFnTSztvKmidvn5z&sz=w1001" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="BKN Compliance" onclick="window.open('https://docs.google.com/document/d/1CHvHU23PQiFQ7suFtsPq5BF3E9vwqnTJ0v9d1LO7SJk/edit?tab=t.0','_blank')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle'%3E%F0%9F%97%BD%3C/text%3E%3C/svg%3E"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const l = document.createElement('link');
+  l.rel = 'icon'; l.type = 'image/svg+xml';
+  l.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>";
+  document.head.appendChild(l);
+})();
+
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const SECTIONS = [
+  { id:'greeting', label:'Greetings', icon:'👋', color:'#8b5cf6', snippets:[
+    `Hello X, Thank you for contacting Lyft support This is Raafat, it'll be my pleasure helping you today as an amazing X driver.`,
+    `Hello X, Thank you for contacting Lyft support This is Raafat, it'll be my pleasure helping you today.`,
+    `Hello X, Thank you for contacting Lyft support. This is Raafat with you, please accept my apology for the long wait time.`
+  ]},
+  { id:'jumping', label:'Jumping', icon:'🚀', color:'#06b6d4', snippets:[
+    `I'm jumping on behalf of my colleague to further assist you, kindly allow me 2 minutes to review your previous conversation`
+  ]},
+  { id:'acknowledge', label:'Acknowledge', icon:'⭐', color:'#f59e0b', snippets:[
+    `I understand that you are reaching us regarding being unable to go online due to the XXX, I will definitely look into it for you.`,
+    `I understand that you want to complete your application to start driving, I will definitely help you with the process.`,
+    `I understand that you want to add your vehicle document, I will definitely help you with that.`
+  ]},
+  { id:'empathy', label:'Empathy', icon:'💛', color:'#f43f5e', snippets:[
+    `I am really sorry to hear that you are unable to XXX`,
+    `Please accept our apology for any inconvenience you may have faced.`,
+    `I understand how hard this is for you and it makes perfect sense to me and i assure you i am doing my best to help.`
+  ]},
+  { id:'assurance', label:'Assurance', icon:'🛡️', color:'#10b981', snippets:[
+    `I assure you that by the end of this chat everything will be sorted out for you.`,
+    `I assure you that i will do my best to help you today.`
+  ]},
+  { id:'recap', label:'Recap', icon:'📋', color:'#a855f7', snippets:[
+    `It was a pleasure assisting you today with XXX`,
+    `I hope I managed to give you the expected outcome of today's chat`,
+    `I'm glad that I was able to solve your issue.`
+  ]},
+  { id:'further', label:'Further', icon:'🚥', color:'#f97316', snippets:[
+    `On top of that, Is there anything I can help you with today?`,
+    `Is there anything else I can help you with?`,
+    `Do you need any more details or clarification before we wrap up?`
+  ]},
+  { id:'closure', label:'Closure', icon:'✅', color:'#059669', snippets:[
+    `Thank you for contacting Lyft. Have a Great day!`,
+    `Feel free to reach out to us with any questions you may have. Have a pleasant day!`,
+    `Always remember that you are a valuable driver, never hesitate to reach us.`
+  ]},
+  { id:'transfer', label:'Transfer', icon:'🔀', color:'#6366f1', snippets:[
+    `I need to transfer you to the specialized team in order to assist further, They will be in touch with you through this chat shortly.`
+  ]},
+  { id:'supervisor', label:'Supervisor', icon:'👔', color:'#7c3aed', snippets:[
+    `Because Lyft cares about your experience the most, I've reached out to a supervisor and I'm transferring this chat to them right away.`
+  ]},
+  { id:'escalate', label:'Escalate', icon:'📤', color:'#dc2626', snippets:[
+    `I need to escalate to the specialized team in order to assist further, They will be in touch with you through email shortly.`
+  ]},
+  { id:'deescalation', label:'De-escalation', icon:'🕊️', color:'#0ea5e9', snippets:[
+    `I completely understand why you'd want to speak with a supervisor,`,
+    `I want to assure you that we all have the same authority in this matter and i am doing my best to help.`,
+    `I want to make sure you feel heard and supported, Let's take a moment to go over the issue together.`
+  ]},
+  { id:'verification', label:'Verification', icon:'✔️', color:'#14b8a6', snippets:[
+    `I can see that your email needs to get verified, please check your email inbox for a verification link.`,
+    `I can see that your phone number needs to get verified, please check your SMS for a verification link.`,
+    `Thank you, it is verified now.`
+  ]},
+  { id:'call', label:'Call Request', icon:'📞', color:'#ec4899', snippets:[
+    `I understand talking to one of our representatives over the phone would probably be more convenient for you.`,
+    `For now we reserved our phone line for calls having to do with accidents or safety-related incidents`,
+    `Please note that i am here to help through this chat.`
+  ]},
+  { id:'hold', label:'Hold', icon:'⏳', color:'#6b7280', snippets:[
+    `Please allow me 2 minutes to check your status.`,
+    `Kindly allow me an extra 2 minutes still checking.`,
+    `I need to look into this a bit more, I will get back to you in 2 minutes.`,
+    `Thank you for your patience.`
+  ]},
+  { id:'afterhold', label:'After Hold', icon:'⌛', color:'#0891b2', snippets:[
+    `Thank you for staying connected, we appreciate your time!`,
+    `I am really sorry about the delay.`,
+    `Are we still connected?`
+  ]},
+  { id:'drop', label:'Drop', icon:'🤐', color:'#64748b', snippets:[
+    `I'd love to help you further. Please reply to this message so that I can help you out.`,
+    `Get back to us whenever you are available.`
+  ]},
+  { id:'questions', label:'Questions', icon:'❓', color:'#3b82f6', snippets:[
+    `How can I help you?`,
+    `Could you please provide a screenshot of the error?`,
+    `Could you please provide a clear picture of your updated drivers license?`,
+    `Can you please provide me with the passenger name with the date and time of the ride?`,
+    `Are you able to provide your vehicle VIN and documents?`,
+    `I'm sorry, can you walk me through what happened?`,
+    `I'm really sorry but I don't quite understand your concern, can you please clarify it to me?`
+  ]},
+  { id:'bonus', label:'Bonus', icon:'💰', color:'#eab308', snippets:[
+    `I understand how important it is for you to feel compensated fairly for your time and efforts.`,
+    `I did my best to get an exception for you with $, It will be reflected in your earnings within the next 3-5 business days.`,
+    `Lyft always appreciate your hard work, based on this we can add $ as a bonus to your account, It will be reflected in your earnings within the next 3-5 business days.`,
+    `I have great news for you, you are lucky and the bonus already reflected on your end!`
+  ]},
+  { id:'news', label:'News!', icon:'🎉', color:'#10b981', snippets:[
+    `Your account is active now!`,
+    `You're all set to turn on Driver Mode in the app and start picking up riders.`,
+    `All of your documents is approved, no further documents needed!`,
+    `We can not wait for you to start driving with Lyft.`
+  ]},
+  { id:'handling', label:'Handling', icon:'🤝', color:'#8b5cf6', snippets:[
+    `I understand how it is important for you.`,
+    `I want to assure you that if we have anything more that can be done, I will take immediate actions.`,
+    `We kindly ask that this experience does not overshadow the many good experiences you've had with Lyft, and we sincerely appreciate your understanding in this matter.`,
+    `I'm assuring you that we wouldn't be late if XXX was accessible`,
+    `Please be assured that had there been more I could do, I would have taken care of it right at the beginning`,
+    `Your dedication does not go unnoticed, and we value your commitment.`,
+    `Your time and energy are respected, and we never want you to feel overlooked.`
+  ]},
+  { id:'deadend', label:'Dead End', icon:'🚧', color:'#f43f5e', snippets:[
+    `at this point i have provided all of the information i have and i believe i answered all of your questions.`,
+    `I understand that was not the outcome you expected but this is the process in such cases.`,
+    `Please accept our apology for any inconvenience you may have faced.`
+  ]},
+  { id:'documents', label:'Documents', icon:'📄', color:'#6b7280', snippets:[
+    `I can confirm we received your X`,
+    `Our specialized Document Review team is currently reviewing it and will complete the process within 12 hours of submission.`,
+    `You'll see the status update in the app once the review is complete.`,
+    `We sincerely appreciate your patience in this process.`
+  ]},
+  { id:'email', label:'Email Templates', icon:'📧', color:'#0ea5e9', snippets:[
+    `Dear [Customer Name],\n\nHope this email finds you well and healthy. Thank you for reaching out to us. We sincerely acknowledge your concern regarding [brief mention of issue].\n\nWe understand how important this is to you and want to assure you that we are here to assist you every step of the way.\n\nOur team is currently reviewing your case, and we will keep you updated with the progress. If you have any additional information to share, please feel free to reply to this email.\n\nThank you for choosing Lyft. We appreciate your patience and trust.\n\nKind regards,`,
+    `Dear [Customer Name],\n\nHope this email finds you well and healthy. Thank you for your patience while we looked into your concern.\n\nWe completely understand how this situation might have caused inconvenience, and we're truly sorry for that. And please rest assured we're working to make sure that your experience with us is being rectified.\n\nWe have [explain the action taken or solution] to resolve the issue. Please check and let us know if everything is working well on your end.\n\nYour satisfaction is our priority, and we're here to support you.\n\nThank you for being a valued driver with Lyft.\n\nBest regards,`,
+    `Dear [Customer Name],\n\nHope this email finds you well and healthy. Thank you for contacting [Company Name].\n\nWe're eager to help resolve your issue promptly.\n\nTo assist you better, could you please provide us with [specific information needed]?\n\nThis will help us address your concern accurately and quickly.\n\nWe appreciate your cooperation and look forward to your response.\n\nWarm regards,`,
+    `Dear [Customer Name],\n\nHope this email finds you well and healthy. I'm checking in to ensure that your issue regarding [brief mention] has been resolved to your satisfaction.\n\nIf you have any further questions or need assistance, please don't hesitate to reach out.\n\nYour experience matters to us, and we are committed to providing you with excellent service every time.\n\nThank you for choosing Lyft.\n\nSincerely,`,
+    `Dear [Customer Name],\n\nHope this email finds you well and healthy. We're reaching out to apologize sincerely for the delay in addressing your issue. We appreciate your patience and understand how frustrating this might be.\n\nPlease be assured that we are actively working on a solution and will keep you updated with any progress. Your satisfaction is very important to us.\n\nThank you for your continued understanding and for being a valued part of Lyft.\n\nKind regards,\n\nBest Regards,`,
+    `Hello XXXX\n\nThank you for contacting Lyft support regarding that you have a concern. I hope you are doing great,\n\nIt'll be a pleasure assisting you regarding any concern that you are having, and I'm going to be doing my best giving you the best possible solution. However, I'm not clearly aware about the content or the information that you provided before.\n\nCan you please elaborate more about your concern so I can help you.\n\nI'll be looking out and waiting for your reply.\n\nRemember that we are always here for you around the clock.\n\nThank you for reaching out to us and have a wonderful day.`
+  ]},
+  { id:'tiergreet', label:'Tier Greetings', icon:'⭐', color:'#f59e0b', snippets:[
+    `Hi _NAME_, Thank you for contacting Lyft support team. I am your live agent Raafat here to assist you today.`,
+    `Hi _NAME_. Thank you for contacting Lyft support. I see that you are an Elite driver! Thank you for your hard work on the platform. I am Raafat, I will be assisting you today.`,
+    `Hello _NAME_, Thank you for contacting Lyft support, I appreciate you for being a Platinum Driver! Thank you for your hard work on the platform. I am Raafat, I will be assisting you today.`,
+    `Hello _NAME_, Thank you for contacting Lyft support, I appreciate you for being a Gold tier Driver! Thank you for your hard work on the platform. I am Raafat, I will be assisting you today.`,
+    `Hello _NAME_, Thank you for contacting Lyft support, I appreciate you for being a Silver tier Driver! Thank you for your hard work on the platform. I am Raafat, I will be assisting you today.`,
+    `Hi _NAME_! My name is Raafat from Lyft support. I will be jumping on behalf of my colleague to assist you further.`,
+    `Hi _NAME_! My name is Raafat. After reviewing your survey, I can see that you were not satisfied with your customer support experience. Let me take a second look at your interaction.`,
+    `Hello _NAME_, this is Raafat and I will be jumping here instead of the AI assistant. Please allow me 2 minutes to check the conversation for you.`,
+    `Hello ***. This is Raafat, thank you for reaching out to Lyft Driver support team, I hope you are doing great today.`,
+    `Hello ***. This is Raafat. Thank you for reaching out to the Lyft Driver Support Team. I will be assisting you on behalf of the AI. I hope you're having a great day today!`,
+    `Hi ***. This is Raafat. Thank you for contacting Lyft driver support, and for being an amazing *** tier driver, and an essential member to our Lyft family! I hope you are doing great today.`,
+    `Hello ***. This is Raafat. I will be stepping on behalf of my colleague. I assure you I will do my best to help and we do apologize for any delay or inconvenience. Please allow me a few moments to read the previous interactions and be right back.`,
+    `Thank you so much for your patience and we really apologize for the delay.`
+  ]},
+  { id:'feedback', label:'Feedback', icon:'💬', color:'#6366f1', snippets:[
+    `Please know that we take feedback like yours very seriously and will take the appropriate actions to protect the Lyft community.`,
+    `Rest assured, your feedback goes a long way and appropriate actions will be taken. We always give importance to our customers time and money.`,
+    `All the feedbacks from our valuable drivers like you are taken care. We are always working towards the improvement of the services with ease and efficiency.`,
+    `We wish you nothing but great experiences with Lyft going forward your message has been taken as a feedback so that we continue to work on it and take appropriate actions.`
+  ]},
+  { id:'underpaid', label:'Underpaid', icon:'💵', color:'#10b981', snippets:[
+    `I understand how important it is to get paid correctly for the time and distance you drive.`,
+    `Can you please tell me which ride was it?`,
+    `Can you please confirm the time of the ride?`,
+    `I can see your hard work and effort in this ride.`,
+    `As an appreciation to your effort, I have issued $`,
+    `Usually it reflects immediately, if it didn't reflect now, it may take up to 3-5 working days to reflect to your earnings.`,
+    `Thank you so much for your hard work during the ride.`,
+    `Thank you for reaching out and sharing your concern. We truly want to help and make sure you're satisfied.\n\nI totally understand your frustration, and let me clarify the following:\n\nWith the ride details, we provide an estimated time and distance before the ride starts. That estimate can sometimes be a bit less or more than the actual trip.\n\nIf the actual time or distance is less than the estimate, and there's no significant change, we don't reduce your pay — you still receive the full upfront amount.\n\nAnd we apply the same logic if the trip ends up being slightly longer with no significant change, an adjustment wouldn't be added.\n\nHowever, please be assured that you will always be paid correctly and receive your base pay according to the time and distance you drove.\n\nAlso, even if this specific ride felt underpaid, Lyft has the Earnings Commitment in place to ensure fairness. By the end of the week, you'll receive at least 70% of what the rider paid after external fees, which helps balance out the earnings across your completed rides.\n\nWe want to make sure you feel supported. If you have any other questions or need further help, we're here for you.`
+  ]},
+  { id:'cancelfees', label:'Cancel Fees', icon:'🚕', color:'#f97316', snippets:[
+    `I understand that you are reaching out regarding the cancellation fees.`,
+    `I totally get that your time is valuable and that the cancellation fees is very important.`,
+    `Rest assured I will do my best to assist you with the cancellation fees for this ride.`,
+    `I have checked this ride carefully for you and I can see that you did a lot of effort to pick up the rider.`,
+    `As an appreciation to your effort, I have issued $`,
+    `Usually it reflects immediately, if it didn't reflect now, it may take up to 3-5 working days to reflect to your earnings.`,
+    `Thank you so much for your hard work trying to pick the rider up.`
+  ]},
+  { id:'nobonus', label:'No Bonus', icon:'🚫', color:'#ef4444', snippets:[
+    `We truly want to help and make sure you're satisfied.`,
+    `We provide an estimated time and distance before the ride starts. That estimate can sometimes be a bit less or more than the actual trip.`,
+    `If the actual time or distance is less than the estimate, and there's no significant change, you still receive the full upfront amount.`,
+    `And we apply the same logic if the trip ends up being slightly longer with no significant change, an adjustment wouldn't be added.`,
+    `However, please be assured that you will always be paid correctly and receive your base pay according to the time and distance you drove.`,
+    `Also, even if this specific ride felt underpaid, Lyft has the Earnings Commitment in place to ensure fairness.`,
+    `By the end of the week, you'll receive at least 70% of what the rider paid after external fees, which helps balance out the earnings across your completed rides.`,
+    `We want to make sure you feel supported. If you have any other questions or need further help, we're here for you.`,
+    `I see that you reached out to us regarding a similar situation, and we were able to assist you.`,
+    `After reviewing all available resources and aligning our efforts, I found that the earnings you received are correct.`,
+    `I understand where you're coming from and how you're feeling. Rest assured, we always strive to enhance our service and improve the customer experience.`
+  ]},
+  { id:'ridechallenges', label:'Ride Challenges', icon:'🏆', color:'#8b5cf6', snippets:[
+    `I totally get that ride challenges are very important and they can be a huge motivation to take more rides.`,
+    `Ride Challenges are personalized for every driver and are based on individual driving history.`,
+    `I have checked from my end and I can assure you that your account is more than perfect and you are able to receive ride challenges`,
+    `And I can really understand that you are interested in receiving challenges more often, so I will highly note this from my end to our relevant team and I can assure you it will be taken into consideration`,
+    `And hopefully you may start getting them very soon.`
+  ]},
+  { id:'concessionnote', label:'Concession Note', icon:'📝', color:'#64748b', snippets:[
+    `Driver got concession within the last 60 days (Concession history from TOM)? (Yes/No): -----------\nReason for the Credit (Brief explanation why we're adding the credit): -----------\nCredit Amount: -----------\nMention the SR we added the credit against: -----------\nCredit Type (LyftCares – Guided by the Workflow): -----------`
+  ]},
+  { id:'bgcpending', label:'BGC Pending', icon:'🔍', color:'#0ea5e9', snippets:[
+    `I'm happy to inform you that you are one step away from going online!`,
+    `And the last step to be able to go online is passing the background check.`,
+    `So keep an eye on the app at any moment, once you pass, you will receive a notification that you are ready to go online!`,
+    `We truly appreciate how excited you are to join the Lyft family, and we care about getting your account activated as soon as possible.`,
+    `You've done an amazing job completing and uploading all the required documents, great work!`,
+    `Please keep an eye on your email we'll keep you updated every step of the way.`,
+    `You're doing everything right, and we are excited to have you on the road soon.`,
+    `Congrats in advance!`,
+    `Most checks take about 24-48 hours to get done.`,
+    `It may take longer than this since it is done by a third party.`,
+    `You can also check the Checkr portal: bit.ly/checkr-p — you will be able to see the estimated time and also check if you need to provide them with any information.`,
+    `I can assure you that I have taken the necessary actions and taken care of everything on your account, and now we are only waiting for the Background checks.`,
+    `I have checked your account and I can see that your background check is currently processing.`,
+    `Keep in mind, the background check is run through a third party and can take a few days to process, depending on a number of factors.`,
+    `To become a driver on the Lyft platform, all applicants must pass a background check.`,
+    `So congrats in advance and welcome on board, it's just a matter of time and you will be all good to go online.`
+  ]},
+  { id:'bgcfailed', label:'BGC Failed', icon:'❌', color:'#dc2626', snippets:[
+    `Ok XXX, I have checked your account and I would like to explain the following information and how to fix this error with the Background checks as soon as possible,`,
+    `So to make sure that we will be able to help you to fix this issue with the background checks`,
+    `And to summarize all the previous information and to save you valuable time`,
+    `Kindly try to check with Checkr or try to provide the following information:`,
+    `- Court approved Certificate of Rehabilitation\n- Court approved Certificate of Relief from Disabilities\n- Court approved expungement documents`,
+    `So rest assured once you follow the previous steps or provide the needed information we will be able to assist you.`
+  ]},
+  { id:'bknwaitlist', label:'BKN Waitlist', icon:'🗽', color:'#6366f1', snippets:[
+    `I'm happy to inform you that you have provided all the documents.`,
+    `And we are currently waiting for the TLC approval so we can get you on the road.`,
+    `Since New York City currently has a waitlist.`,
+    `Once you get off the waitlist, you will be able to go online!`,
+    `And I can see that you have been waiting for this and we have all your documents on file so I will have it marked as urgent for you.`,
+    `So keep an eye on the app and your email once you are able to go online you will be notified.`,
+    `You are doing everything right, and we are excited to have you on the road soon!`
+  ]},
+  { id:'notreceiving', label:'Not Receiving Rides', icon:'🔕', color:'#a855f7', snippets:[
+    `Ok xxxx, I have checked your account and everything is working perfectly fine now and on the right track and you will receive ride requests as soon as possible`,
+    `And kindly keep in mind that there's nothing on our end that's preventing you from receiving rides.`,
+    `We take many factors into account when making matching decisions.`,
+    `This includes the distance between the rider's and driver's locations, driver ride preferences, and expected benefits and costs to drivers, riders, and Lyft.`,
+    `To increase the number of rides you receive kindly follow the following steps:\n- Make sure all filters (like destination mode or ride type) are turned off\n- Go closer to areas of high demand\n- Keep phone interactions to a minimum\n- Drive safely in accordance with local traffic laws and follow Lyft's Community Guidelines here: lft.to/scomm`
+  ]},
+  { id:'dmv', label:'DMV', icon:'🪪', color:'#ef4444', snippets:[
+    `Can you please provide me with a clear photo of your current license?`,
+    `I'm happy to inform you that I was able to get a DMV check done for you.`,
+    `I have great news for you, you have passed your DMV check!`,
+    `To summarize all the previous information and to save you valuable time`,
+    `And to make sure that we will be able to help you to move forward you will need to have your driving record updated.`,
+    `And rest assured that once you do, this will be reflected on the DMV's end within a week after fixing the issue with them`,
+    `We will do everything possible for you to rerun the DMV checks again on your account to make sure that you will be able to go online as soon as possible.`
+  ]},
+  { id:'payfare', label:'Payfare', icon:'💳', color:'#14b8a6', snippets:[
+    `To contact Payfare support team:\n1- tap on Help center\n2- Payouts and transactions\n3- payouts from Lyft\n4- Need more help\n5- choose any option\n6- contact Lyft direct`
+  ]},
+  { id:'appsteps', label:'App Steps', icon:'📱', color:'#f59e0b', snippets:[
+    `1. In the Lyft Driver app menu, tap on your profile photo\n2. Tap 'Driver Dashboard'\n3. Tap 'Vehicles'\n4. Tap 'Ride preferences'\n5. Select ride types`,
+    `- Locate the 'Vehicles and Devices' heading in the menu, and select the arrow.\n- Select 'Your vehicles' to see the list of vehicles on your account.\n- Select 'See details' and then locate the 'View documents' section under 'Manage car'\n- The 'to-do' section includes the items required to complete your application. Select the 'Background check consent' option to start your checks.`,
+    `1. Log into the Lyft Driver App and go to 'Account'\n2. Select 'Pay & Tax Info', then tap 'Set up weekly payouts.'\n3. Fill out the required fields.\n4. Tap 'Save.'`,
+    `While I want to help expedite the resolution, my review shows that your specific case is currently being handled and investigated by our specialized team.`
+  ]}
+];
+
+// ═══════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch(e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+};
+
+// ═══════════════════════════════════════════════
+// AGENT NAME
+// ═══════════════════════════════════════════════
+let agentName = store.get('douban_agent_name') || '';
+
+function applyName(text) {
+  if (!agentName) return text;
+  return text
+    .replace(/\bRaafat\b/g, agentName)
+    .replace(/I'm Raafat\b/g, `I'm ${agentName}`)
+    .replace(/this is Raafat\b/gi, `this is ${agentName}`);
+}
+
+function saveAgentName() {
+  const val = document.getElementById('nameInput').value.trim();
+  if (!val) return;
+  agentName = val;
+  store.set('douban_agent_name', val);
+  store.set('douban_last_seen', Date.now().toString());
+  document.getElementById('nameModal').style.display = 'none';
+  updateHeaderName();
+  if (selId) showSection(selId);
+}
+function promptChangeName() {
+  const i = document.getElementById('nameInput');
+  i.value = agentName;
+  document.getElementById('nameSaveBtn').disabled = !agentName;
+  document.getElementById('nameModal').style.display = 'flex';
+  setTimeout(() => i.focus(), 50);
+}
+function updateHeaderName() {
+  document.getElementById('agentNameDisplay').textContent = agentName || '...';
+  document.getElementById('agentAvatar').textContent = agentName ? agentName.charAt(0).toUpperCase() : '?';
+}
+
+// ═══════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════
+let selId = null;
+
+function renderNav() {
+  document.getElementById('navList').innerHTML = SECTIONS.map(s => `
+    <div class="nav-item${selId === s.id ? ' active' : ''}" onclick="showSection('${s.id}')">
+      <div class="nav-icon" style="background:${selId === s.id ? 'rgba(255,255,255,0.25)' : s.color + '22'}">${s.icon}</div>
+      <span>${esc(s.label)}</span>
+      <span class="nav-count">${s.snippets.length}</span>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+// CONTENT
+// ═══════════════════════════════════════════════
+function showSection(id) {
+  selId = id;
+  const s = SECTIONS.find(x => x.id === id);
+  const cards = s.snippets.map(t => {
+    const applied = applyName(t);
+    return `<div class="snip-card" onclick="copyCard(this)" data-text="${escAttr(applied)}" style="border-left-color:${s.color}55;">
+      <div class="snip-text">${esc(applied)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('contentBody').innerHTML = `
+    <div class="section-hdr">
+      <div class="section-icon" style="background:${s.color}22;">${s.icon}</div>
+      <div>
+        <div class="section-title">${esc(s.label)}</div>
+        <div class="section-count">${s.snippets.length} snippet${s.snippets.length !== 1 ? 's' : ''} · tap to copy</div>
+      </div>
+    </div>
+    <div class="snip-grid">${cards}</div>`;
+  document.querySelectorAll('.snip-card').forEach(c => {
+    c.style.borderLeftColor = s.color + '55';
+    c.onmouseenter = () => { c.style.borderLeftColor = s.color; c.style.borderColor = s.color; };
+    c.onmouseleave = () => { c.style.borderLeftColor = s.color + '55'; c.style.borderColor = 'var(--border)'; };
+  });
+  renderNav();
+  closeSidebar();
+}
+
+// ═══════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════
+function onSearch(q) {
+  if (!q.trim()) {
+    if (selId) showSection(selId);
+    else document.getElementById('contentBody').innerHTML = `<div class="welcome"><div class="big">💬</div><h2>Pick a section to get started</h2><p>Select any category from the sidebar<br>to instantly copy your snippets.</p></div>`;
+    return;
+  }
+  const lq = q.toLowerCase();
+  const results = [];
+  SECTIONS.forEach(s => s.snippets.forEach(t => {
+    if (applyName(t).toLowerCase().includes(lq)) results.push({ text: t, label: s.label, icon: s.icon, color: s.color });
+  }));
+  if (!results.length) {
+    document.getElementById('contentBody').innerHTML = `<div class="no-results"><div class="big">🔍</div><p>No snippets found for "<strong>${esc(q)}</strong>"</p></div>`;
+    return;
+  }
+  document.getElementById('contentBody').innerHTML = results.map(r => {
+    const applied = applyName(r.text);
+    return `<div style="margin-bottom:8px">
+      <div class="path-tag">${r.icon} ${esc(r.label)}</div>
+      <div class="snip-card" onclick="copyCard(this)" data-text="${escAttr(applied)}" style="border-left-color:${r.color}55;">
+        <div class="snip-text">${hi(esc(applied), lq)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.snip-card').forEach((c, i) => {
+    const col = results[i]?.color;
+    if (!col) return;
+    c.style.borderLeftColor = col + '55';
+    c.onmouseenter = () => { c.style.borderLeftColor = col; c.style.borderColor = col; };
+    c.onmouseleave = () => { c.style.borderLeftColor = col + '55'; c.style.borderColor = 'var(--border)'; };
+  });
+}
+
+// ═══════════════════════════════════════════════
+// COPY
+// ═══════════════════════════════════════════════
+let toastTimer;
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+function copyCard(el) {
+  const text = el.dataset.text;
+  el.classList.add('flashing');
+  setTimeout(() => el.classList.remove('flashing'), 500);
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(showToast);
+  } else {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// MOBILE SIDEBAR
+// ═══════════════════════════════════════════════
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(t) { return t.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function hi(text, q) { return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<mark>$1</mark>'); }
+
+// ═══════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════
+let isDark   = store.get('douban_theme') === 'dark';
+let curColor = store.get('douban_color') || 'violet';
+
+function applyTheme() {
+  const html = document.documentElement;
+  html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  if (curColor === 'violet') html.removeAttribute('data-color');
+  else html.setAttribute('data-color', curColor);
+  const track = document.getElementById('darkTrack');
+  if (track) track.classList.toggle('on', isDark);
+  document.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', s.dataset.color === curColor));
+}
+function toggleTheme() { isDark = !isDark; store.set('douban_theme', isDark ? 'dark' : 'light'); applyTheme(); }
+function setColor(c) { curColor = c; store.set('douban_color', c); applyTheme(); }
+function toggleThemePanel(e) { e.stopPropagation(); document.getElementById('themePanel').classList.toggle('open'); }
+document.addEventListener('click', () => document.getElementById('themePanel')?.classList.remove('open'));
+document.getElementById('themePanel')?.addEventListener('click', e => e.stopPropagation());
+
+// ═══════════════════════════════════════════════
+// DOCK
+// ═══════════════════════════════════════════════
+(function() {
+  const dock = document.getElementById('dock');
+  if (!dock) return;
+  const BASE = 34, MAX = 58, SPREAD = 90;
+  function ease(t) { return t * t * (3 - 2 * t); }
+  dock.addEventListener('mousemove', e => {
+    dock.querySelectorAll('.dock-item').forEach(item => {
+      const r = item.getBoundingClientRect();
+      const dist = Math.abs(e.clientX - (r.left + r.width / 2));
+      const size = BASE + ease(Math.max(0, 1 - dist / SPREAD)) * (MAX - BASE);
+      item.style.width = size + 'px';
+      item.style.height = size + 'px';
+    });
+  });
+  dock.addEventListener('mouseleave', () => {
+    dock.querySelectorAll('.dock-item').forEach(item => {
+      item.style.width = BASE + 'px';
+      item.style.height = BASE + 'px';
+    });
+  });
+  dock.querySelectorAll('.dock-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.remove('dock-bounce');
+      void item.offsetWidth;
+      item.classList.add('dock-bounce');
+      item.addEventListener('animationend', () => item.classList.remove('dock-bounce'), { once: true });
+    });
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+applyTheme();
+updateHeaderName();
+renderNav();
+(function() {
+  const EIGHT_HOURS = 8 * 60 * 60 * 1000;
+  const lastSeen = parseInt(store.get('douban_last_seen') || '0', 10);
+  const freshSession = !agentName || (Date.now() - lastSeen > EIGHT_HOURS);
+  if (freshSession) {
+    const input = document.getElementById('nameInput');
+    const btn   = document.getElementById('nameSaveBtn');
+    input.value  = agentName;
+    btn.disabled = !agentName;
+    document.getElementById('nameModal').style.display = 'flex';
+    setTimeout(() => input.focus(), 100);
+  } else {
+    document.getElementById('nameModal').style.display = 'none';
+  }
+})();
+</script>
+</body>
+</html>

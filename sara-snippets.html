@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sara Snippets</title>
+  <style>
+    :root {
+      --accent:  #8b5cf6;
+      --accent2: #ec4899;
+      --grad:    linear-gradient(135deg, #8b5cf6, #ec4899);
+      --bg:      #faf5ff;
+      --surface: #ffffff;
+      --border:  #ede9fe;
+      --text:    #1e1040;
+      --muted:   #7c6a9a;
+      --shadow:  0 4px 20px rgba(139,92,246,0.1);
+      --sidebar-w: 245px;
+    }
+    /* ── COLOR THEMES ── */
+    [data-color="ocean"]  { --accent:#0ea5e9; --accent2:#06b6d4; --grad:linear-gradient(135deg,#0ea5e9,#06b6d4); --bg:#f0f9ff; --border:#bae6fd; --muted:#5b8fa8; --shadow:0 4px 20px rgba(14,165,233,0.1); }
+    [data-color="sunset"] { --accent:#f97316; --accent2:#ef4444; --grad:linear-gradient(135deg,#f97316,#ef4444); --bg:#fff7ed; --border:#fed7aa; --muted:#a87050; --shadow:0 4px 20px rgba(249,115,22,0.1); }
+    [data-color="forest"] { --accent:#10b981; --accent2:#059669; --grad:linear-gradient(135deg,#10b981,#059669); --bg:#f0fdf4; --border:#bbf7d0; --muted:#507a60; --shadow:0 4px 20px rgba(16,185,129,0.1); }
+    [data-color="rose"]   { --accent:#f43f5e; --accent2:#fb7185; --grad:linear-gradient(135deg,#f43f5e,#fb7185); --bg:#fff1f2; --border:#fecdd3; --muted:#a05060; --shadow:0 4px 20px rgba(244,63,94,0.1); }
+    /* ── DARK MODE ── */
+    [data-theme="dark"]                { --bg:#0c0a18; --surface:#160f2e; --border:#2a1f4a; --text:#e8e0ff; --muted:#7060a0; --shadow:0 4px 20px rgba(0,0,0,0.4); }
+    [data-theme="dark"][data-color="ocean"]  { --bg:#020d18; --surface:#0a1e2e; --border:#0d3050; --muted:#4080a0; }
+    [data-theme="dark"][data-color="sunset"] { --bg:#18080a; --surface:#2a120c; --border:#502010; --muted:#a06040; }
+    [data-theme="dark"][data-color="forest"] { --bg:#02100a; --surface:#0a2018; --border:#0d4025; --muted:#40806a; }
+    [data-theme="dark"][data-color="rose"]   { --bg:#18080e; --surface:#2a0f18; --border:#501030; --muted:#a05070; }
+    [data-theme="dark"] mark { background: rgba(139,92,246,0.3); color: var(--text); }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* ── HEADER ── */
+    .hdr {
+      background: var(--grad); color: white;
+      padding: 11px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 4px 24px rgba(139,92,246,0.45);
+    }
+    .hdr-left { display: flex; align-items: center; gap: 12px; }
+    .hdr h1 { font-size: 1.08rem; font-weight: 800; letter-spacing: -0.01em; }
+    .hdr-sub { font-size: 0.62rem; color: rgba(255,255,255,0.6); margin-top: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .burger { background: none; border: none; color: white; cursor: pointer; font-size: 1.25rem; display: none; padding: 4px; }
+    .theme-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; font-size: 1rem; padding: 5px 10px; border-radius: 20px; transition: all 0.18s; line-height: 1; }
+    .theme-btn:hover { background: rgba(255,255,255,0.35); }
+    /* theme picker */
+    .theme-picker-wrap { position: relative; }
+    .palette-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; font-size: 1rem; padding: 5px 10px; border-radius: 20px; transition: all 0.18s; line-height: 1; }
+    .palette-btn:hover { background: rgba(255,255,255,0.35); }
+    .theme-panel {
+      position: absolute; top: calc(100% + 10px); right: 0;
+      background: #1a1a2e; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 14px 16px;
+      display: none; flex-direction: column; gap: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      z-index: 500; min-width: 160px;
+    }
+    .theme-panel.open { display: flex; }
+    .theme-panel-label { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+    .swatches { display: flex; gap: 8px; align-items: center; }
+    .swatch {
+      width: 22px; height: 22px; border-radius: 50%;
+      cursor: pointer; border: 2px solid transparent;
+      transition: transform 0.15s, box-shadow 0.15s;
+      flex-shrink: 0;
+    }
+    .swatch:hover { transform: scale(1.15); }
+    .swatch.active { box-shadow: 0 0 0 2px #1a1a2e, 0 0 0 4px white; }
+    .dark-toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .dark-toggle span { font-size: 0.78rem; color: rgba(255,255,255,0.7); font-weight: 600; }
+    .toggle-track {
+      width: 38px; height: 20px; border-radius: 10px;
+      background: rgba(255,255,255,0.15); position: relative;
+      cursor: pointer; transition: background 0.2s; flex-shrink: 0;
+    }
+    .toggle-track.on { background: rgba(255,255,255,0.4); }
+    .toggle-thumb {
+      position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: white; transition: left 0.2s;
+    }
+    .toggle-track.on .toggle-thumb { left: 20px; }
+    .agent-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25); border-radius: 24px; padding: 5px 14px 5px 5px; cursor: pointer; transition: all 0.18s; }
+    .agent-badge:hover { background: rgba(255,255,255,0.3); }
+    .av { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .aname { font-size: 0.82rem; font-weight: 600; color: white; }
+    .ahint { font-size: 0.6rem; color: rgba(255,255,255,0.6); }
+
+    /* ── BODY ── */
+    .body { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { width: var(--sidebar-w); flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; transition: transform 0.25s ease; }
+    .sidebar-search { padding: 12px; border-bottom: 1px solid var(--border); }
+    .sidebar-search input {
+      width: 100%; padding: 9px 12px 9px 34px;
+      border: 2px solid var(--border); border-radius: 20px;
+      font-size: 0.83rem; outline: none; color: var(--text);
+      background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' fill='%238b5cf6' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E") no-repeat 12px center;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .sidebar-search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
+    .sidebar-search input::placeholder { color: var(--muted); }
+
+    .nav-list { flex: 1; overflow-y: auto; padding: 8px 10px 20px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px; border-radius: 12px;
+      cursor: pointer; transition: all 0.15s;
+      margin-bottom: 2px; font-size: 0.86rem; font-weight: 600; user-select: none;
+    }
+    .nav-item:hover { background: rgba(139,92,246,0.09); color: var(--accent); }
+    .nav-item.active { background: var(--grad); color: white; box-shadow: 0 4px 14px rgba(139,92,246,0.3); }
+    .nav-icon { width: 26px; height: 26px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; transition: background 0.15s; }
+    .nav-item.active .nav-icon { background: rgba(255,255,255,0.25); }
+    .nav-count { margin-left: auto; font-size: 0.65rem; font-weight: 700; background: var(--bg); color: var(--muted); padding: 2px 7px; border-radius: 10px; flex-shrink: 0; }
+    .nav-item.active .nav-count { background: rgba(255,255,255,0.25); color: white; }
+
+    /* ── CONTENT ── */
+    .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .content-body { flex: 1; overflow-y: auto; padding: 22px 24px 40px; display: flex; flex-direction: column; }
+
+    .section-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+    .section-icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+    .section-title { font-size: 1.12rem; font-weight: 800; letter-spacing: -0.01em; }
+    .section-count { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── SNIPPET CARDS ── */
+    .snip-grid { display: flex; flex-direction: column; gap: 9px; }
+    .snip-card {
+      padding: 13px 16px 13px 20px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer; transition: all 0.16s;
+      background: var(--surface); position: relative; overflow: hidden;
+    }
+    .snip-card::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px; border-radius: 4px 0 0 4px;
+    }
+    .snip-card:hover { transform: translateX(5px); box-shadow: var(--shadow); }
+    .snip-card:hover::after { content: '📋'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; opacity: 0.45; }
+    .snip-card.flashing { border-color: #10b981 !important; background: rgba(16,185,129,0.07) !important; }
+    .snip-text { font-size: 0.88rem; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
+
+    /* ── WELCOME ── */
+    .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--muted); }
+    .welcome .big { font-size: 4rem; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .welcome h2 { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .welcome p { font-size: 0.87rem; line-height: 1.7; }
+
+    /* ── SEARCH RESULTS ── */
+    .path-tag { font-size: 0.68rem; font-weight: 700; color: var(--muted); background: var(--bg); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); display: inline-block; margin-bottom: 8px; letter-spacing: 0.02em; }
+    .no-results { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .no-results .big { font-size: 2.8rem; margin-bottom: 12px; }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--grad); color: white; padding: 10px 28px; border-radius: 30px; font-weight: 700; font-size: 0.87rem; opacity: 0; transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1); z-index: 600; pointer-events: none; white-space: nowrap; box-shadow: 0 6px 24px rgba(139,92,246,0.4); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+    .modal-box { background: var(--surface); border-radius: 24px; padding: 36px 32px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.25), 0 0 0 1px var(--border); }
+    .modal-box .big-icon { font-size: 3rem; margin-bottom: 14px; }
+    .modal-box h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
+    .modal-box p { font-size: 0.85rem; color: var(--muted); margin-bottom: 22px; line-height: 1.5; }
+    .modal-box input { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 14px; font-size: 0.98rem; outline: none; text-align: center; margin-bottom: 12px; background: var(--bg); color: var(--text); transition: border-color 0.2s, box-shadow 0.2s; }
+    .modal-box input::placeholder { color: var(--muted); }
+    .modal-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(139,92,246,0.15); }
+    .modal-box button { width: 100%; padding: 13px; background: var(--grad); color: white; border: none; border-radius: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(139,92,246,0.35); }
+    .modal-box button:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,92,246,0.45); }
+    .modal-box button:disabled { background: var(--border); color: var(--muted); cursor: default; box-shadow: none; transform: none; opacity: 1; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+    .shake { animation: shake 0.35s ease; }
+
+    /* ── MOBILE ── */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 250; }
+    @media (max-width: 640px) {
+      .burger { display: block; }
+      .sidebar { position: fixed; top: 0; left: 0; bottom: 0; z-index: 260; transform: translateX(-100%); width: 280px; }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .dock-wrapper { display: none; }
+    }
+
+    /* ── DOCK ── */
+    .dock-wrapper { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 2000; pointer-events: none; }
+    .dock {
+      display: flex; align-items: center; justify-content: center;
+      gap: 15px; padding: 8px 24px;
+      background: #080808; border-radius: 30px;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 0 4px rgba(0,0,0,0.5), 0 15px 30px rgba(0,0,0,0.8), 0 0 20px rgba(139,92,246,0.5);
+      pointer-events: auto; overflow: visible; max-width: 90vw; flex-wrap: wrap;
+    }
+    .dock-item {
+      width: 34px; height: 34px; background: transparent; border: none;
+      cursor: pointer; padding: 0; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: width 0.07s ease-out, height 0.07s ease-out;
+      position: relative; z-index: 5;
+    }
+    .dock-item img { width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+    .dock-item:active { filter: brightness(0.8); }
+    .dock-item[data-tooltip]::before {
+      content: attr(data-tooltip);
+      position: absolute; bottom: calc(100% + 10px); left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: rgba(8,8,8,0.92); color: white;
+      padding: 5px 11px; border-radius: 7px;
+      font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s, transform 0.18s;
+      border: 1px solid rgba(255,255,255,0.1); letter-spacing: 0.02em;
+    }
+    .dock-item[data-tooltip]:hover::before { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .dock-bounce { animation: dockBounce 0.4s cubic-bezier(0.36,0.07,0.19,0.97); }
+    @keyframes dockBounce { 0%,100% { transform: translateY(0); } 30% { transform: translateY(-14px); } 60% { transform: translateY(-4px); } }
+  </style>
+</head>
+<body>
+
+<div class="modal-overlay" id="nameModal">
+  <div class="modal-box">
+    <div class="big-icon">✨</div>
+    <h2>Hey! What's your name?</h2>
+    <p>We'll swap placeholders with your name automatically so you're always ready to go.</p>
+    <input type="text" id="nameInput" placeholder="e.g. Sara" maxlength="40"
+      oninput="document.getElementById('nameSaveBtn').disabled=!this.value.trim()"
+      onkeydown="if(event.key==='Enter')saveAgentName()">
+    <button id="nameSaveBtn" onclick="saveAgentName()" disabled>Let's go! 🚀</button>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <button class="burger" onclick="toggleSidebar()">☰</button>
+    <div>
+      <h1>✨ Sara Snippets</h1>
+      <div class="hdr-sub">Quick copy · Support flow</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="theme-picker-wrap">
+      <button class="palette-btn" onclick="toggleThemePanel(event)">🎨</button>
+      <div class="theme-panel" id="themePanel">
+        <div class="theme-panel-label">Color</div>
+        <div class="swatches">
+          <div class="swatch" data-color="violet" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)" title="Violet" onclick="setColor('violet')"></div>
+          <div class="swatch" data-color="ocean"  style="background:linear-gradient(135deg,#0ea5e9,#06b6d4)" title="Ocean"  onclick="setColor('ocean')"></div>
+          <div class="swatch" data-color="sunset" style="background:linear-gradient(135deg,#f97316,#ef4444)" title="Sunset" onclick="setColor('sunset')"></div>
+          <div class="swatch" data-color="forest" style="background:linear-gradient(135deg,#10b981,#059669)" title="Forest" onclick="setColor('forest')"></div>
+          <div class="swatch" data-color="rose"   style="background:linear-gradient(135deg,#f43f5e,#fb7185)" title="Rose"   onclick="setColor('rose')"></div>
+        </div>
+        <div class="theme-panel-label">Mode</div>
+        <div class="dark-toggle" onclick="toggleTheme()">
+          <span id="darkLabel">Dark mode</span>
+          <div class="toggle-track" id="darkTrack"><div class="toggle-thumb"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="agent-badge" onclick="promptChangeName()">
+      <div class="av" id="agentAvatar">?</div>
+      <div>
+        <div class="aname" id="agentNameDisplay">...</div>
+        <div class="ahint">tap to change</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="body">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-search">
+      <input type="text" id="sideSearch" placeholder="Search snippets..." oninput="onSearch(this.value)" autocomplete="off">
+    </div>
+    <div class="nav-list" id="navList"></div>
+  </nav>
+  <div class="content">
+    <div class="content-body" id="contentBody">
+      <div class="welcome">
+        <div class="big">💬</div>
+        <h2>Pick a section to get started</h2>
+        <p>Select any category from the sidebar<br>to instantly copy your snippets.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Copied!</div>
+
+<div class="dock-wrapper">
+  <div class="dock" id="dock">
+    <div class="dock-item" data-tooltip="US Compliance" onclick="window.open('https://docs.google.com/document/d/14tD7AHvP6H_B3vSVA6h032LXZXmOesRYSdpP1f_6KUU/edit?tab=t.iah0hpoq3hm9','_blank')"><img src="https://drive.google.com/thumbnail?id=1QCd1II7UR2mCGFdzPFt9uBj_cJsF_ZoL&sz=w1000" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="Canada Compliance" onclick="window.open('https://docs.google.com/document/d/1uVodZwHy9CN5FVjOqvFBNmAJEK1jW4vzjK8_s5tG1vM/edit?tab=t.0','_blank')"><img src="https://drive.google.com/thumbnail?id=18BocyyO022oNBB0z7R6Ccvmgjj9EkgGX&sz=w1000" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="Compass" onclick="window.open('https://tom.lyft.net/compass','_blank')"><img src="https://lh3.googleusercontent.com/rd-d/ALs6j_HK8-dRI8DMhGYv_9coetXdrqwOnYh_QNvG2-1HAu14hoVFNQz92rkq7snZFCtdbGO574QA6t7QLDrHczMZh_5nFBG9iYmx4TfnqSArawsx2X4_UIzHPoqaFh_seq5pxD05nWIcTZGtnrypgmh9uTgk05GesfBbzHtgRqZ1jwv6TAe_14mh1mHLKNhgkgPv3L5ltScjVRE6ef2QvmR6BKzN3Oszms2WdFrw07hyl9taTVPCDQqQV8oDllNq4IOrzPgduo-YeHf0RUti_GHvuBuuL31Z9yTa0hqlxC7NZAFEAPNldIHxk7CzXLBrWS_lG5dAL4xQh1cfxdi5NUbIl7_L5qvNe3GlIGucCUeMqSmNpllI0AliheMGUgVQXNOao5kpJ2f0HFEOs6Ovx3mu70Fx5wTvvofGuzujKEqw4ZXHVRDlNNiJezzAb6EQ4iHgySwLgkK0hrgUka9KXGaY1tjToCsSg3vq-lrrCLETp00Cp2HWMXxXjUMNXeos87i9IEPS5HTLlXsUKzdpAdJoSJxlSF6E5EdDKjAFrgrLDB5nBGf7yr2ZrFPlHUNO5y06NvE3owQBpvZLjufbL9erpXOAU177uyrHTGmGiRw22u2NjEH8Bk2zi0pTtZbtOPX3bl2jiSer2uwS2_2R2WHm6uikAg1qTy_kvp2y8d2D9Va5G2eohvmg2i583ytT7R9gfqPLI5QFBejEgsSlE8VkweAkQxp38i1WoOwWLrdnFvlhi9s2F8OnhMY5Iv5HORk3-SD5R1_ytau6K2SXTiV79XNtdt049m2zhw1kabv1friHowuvdrF4DPqoAvIG9ig0e8oFax4137Q0GOgOjqc4D41Au4_bbxSAPS0z9UMYnV0IKXV4fMCMpaQxB2hk3V2VbTCks_lnk9boZlCskoqjrDoxbN9NooOuK3Aj32y51u_rKEgASLmhY88BqYqw7MqGOb6sZ62OLRrwQtTpXtMoHGr4gz7ikOD1PAVI9c8AYFE5d4K5rMfHmyH5Xgo4ca1K1Hf_XuPx1R3nh9kQvQRgVOlLUNkC-C95jSHforXo2gidhM2HPPuvulrsXe5ZBbM90ISKf-49-MU6lI19JcunpdFT=s16383-w100?authuser=0"></div>
+    <div class="dock-item" data-tooltip="Driver App" onclick="window.open('https://docs.google.com/document/d/1h7XTADbcChCU9Q1Y8aQUio0JE9yEea0QemocVH6PjP8/edit?tab=t.0','_blank')"><img src="https://drive.google.com/thumbnail?id=1FciYKTc_p27SGZcXVFnTSztvKmidvn5z&sz=w1001" onerror="this.src='https://drive.google.com/thumbnail?id=1vB8QnLX53rhc-BKHZJIJHoqgI4x9_szu&sz=w1000'"></div>
+    <div class="dock-item" data-tooltip="BKN Compliance" onclick="window.open('https://docs.google.com/document/d/1CHvHU23PQiFQ7suFtsPq5BF3E9vwqnTJ0v9d1LO7SJk/edit?tab=t.0','_blank')"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle'%3E%F0%9F%97%BD%3C/text%3E%3C/svg%3E"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// FAVICON
+// ═══════════════════════════════════════════════
+(function(){
+  const l = document.createElement('link');
+  l.rel = 'icon'; l.type = 'image/svg+xml';
+  l.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>";
+  document.head.appendChild(l);
+})();
+
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const SECTIONS = [
+  { id:'greeting', label:'Greeting', icon:'⭐', color:'#f59e0b', snippets:[
+    `Hello, Thank you for contacting Lyft support, This is X, It will be my pleasure to assist you today.`,
+    `Hello, Thank you for contacting Lyft support and thank you for being a X driver. This is X, It will be my pleasure to assist you today.`,
+    `Allow me a moment please to review the previous conversation`,
+    `I hope that you are doing great!`,
+    `Could you please walk me through what happened exactly?`,
+    `Can you please elaborate more about your concern so I can help you?`,
+    `Hello, Thank you for replying back to us, This is X, I will be jumping on behalf of my colleague, it'll be my pleasure to continue looking into this for you.`,
+    `I want to thank you so much for being a X tier driver`,
+    `At this time we are facing a technical issue and our specialized team is working on it and once it got solved you will get notified in your email.`,
+    `First of all, I'm really sorry about the long wait time, We are facing a huge number of chats today, But I can assure you I will do my best to help.`
+  ]},
+  { id:'empathy', label:'Empathy', icon:'😊', color:'#ec4899', snippets:[
+    `I'm really sorry to hear that, I will check that for you right away and I can assure you I will do my best.`,
+    `I understand your concerns regarding the warning you received. We appreciate your efforts and want to ensure your experience with Lyft is positive.\nRest assured, I'll review your case carefully and I will explain to you the reason why you've received that warning`,
+    `I'm really sorry to hear that you can't go online, I will check that for you right away and I can assure you I will do my best.`,
+    `I understand how important this is to you and appreciate your patience during this process.`,
+    `This is definitely not the experience we wanted you to have.`,
+    `I hope you can accept my apology about the hassle that you had to go through.`,
+    `We are always raising a flag to our managerial team.`,
+    `That's sounds really hard, I really apologize that we made you feel like this`,
+    `Honestly, I would definitely feel the same if this happened to me.`,
+    `We want to ensure a better experience with Lyft so I will do my best to assist you regarding your concern.`,
+    `I totally understand how you're feeling right now so please rest assured I'm on your side and I will make sure it's sorted out`,
+    `On behalf of Lyft please accept our sincere apology as we care the most about your experience more than anything`,
+    `And please be assured if it's by my hand I won't hesitate to solve it now.`,
+    `I completely understand your expectation for a quick resolution, and I assure you that if there were anything further I could do on my end, I would absolutely take action to help.`,
+    `Your case has been flagged as urgent, meaning you'll receive your email within the next few hours. Please note that replying to this chat may delay your case because a new ticket might be opened for you.`
+  ]},
+  { id:'ar', label:'A&R', icon:'🙂', color:'#14b8a6', snippets:[
+    `Rest assured I'll do my best to assist you for today.`,
+    `I will be more than happy to check your application and update you, I can assure you I will do my best.`,
+    `I understand that you are contacting us about your`,
+    `Let me look into this for you and I will do my best to help you.`,
+    `I understand how important this is for you, And I will definitely make sure it's sorted out.`
+  ]},
+  { id:'hold', label:'Hold & Refresh Hold', icon:'⏳', color:'#3b82f6', snippets:[
+    `If you don't mind I'll need 2 minutes to check that and I will be right back.`,
+    `Could you please allow me 2 minutes on hold to investigate in your account, I'll be back?`,
+    `Could you please allow me 2 minutes on hold to check the ride for you and I'll be back?`,
+    `Thank you so much for holding, if you don't mind to allow me more 2 minutes, I'm still checking and I will be right back.`,
+    `If you don't mind to allow me more time, I'm still investigating.`,
+    `I'm very sorry for taking too long of your time, however I'm making sure that everything is perfect on your account.`
+  ]},
+  { id:'afterhold', label:'After Hold', icon:'⌛', color:'#6366f1', snippets:[
+    `Thank you so much for your patience, we appreciate your time!`,
+    `Thank you so much for staying connected, I appreciate your time!`,
+    `Thank you for your patience and sorry for any delay, I've double checked and I found that`
+  ]},
+  { id:'further', label:'Further Assistance', icon:'🚥', color:'#f97316', snippets:[
+    `On top of that, is there anything else you'd like me to assist you with today? Just let me know and it'd be a huge pleasure for me.`,
+    `It was a pleasure assisting you today, Is there any other question or any other thing that I can help you with?`,
+    `I hope I have fully answered your questions, that the information I provided has been clear 😊`,
+    `I hope I managed to give you the expected outcome of today's chat 😊`,
+    `I hope I was able to explain that for you and I know that I didn't resolve your issue 100%, but I tried even if it's a little bit, and I appreciate your understanding!`,
+    `Is there anything else would you like me to help you with?`
+  ]},
+  { id:'closure', label:'Closure', icon:'👋', color:'#10b981', snippets:[
+    `Thank you so much for contacting Lyft have a great day and drive safe! 👋`,
+    `We sincerely appreciate your understanding in this matter. Please feel free to reach out to us with any questions you may have. Have a pleasant day!`,
+    `Thanks for being such an important part of our Community, have a lovely rest of your day and stay safe! 🤩`,
+    `Wishing you many smooth, 5-star rides ahead! Thank you for driving with Lyft! ⭐️`,
+    `We're excited to see you on the road with Lyft! ✨`,
+    `I hope I was able to assist you today, feel free to contact us back whenever you need our support, we're always at your service.`
+  ]},
+  { id:'drop', label:'Drop Procedures', icon:'🤐', color:'#64748b', snippets:[
+    `Just to confirm, are we still connected?`,
+    `I don't mean to rush you, Are you still there?`,
+    `I haven't heard from you in a while, I want to make sure that we are still connected?`,
+    `I still can't get a response from you, Please do not hesitate to chat with us again If you have more questions or need additional assistance.`,
+    `As much as I wanted to help you with this, I don't hear any response from you for a while. I'll leave this chat session open so that you can reply once you're available. Thank you for using Lyft.`,
+    `It looks like you are busy now. Please feel free to respond to this message within 24 hours so that we can pick up where we left off.`,
+    `Apparently you are having a ride at the moment so I'm ending this chat at the moment, then you can feel free to response again within 24 hours so that we can assist from where we left off.`
+  ]},
+  { id:'transfer', label:'Transfer', icon:'🔀', color:'#a855f7', snippets:[
+    `I'm really sorry for taking this long time to solve the issue, I tried my best and I found that we need to escalate this to a specialized team.`,
+    `I will transfer the chat to a specialized team and I can assure you they will do the best to help you.`,
+    `Please refrain from replying to this interaction to avoid it from reopening, so the specialized team can assist you.`
+  ]},
+  { id:'call', label:'Driver Requested a Call', icon:'📞', color:'#ec4899', snippets:[
+    `I really wish I could call, but there is no option for me, however I will do my best to help you in the chat.`
+  ]},
+  { id:'underpaid', label:'Underpaid Single Ride', icon:'💰', color:'#eab308', snippets:[
+    `Thank you for your patience. I really appreciate your time! I have looked into the ride for you and I can confirm that, You have received the correct earnings that was shown before accepting the ride, With correct time and distance.`,
+    `I totally understand that you deserve to be compensated and you are already working hard to support yourself, However as long as the earnings are correct, We are no longer able to issue a bonus`,
+    `So nothing to worry about, I just documented your feedback about the earnings`,
+    `I can assure you that we take this kind of reports very seriously, We will prevent this from happening again.`,
+    `I totally understand how important this is for you and you are already working hard to support yourself, So you definitely deserve that, That's why I sent your feedback to make the service better for you.`
+  ]},
+  { id:'bonus', label:'Bonus SLA', icon:'🤑', color:'#059669', snippets:[
+    `The bonus should be reflected in a couple of minutes but maximum it could take 5 business days`
+  ]},
+  { id:'scheduled', label:'Scheduled Ride Issue', icon:'📍', color:'#0ea5e9', snippets:[
+    `I looked into the ride for you and I can see that before the ride was cancelled we were unable to determine your location.`,
+    `App issues can happen when your phone is overtasked, or your service provider's data is limited, However it's an exception for you, I applied a $10 cancel fee on your account, You would see it within 5 business days but usually a couple of minutes.`
+  ]},
+  { id:'idv', label:'ID Verification Failed', icon:'🪪', color:'#7c3aed', snippets:[
+    `As I know how worried you are regarding your account, I made sure to carefully yet quickly investigate your account to avoid wasting your time.`,
+    `And upon checking, I could see that all is set from your side since you have provided all of the needed documents, thank you so much for your efforts!`,
+    `Thank you for your patience while we complete the ID verification process. We understand how eager you are to get started, and we truly appreciate your commitment to joining Lyft.\nVerifying IDs is an important step to ensure the security of our platform, and we're working hard to get this completed as soon as possible`,
+    `Now it's our turn to validate this information and documents that you've provided.`,
+    `So, everything is done from your side, now we will work on your account to get it ready to go online!`,
+    `Just to clarify that, your account status will be on hold for 3 months, until we finish the process to get your account ready to go online.`,
+    `Stay tuned for more exciting opportunities and rewards as you continue your journey with us. We're thrilled to have you onboard and can't wait to see you thrive!`,
+    `All set from your side, it's just a matter of time, don't worry at all.`
+  ]},
+  { id:'bgc', label:'BGC Pending', icon:'🔍', color:'#06b6d4', snippets:[
+    `I've taken a look at your account, and everything looks great on your end — you've already provided all the required documents, so thank you for taking the time to get everything submitted correctly. Nice work!`,
+    `Right now, the only thing still in progress is your background check. This is a completely normal part of the onboarding process, and it typically takes a few days to be completed`,
+    `The best part is that you don't need to do anything else. Once the background check is completed, the system will update automatically.`,
+    `You're really close, and I'm sure you'll be hitting the road very soon. 😊🙏`
+  ]},
+  { id:'age', label:'Age Requirement', icon:'🎂', color:'#ef4444', snippets:[
+    `I know how excited you are to be approved to drive with Lyft and hit the road. I am extremely sorry to hear that the app is not letting you in.\nKindly allow me to clarify that as per your region's regulations, drivers are not allowed to hit the road unless they are 25 years old or older.\nHowever, The good news is that you are only 2 months away from being approved to drive with Lyft. We advise you to start preparing your vehicle's documents and requirements so that you could be ready by next month. We will be waiting for you to join our family and we are sure you are gonna be one of our best drivers in no time!`
+  ]},
+  { id:'tip', label:'Tip / Earnings Not Received', icon:'💸', color:'#84cc16', snippets:[
+    `The tip still not reflected because usually it takes 72hrs for the tips to be reflected.`,
+    `I know sometimes you will receive it right away, But usually it takes 72hrs,`,
+    `So I can assure you that nothing to worry about, I know how important this is for you and if you don't mind,`,
+    `I will make sure to keep an eye on your account to make sure that you will receive the tip as soon as possible.`
+  ]},
+  { id:'fee', label:'Lyft Internal Fee', icon:'📊', color:'#d97706', snippets:[
+    `The internal fees is maximum of 30% of passenger payment, after excluding the external fees`,
+    `So we ensure that you receive a minimum of 70% of passenger payment, after excluding the external fees`,
+    `If by the end of the week your earnings are less than 70%, you will receive an adjustment`
+  ]},
+  { id:'deactivation', label:'Deactivation Appeal', icon:'🔴', color:'#dc2626', snippets:[
+    `I understand how important this is for you to get your account reactivated and I really wish I could do this right now for you, However we will need to escalate this so I escalated this to the proper team and they will do the best to help you reactivate your account.`,
+    `Please make sure to keep an eye on your email.`
+  ]},
+  { id:'bkn', label:'BKN Waitlist', icon:'🗽', color:'#6d28d9', snippets:[
+    `I completely understand how important it is for you to complete your application and start driving in New York City. That's why I carefully reviewed your account details to identify what's needed and how I can assist you further.`,
+    `I understand how hard this situation is, I can see you are on the waitlist since , And of course this is a very long time, and unacceptable.`,
+    `Kindly keep in mind that this is the TLC regulations and we are not in charge of this.`,
+    `I know how urgent you need to go online and hit the road.`,
+    `No worries at all, many drivers were facing the same issue and now hitting the road.`,
+    `Hopefully you will go online very soon.`,
+    `It won't be immediately, however, it will be as soon as possible.`,
+    `I do not want to give a certain time frame, as it may be changeable.`
+  ]},
+  { id:'legal', label:'Legal Macro', icon:'⚖️', color:'#6b7280', snippets:[
+    `I will be providing you with some legal declarations related to the XXX. It's important that you read these carefully, as they contain essential information about the next steps and why this is happening.`,
+    `I hope this issue will be resolved as soon as possible so you can start with Lyft`
+  ]},
+  { id:'norides', label:'Not Receiving Rides', icon:'🤧', color:'#db2777', snippets:[
+    `And upon checking, I would like to reassure you that your account is perfectly working and there's nothing wrong with it.`,
+    `However I agree with you this is not normal.`,
+    `So I will do my best to help you get rides as soon as possible.`,
+    `First of all I will document your feedback and report about this. We take kinds of this reports very seriously,`,
+    `Let me also refresh your account to fix this issue so you can receive many rides and avoid this from happening,`,
+    `May I have your consent to refresh your account?`
+  ]},
+  { id:'dnr', label:'Do Not Rent List', icon:'🚫', color:'#f97316', snippets:[
+    `I checked your account carefully and I'm really sorry to inform you that *driver name*, you are currently not eligible to rent with us, However you are welcome to use your personal vehicle.`,
+    `I understand how important this is for you and I really wish I could help you start renting, So as a friendly advice, You can reach the rental provider location, I will be more than happy to help you find the nearest one.`
+  ]},
+  { id:'priority', label:'Priority Mode', icon:'⚡', color:'#8b5cf6', snippets:[
+    `I really appreciate your time! I understand how important to find the priority mode everyday, also I can see that you are working hard and I appreciate that, And I really wish I could help you receive it everyday,`,
+    `But at this time it's not available because it depends on some factors (region, time, driver) But nothing to worry about, You might find it tomorrow and also I will make sure to document your feedback regarding it.`
+  ]},
+  { id:'flags', label:'Flags', icon:'⚠️', color:'#f59e0b', snippets:[
+    `I know how it feels like your driving is being questioned,`,
+    `I checked your account carefully, I know how important this is for you so nothing to worry about, This flag was related to a feedback, and it won't affect your account at all,`,
+    `I know how much effort it takes to drive and support yourself, And you are working hard to be 5 stars.`,
+    `But I can assure you that, The rating is the average of the last 100 rides.`,
+    `So once you get more rides it will be disappeared.`,
+    `And I can assure you that, I will document that it wasn't your fault at all.`,
+    `We'll email you a feedback summary weekly with rider feedback and flags every Wednesday.`
+  ]},
+  { id:'expressmatch', label:'Not Getting Express Match', icon:'✈️', color:'#0ea5e9', snippets:[
+    `I understand how important this is for you, and I appreciate the effort you're making by already being at the airport to receive the express match.`,
+    `You might not get the express match option because it's not available at the moment for you or in your region, However I documented your feedback about it,`,
+    `Rest assured I will do my best to explain to you what is happening.`,
+    `I carefully looked into your account details to identify the issue and clarify it for you. And upon checking, I would like to reassure you that your account is perfectly working and there's nothing wrong with it.`,
+    `However the express match is depending on the number of drivers inside the airport queue itself, So if there are enough number of drivers waiting in the queue the express match won't be available`,
+    `But you will receive it normally if there is a request, But because this is an important option for you I will do my best to make this available as soon as possible`
+  ]},
+  { id:'airportsusp', label:'Airport Suspension', icon:'🛫', color:'#ef4444', snippets:[
+    `I hear your concern about not being able to pick up from the airport. Please know this is a standard temporary step during a review, and my goal is to help you get through this as smoothly as possible`,
+    `I can imagine how stressful a sudden change like this is for your earnings. Rest assured, I will do my best to help you.`,
+    `As a friendly advice, I recommend to reach the airport and inform them that you have already fixed the issue and you are eligible to get the access again.`,
+    `Also if you have received an email about the deactivation, I recommend to reply to the email, And mention that you have fixed the issue successfully.`,
+    `Also you can still provide other rides. I'm here to support you in resolving this specific hold so you can.`
+  ]},
+  { id:'lowdemand', label:'Low Demand Area', icon:'📉', color:'#14b8a6', snippets:[
+    `I understand how important it is to be online and ready to work, and I appreciate your commitment. We want your experience to be smooth and rewarding.`,
+    `Upon checking on your account I can see that, It's working perfectly, So it's a matter of demand.`,
+    `To increase the number of rides you receive:\n- Make sure all filters (like destination mode or ride type) are turned off\n- Go closer to areas of high demand`,
+    `- Keep phone interactions to a minimum\n- Drive safely in accordance with local traffic laws and follow Lyft's Community Guidelines`,
+    `I will document your feedback and report about this. We take kinds of this reports very seriously,`
+  ]},
+  { id:'network', label:'Network Issue', icon:'📶', color:'#3b82f6', snippets:[
+    `I hear you and I know how it feels to be in a busy area and not receiving any pings.`,
+    `But I'm here to help you *Driver's name* Let's work together to get your connection back on track so you can get moving again.`,
+    `I appreciate your patience while we troubleshoot this. I know your time is valuable, and I want to make sure the app is working as hard as you are.`,
+    `Turn Airplane Mode ON for 5 seconds, then OFF.`,
+    `Make sure your Wi-Fi is turned OFF. If your phone tries to connect to a weak signal at a nearby shop, it will block your ride requests`,
+    `Log out of the app, restart your phone, and log back in.`
+  ]},
+  { id:'premium', label:'Premium Vehicle Eligibility', icon:'🚗', color:'#ec4899', snippets:[
+    `I'm really sorry to hear that you are not eligible for *Enter the ride type*`,
+    `I know you were looking forward to those higher-earning ride types to make the most of your time on the road.`,
+    `I checked our current list, and although your car is great, it isn't currently on the approved vehicle list for [Premium Type] in your specific city.`,
+    `You can check the list here https://www.lyft.com/driver/eligible-premium-vehicles`,
+    `Your feedback is important to me so I made sure to document it, So please make sure to keep an eye on the list, It will be added very soon.`,
+    `It looks like [Premium Type] isn't currently offered in your specific region. We constantly review market demand to see which ride types will be most profitable for drivers there`
+  ]},
+  { id:'fraud', label:'Flagged for Fraud', icon:'🚨', color:'#dc2626', snippets:[
+    `I know how important it is to have access to your earnings right away, especially after putting in the time and effort for that trip, I will do my best to help you and make this clear.`,
+    `I want to be clear: this doesn't mean you've done anything wrong.`,
+    `It's just a standard review to verify the ride details. My goal is to help get this cleared up so that money moves into your 'Available to Cash Out' balance as fast as possible`,
+    `I've noted this ride for an expedited review because I know how much you're counting on those funds. Thank you for your patience while we get this finalized for you.`
+  ]},
+  { id:'reduceaccess', label:'Reduce Access', icon:'📅', color:'#6366f1', snippets:[
+    `I understand how important scheduled rides are for planning your time. Access to scheduled rides can change when several scheduled rides aren't completed.`,
+    `A scheduled ride is counted as not completed if it's canceled before pickup, canceled after accepting, declined, missed, or if the app request comes through while you're offline.`,
+    `I completely understand why this situation feels discouraging, especially when scheduled rides are part of how you plan your time and earnings.\nI want you to know your experience is valid, and I'm here to support you through it.\nI want you to know your feedback is truly heard, Your perspective matters, and we value you bringing this to our attention.`
+  ]},
+  { id:'ptc', label:'PTC License', icon:'📋', color:'#06b6d4', snippets:[
+    `Thanks for your patience. Your PTC license application has already been submitted on Lyft's end.`,
+    `We totally understand you're eager to get online. Your PTC application has already been submitted on Lyft's end, and now we're just waiting for ML&S to finish their review and send the license.`,
+    `These usually don't take long, and as soon as ML&S approves it, it will automatically show up in your Lyft Driver app. Thanks for hanging in there — you're almost set!`,
+    `If you'd prefer not to wait, you can also switch your driving region to another GTA area like Mississauga, Brampton, Oakville, Burlington, Vaughan, Markham, and Richmond Hill, where a PTC license isn't required.`,
+    `You can update your region in the app and start driving right away. You've got options, and you're very close — you're doing great!`
+  ]},
+  { id:'rentaldeposit', label:'Rental Deposit', icon:'💳', color:'#10b981', snippets:[
+    `I completely understand why you're checking on the status of your rental deposit — waiting for money to come back is never ideal, and I'm glad you asked.`,
+    `Just to clarify how the process works, Lyft Express Drive rental deposits are generally refunded to your original payment method within 3 weeks after the rental return is finalized.`,
+    `The deposit is used to cover outstanding rental fees, tolls, damage, or cleaning fees. Deposits are typically refunded 5-7 business days after processing, That's why it may feel like it's taking a little longer.`,
+    `The refund is already moving through the system, and you don't need to do anything else at this point.`,
+    `I truly appreciate you sharing how you feel, and I want you to know your experience matters to me. I understand how important your deposit is and I completely understand why you want everything to move smoothly. Your patience means a lot, and I'm here to support you through this.`
+  ]}
+];
+
+// ═══════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch(e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+};
+
+// ═══════════════════════════════════════════════
+// AGENT NAME
+// ═══════════════════════════════════════════════
+let agentName = store.get('chat_agent_name') || '';
+
+function applyName(text) {
+  if (!agentName) return text;
+  return text
+    .replace(/This is X\b/g, `This is ${agentName}`)
+    .replace(/This is Sara\b/g, `This is ${agentName}`)
+    .replace(/\bThis is X,/g, `This is ${agentName},`);
+}
+
+function saveAgentName() {
+  const val = document.getElementById('nameInput').value.trim();
+  if (!val) return;
+  agentName = val;
+  store.set('chat_agent_name', val);
+  store.set('chat_last_seen', Date.now().toString());
+  document.getElementById('nameModal').style.display = 'none';
+  updateHeaderName();
+  if (selId) showSection(selId);
+}
+function promptChangeName() {
+  const i = document.getElementById('nameInput');
+  i.value = agentName;
+  document.getElementById('nameSaveBtn').disabled = !agentName;
+  document.getElementById('nameModal').style.display = 'flex';
+  setTimeout(() => i.focus(), 50);
+}
+function updateHeaderName() {
+  document.getElementById('agentNameDisplay').textContent = agentName || '...';
+  document.getElementById('agentAvatar').textContent = agentName ? agentName.charAt(0).toUpperCase() : '?';
+}
+
+// ═══════════════════════════════════════════════
+// NAV STATE
+// ═══════════════════════════════════════════════
+let selId = null;
+
+function renderNav() {
+  document.getElementById('navList').innerHTML = SECTIONS.map(s => `
+    <div class="nav-item${selId === s.id ? ' active' : ''}" onclick="showSection('${s.id}')"
+         style="${selId !== s.id ? '' : ''}">
+      <div class="nav-icon" style="background:${selId === s.id ? 'rgba(255,255,255,0.25)' : s.color + '22'}">${s.icon}</div>
+      <span>${esc(s.label)}</span>
+      <span class="nav-count">${s.snippets.length}</span>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+// CONTENT
+// ═══════════════════════════════════════════════
+function showSection(id) {
+  selId = id;
+  const s = SECTIONS.find(x => x.id === id);
+  const cards = s.snippets.map(t => {
+    const applied = applyName(t);
+    return `<div class="snip-card" onclick="copyCard(this)" data-text="${escAttr(applied)}"
+              style="--c:${s.color}; border-left-color:${s.color}33;">
+      <div class="snip-text">${esc(applied)}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('contentBody').innerHTML = `
+    <div class="section-hdr">
+      <div class="section-icon" style="background:${s.color}22;">${s.icon}</div>
+      <div>
+        <div class="section-title">${esc(s.label)}</div>
+        <div class="section-count">${s.snippets.length} snippet${s.snippets.length !== 1 ? 's' : ''} · tap to copy</div>
+      </div>
+    </div>
+    <div class="snip-grid">${cards}</div>`;
+
+  // update card ::before color via inline style workaround
+  document.querySelectorAll('.snip-card').forEach(c => {
+    c.style.setProperty('--c', s.color);
+    c.style.borderLeftColor = s.color + '55';
+    c.onmouseenter = () => { c.style.borderLeftColor = s.color; c.style.borderColor = s.color; };
+    c.onmouseleave = () => { c.style.borderLeftColor = s.color + '55'; c.style.borderColor = 'var(--border)'; };
+  });
+
+  renderNav();
+  closeSidebar();
+}
+
+// ═══════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════
+function onSearch(q) {
+  if (!q.trim()) {
+    if (selId) showSection(selId);
+    else document.getElementById('contentBody').innerHTML = `<div class="welcome"><div class="big">💬</div><h2>Pick a section to get started</h2><p>Select any category from the sidebar<br>to instantly copy your snippets.</p></div>`;
+    return;
+  }
+  const lq = q.toLowerCase();
+  const results = [];
+  SECTIONS.forEach(s => {
+    s.snippets.forEach(t => {
+      if (applyName(t).toLowerCase().includes(lq))
+        results.push({ text: t, label: s.label, icon: s.icon, color: s.color });
+    });
+  });
+  if (!results.length) {
+    document.getElementById('contentBody').innerHTML = `<div class="no-results"><div class="big">🔍</div><p>No snippets found for "<strong>${esc(q)}</strong>"</p></div>`;
+    return;
+  }
+  document.getElementById('contentBody').innerHTML = results.map(r => {
+    const applied = applyName(r.text);
+    return `<div style="margin-bottom:8px">
+      <div class="path-tag">${r.icon} ${esc(r.label)}</div>
+      <div class="snip-card" onclick="copyCard(this)" data-text="${escAttr(applied)}" style="border-left-color:${r.color}55;">
+        <div class="snip-text">${hi(esc(applied), lq)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.snip-card').forEach((c, i) => {
+    const col = results[i]?.color;
+    if (!col) return;
+    c.style.borderLeftColor = col + '55';
+    c.onmouseenter = () => { c.style.borderLeftColor = col; c.style.borderColor = col; };
+    c.onmouseleave = () => { c.style.borderLeftColor = col + '55'; c.style.borderColor = 'var(--border)'; };
+  });
+}
+
+// ═══════════════════════════════════════════════
+// COPY
+// ═══════════════════════════════════════════════
+let toastTimer;
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+function copyCard(el) {
+  const text = el.dataset.text;
+  el.classList.add('flashing');
+  setTimeout(() => el.classList.remove('flashing'), 500);
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(showToast);
+  } else {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// MOBILE SIDEBAR
+// ═══════════════════════════════════════════════
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(t) { return t.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function hi(text, q) { return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<mark>$1</mark>'); }
+
+// ═══════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════
+let isDark   = store.get('chat_theme') === 'dark';
+let curColor = store.get('chat_color') || 'violet';
+
+function applyTheme() {
+  const html = document.documentElement;
+  html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  if (curColor === 'violet') html.removeAttribute('data-color');
+  else html.setAttribute('data-color', curColor);
+  // update toggle
+  const track = document.getElementById('darkTrack');
+  if (track) track.classList.toggle('on', isDark);
+  // update active swatch
+  document.querySelectorAll('.swatch').forEach(s =>
+    s.classList.toggle('active', s.dataset.color === curColor));
+}
+function toggleTheme() {
+  isDark = !isDark;
+  store.set('chat_theme', isDark ? 'dark' : 'light');
+  applyTheme();
+}
+function setColor(c) {
+  curColor = c;
+  store.set('chat_color', c);
+  applyTheme();
+}
+function toggleThemePanel(e) {
+  e.stopPropagation();
+  document.getElementById('themePanel').classList.toggle('open');
+}
+document.addEventListener('click', () => document.getElementById('themePanel')?.classList.remove('open'));
+document.getElementById('themePanel')?.addEventListener('click', e => e.stopPropagation());
+
+// ═══════════════════════════════════════════════
+// DOCK
+// ═══════════════════════════════════════════════
+(function() {
+  const dock = document.getElementById('dock');
+  if (!dock) return;
+  const BASE = 34, MAX = 58, SPREAD = 90;
+  function ease(t) { return t * t * (3 - 2 * t); }
+  dock.addEventListener('mousemove', e => {
+    dock.querySelectorAll('.dock-item').forEach(item => {
+      const r = item.getBoundingClientRect();
+      const dist = Math.abs(e.clientX - (r.left + r.width / 2));
+      const size = BASE + ease(Math.max(0, 1 - dist / SPREAD)) * (MAX - BASE);
+      item.style.width = size + 'px';
+      item.style.height = size + 'px';
+    });
+  });
+  dock.addEventListener('mouseleave', () => {
+    dock.querySelectorAll('.dock-item').forEach(item => {
+      item.style.width = BASE + 'px';
+      item.style.height = BASE + 'px';
+    });
+  });
+  dock.querySelectorAll('.dock-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.remove('dock-bounce');
+      void item.offsetWidth;
+      item.classList.add('dock-bounce');
+      item.addEventListener('animationend', () => item.classList.remove('dock-bounce'), { once: true });
+    });
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+applyTheme(); // applies both dark/light + color
+updateHeaderName();
+renderNav();
+(function() {
+  const EIGHT_HOURS = 8 * 60 * 60 * 1000;
+  const lastSeen = parseInt(store.get('chat_last_seen') || '0', 10);
+  const freshSession = !agentName || (Date.now() - lastSeen > EIGHT_HOURS);
+  if (freshSession) {
+    const input = document.getElementById('nameInput');
+    const btn   = document.getElementById('nameSaveBtn');
+    input.value  = agentName;
+    btn.disabled = !agentName;
+    document.getElementById('nameModal').style.display = 'flex';
+    setTimeout(() => input.focus(), 100);
+  } else {
+    document.getElementById('nameModal').style.display = 'none';
+  }
+})();
+</script>
+</body>
+</html>
