@@ -328,19 +328,19 @@
 // ═══════════════════════════════════════════════
 const SECTIONS = [
   { id:'greeting', label:'Greeting', icon:'⭐', color:'#f59e0b', snippets:[
-    "Hello, Thank you for contacting Lyft support, This is X, It will be my pleasure to assist you today.",
-    "Hello, Thank you for contacting Lyft support and thank you for being a X driver. This is X, It will be my pleasure to assist you today.",
+    "Hello ,Thank you for contacting Lyft support, This is X, It will be my pleasure to assist you today.",
+    "Hello ,Thank you for contacting Lyft support and thank you for being a X driver. This is X, It will be my pleasure to assist you today.",
     "Allow me a moment please to review the previous conversation",
     "I hope that you are doing great!",
     "Could you please walk me through what happened exactly?",
     "Can you please elaborate more about your concern so I can help you?",
-    "Hello, Thank you for replying back to us, This is X, I will be jumping on behalf of my colleague, it'll be my pleasure to continue looking into this for you.",
+    "Hello , Thank you for replying back to us, This is Sara, I will be jumping on behalf of my colleague, it'll be my pleasure to continue looking into this for you.",
     "I want to thank you so much for being a X tier driver",
     "At this time we are facing a technical issue and our specialized team is working on it and once it got solved you will get notified in your email.",
     "First of all, I'm really sorry about the long wait time, We are facing a huge number of chats today, But I can assure you I will do my best to help."
   ]},
   { id:'empathy', label:'Empathy', icon:'😊', color:'#ec4899', snippets:[
-    "I'm really sorry to hear that, I will check that for you right away and I can assure you I will do my best.",
+    "I'm really sorry to hear that , I will check that for you right away and I can assure you I will do my best.",
     "I understand your concerns regarding the warning you received. We appreciate your efforts and want to ensure your experience with Lyft is positive.\nRest assured, I'll review your case carefully and I will explain to you the reason why you've received that warning",
     "I'm really sorry to hear that you can't go online, I will check that for you right away and I can assure you I will do my best.",
     "I understand how important this is to you and appreciate your patience during this process.",
@@ -349,27 +349,27 @@ const SECTIONS = [
     "We are always raising a flag to our managerial team.",
     "That's sounds really hard, I really apologize that we made you feel like this",
     "Honestly, I would definitely feel the same if this happened to me.",
-    "We want to ensure a better experience with Lyft so I will do my best to assist you regarding your concern.",
+    "We want to review a better experience with Lyft to I will do my best to assist you regarding your concern.",
     "I totally understand how you're feeling right now so please rest assured I'm on your side and I will make sure it's sorted out",
     "On behalf of Lyft please accept our sincere apology as we care the most about your experience more than anything",
     "And please be assured if it's by my hand I won't hesitate to solve it now.",
     "I completely understand your expectation for a quick resolution, and I assure you that if there were anything further I could do on my end, I would absolutely take action to help.",
-    "Your case has been flagged as urgent, meaning you'll receive your email within the next few hours. Please note that replying to this chat may delay your case because a new ticket might be opened for you."
+    "Your case has been flagged as urgent, meaning you'll receive your email within the next few hours.please note that replying to this chat may delay your case because a new ticket might be opened for you."
   ]},
   { id:'ar', label:'A&R', icon:'🙂', color:'#14b8a6', snippets:[
     "Rest assured I'll do my best to assist you for today.",
     "I will be more than happy to check your application and update you, I can assure you I will do my best.",
     "I understand that you are contacting us about your",
     "Let me look into this for you and I will do my best to help you.",
-    "I understand how important this is for you, And I will definitely make sure it's sorted out."
+    "I understand how important this for you, And I will definitely make sure it's sorted out."
   ]},
   { id:'hold', label:'Hold & Refresh Hold', icon:'⏳', color:'#3b82f6', snippets:[
     "If you don't mind I'll need 2 minutes to check that and I will be right back.",
     "Could you please allow me 2 minutes on hold to investigate in your account, I'll be back?",
-    "Could you please allow me 2 minutes on hold to check the ride for you and I'll be back?",
+    "Could you please allow me 2 minutes on hold to check the ride for your and I'll be back?",
     "Thank you so much for holding, if you don't mind to allow me more 2 minutes, I'm still checking and I will be right back.",
     "If you don't mind to allow me more time, I'm still investigating.",
-    "I'm very sorry for taking too long of your time, however I'm making sure that everything is perfect on your account."
+    "I'm very sorry for taking too long of your time However I'm making sure that everything is perfect on your account."
   ]},
   { id:'afterhold', label:'After Hold', icon:'⌛', color:'#6366f1', snippets:[
     "Thank you so much for your patience, we appreciate your time!",
@@ -381,7 +381,7 @@ const SECTIONS = [
     "It was a pleasure assisting you today, Is there any other question or any other thing that I can help you with?",
     "I hope I have fully answered your questions, that the information I provided has been clear 😊",
     "I hope I managed to give you the expected outcome of today's chat 😊",
-    "I hope I was able to explain that for you and I know that I didn't resolve your issue 100%, but I tried even if it's a little bit, and I appreciate your understanding!",
+    "I hope I was able to explain that for you and I know that I didn't resolve your issue %100, but I tried even if it's a little bit, and I appreciate your understanding , !",
     "Is there anything else would you like me to help you with?"
   ]},
   { id:'closure', label:'Closure', icon:'👋', color:'#10b981', snippets:[
@@ -399,43 +399,43 @@ const SECTIONS = [
     "I still can't get a response from you, Please do not hesitate to chat with us again If you have more questions or need additional assistance.",
     "As much as I wanted to help you with this, I don't hear any response from you for a while. I'll leave this chat session open so that you can reply once you're available. Thank you for using Lyft.",
     "It looks like you are busy now. Please feel free to respond to this message within 24 hours so that we can pick up where we left off.",
-    "Apparently you are having a ride at the moment so I'm ending this chat at the moment, then you can feel free to response again within 24 hours so that we can assist from where we left off."
+    "Apparently you are having a ride at the moment so I'm ending this chat at the moment, \nthen you can feel free to response again within 24 hours so that we can assist from where we left off."
   ]},
   { id:'transfer', label:'Transfer', icon:'🔀', color:'#a855f7', snippets:[
-    "I'm really sorry for taking this long time to solve the issue, I tried my best and I found that we need to escalate this to a specialized team.",
+    "I'm really sorry for taking this  long time to solve the issue, I tried my best and I found that we need to escalate this to a specialized team.",
     "I will transfer the chat to a specialized team and I can assure you they will do the best to help you.",
     "Please refrain from replying to this interaction to avoid it from reopening, so the specialized team can assist you."
   ]},
   { id:'call', label:'Driver Requested a Call', icon:'📞', color:'#ec4899', snippets:[
-    "I really wish I could call, but there is no option for me, however I will do my best to help you in the chat."
+    "I really wish I could call, But there is no option for me, However I will do my best to help you in the chat."
   ]},
-  { id:'underpaid', label:'Underpaid Single Ride', icon:'💰', color:'#eab308', snippets:[
-    "Thank you for your patience. I really appreciate your time! I have looked into the ride for you and I can confirm that, You have received the correct earnings that was shown before accepting the ride, With correct time and distance.",
-    "I totally understand that you deserve to be compensated and you are already working hard to support yourself, However as long as the earnings are correct, We are no longer able to issue a bonus",
+  { id:'underpaid', label:'Underpaid Single Ride with Adj', icon:'💰', color:'#eab308', snippets:[
+    "Thank you for your patience. I really appreciate your time! I have looked into the ride for you and I can confirm that, You have received the correct earnings that was shown before accept the ride, With correct time and distance.",
+    "I totally understand that you deserve to be compensated and you are already working hard to support yourself, However as long as the earnings are correct, We are no longer be able to issue a bonus",
     "So nothing to worry about, I just documented your feedback about the earnings",
-    "I can assure you that we take this kind of reports very seriously, We will prevent this from happening again.",
-    "I totally understand how important this is for you and you are already working hard to support yourself, So you definitely deserve that, That's why I sent your feedback to make the service better for you."
+    "I can assure you that , We take this kind of reports very serious, We will prevent this from happening again.",
+    "I totally understand how important this is for you and you already working hard to support yourself, So you definitely deserve that, That's why I send your feedback so make the service better for you."
   ]},
   { id:'bonus', label:'Bonus SLA', icon:'🤑', color:'#059669', snippets:[
     "The bonus should be reflected in a couple of minutes but maximum it could take 5 business days"
   ]},
-  { id:'scheduled', label:'Scheduled Ride Issue', icon:'📍', color:'#0ea5e9', snippets:[
+  { id:'scheduled', label:'Scheduled Ride Pick-Up Issue', icon:'📍', color:'#0ea5e9', snippets:[
     "I looked into the ride for you and I can see that before the ride was cancelled we were unable to determine your location.",
-    "App issues can happen when your phone is overtasked, or your service provider's data is limited, However it's an exception for you, I applied a $10 cancel fee on your account, You would see it within 5 business days but usually a couple of minutes."
+    "App issues can happen when your phone is overtasked, or your service provider's data is limited, However it's an exception for you, I applied a $10 cancel fee on your account account, You would see it within 5 business days but usually a couple of minutes."
   ]},
   { id:'idv', label:'ID Verification Failed', icon:'🪪', color:'#7c3aed', snippets:[
     "As I know how worried you are regarding your account, I made sure to carefully yet quickly investigate your account to avoid wasting your time.",
-    "And upon checking, I could see that all is set from your side since you have provided all of the needed documents, thank you so much for your efforts!",
+    "And upon checking, I could see that all set from your side since you have provided all of the needed documents thank you so much for your efforts, !",
     "Thank you for your patience while we complete the ID verification process. We understand how eager you are to get started, and we truly appreciate your commitment to joining Lyft.\nVerifying IDs is an important step to ensure the security of our platform, and we're working hard to get this completed as soon as possible",
     "Now it's our turn to validate this information and documents that you've provided.",
     "So, everything is done from your side, now we will work on your account to get it ready to go online!",
     "Just to clarify that, your account status will be on hold for 3 months, until we finish the process to get your account ready to go online.",
     "Stay tuned for more exciting opportunities and rewards as you continue your journey with us. We're thrilled to have you onboard and can't wait to see you thrive!",
-    "All set from your side, it's just a matter of time, don't worry at all."
+    "All set from your side, its just matter of time, don't worry at all."
   ]},
   { id:'bgc', label:'BGC Pending', icon:'🔍', color:'#06b6d4', snippets:[
-    "I've taken a look at your account, and everything looks great on your end — you've already provided all the required documents, so thank you for taking the time to get everything submitted correctly. Nice work!",
-    "Right now, the only thing still in progress is your background check. This is a completely normal part of the onboarding process, and it typically takes a few days to be completed",
+    "I've taken a look at your account, and everything looks great on your end  you've already provided all the required documents, so thank you for taking the time to get everything submitted correctly. Nice work!",
+    "Right now, the only thing still in progress is your background check. This is a completely normal part of the onboarding process,\nand it typically takes a few days to be completed",
     "The best part is that you don't need to do anything else. Once the background check is completed, the system will update automatically.",
     "You're really close, and I'm sure you'll be hitting the road very soon. 😊🙏"
   ]},
@@ -450,22 +450,22 @@ const SECTIONS = [
   ]},
   { id:'fee', label:'Lyft Internal Fee', icon:'📊', color:'#d97706', snippets:[
     "The internal fees is maximum of 30% of passenger payment, after excluding the external fees",
-    "So we ensure that you receive a minimum of 70% of passenger payment, after excluding the external fees",
-    "If by the end of the week your earnings are less than 70%, you will receive an adjustment"
+    "so we insure that you receive a minimum of 70% f passenger payment, after excluding the external fees",
+    "if by the end of the week your earnings are less than 70%, you will receive an adjustment"
   ]},
   { id:'deactivation', label:'Deactivation Appeal', icon:'🔴', color:'#dc2626', snippets:[
-    "I understand how important this is for you to get your account reactivated and I really wish I could do this right now for you, However we will need to escalate this so I escalated this to the proper team and they will do the best to help you reactivate your account.",
+    "I understand how important this is for you to get your account reactivated and I really wish I could do this right now for you, However we will need to escalate this so I escalated this to the proper team and they will do the best to help you reactivated your account.",
     "Please make sure to keep an eye on your email."
   ]},
   { id:'bkn', label:'BKN Waitlist', icon:'🗽', color:'#6d28d9', snippets:[
     "I completely understand how important it is for you to complete your application and start driving in New York City. That's why I carefully reviewed your account details to identify what's needed and how I can assist you further.",
-    "I understand how hard this situation is, I can see you are on the waitlist since , And of course this is a very long time, and unacceptable.",
+    "I understand how hard this situation is, I can see you are on the waitlist since , And of course this is a very long time , and unacceptable.",
     "Kindly keep in mind that this is the TLC regulations and we are not in charge of this.",
     "I know how urgent you need to go online and hit the road.",
-    "No worries at all, many drivers were facing the same issue and now hitting the road.",
+    "No worries at all , many drivers were facing the same issue and now hitting the road.",
     "Hopefully you will go online very soon.",
-    "It won't be immediately, however, it will be as soon as possible.",
-    "I do not want to give a certain time frame, as it may be changeable."
+    "It won't be immediately , however, it will be as soon as possible.",
+    "I do not want to give a certain time frame , as it may be changeable."
   ]},
   { id:'legal', label:'Legal Macro', icon:'⚖️', color:'#6b7280', snippets:[
     "I will be providing you with some legal declarations related to the XXX. It's important that you read these carefully, as they contain essential information about the next steps and why this is happening.",
@@ -475,7 +475,7 @@ const SECTIONS = [
     "And upon checking, I would like to reassure you that your account is perfectly working and there's nothing wrong with it.",
     "However I agree with you this is not normal.",
     "So I will do my best to help you get rides as soon as possible.",
-    "First of all I will document your feedback and report about this. We take kinds of this reports very seriously,",
+    "First of all I will document your feedback and report about this We take kinds of this reports very seriously,",
     "Let me also refresh your account to fix this issue so you can receive many rides and avoid this from happening,",
     "May I have your consent to refresh your account?"
   ]},
@@ -485,12 +485,12 @@ const SECTIONS = [
   ]},
   { id:'priority', label:'Priority Mode', icon:'⚡', color:'#8b5cf6', snippets:[
     "I really appreciate your time! I understand how important to find the priority mode everyday, also I can see that you are working hard and I appreciate that, And I really wish I could help you receive it everyday,",
-    "But at this time it's not available because it depends on some factors (region, time, driver) But nothing to worry about, You might find it tomorrow and also I will make sure to document your feedback regarding it."
+    "But at this time it's not available because it depends on some factors(region, time, driver) But nothing to worry about, You might find it tomorrow and also I will make sure to document your feedback regrading it."
   ]},
   { id:'flags', label:'Flags', icon:'⚠️', color:'#f59e0b', snippets:[
     "I know how it feels like your driving is being questioned,",
-    "I checked your account carefully, I know how important this is for you so nothing to worry about, This flag was related to a feedback, and it won't affect your account at all,",
-    "I know how much effort it takes to drive and support yourself, And you are working hard to be 5 stars.",
+    "I checked your account carefully, I know how important this is for you so no thing to worry about, This flag was related to a feedback, and it won't affect your account at all,",
+    "I know how much effort it takes to drive and support yourself, And you are working hard to be 5 starts.",
     "But I can assure you that, The rating is the average of the last 100 rides.",
     "So once you get more rides it will be disappeared.",
     "And I can assure you that, I will document that it wasn't your fault at all.",
@@ -502,21 +502,22 @@ const SECTIONS = [
     "Rest assured I will do my best to explain to you what is happening.",
     "I carefully looked into your account details to identify the issue and clarify it for you. And upon checking, I would like to reassure you that your account is perfectly working and there's nothing wrong with it.",
     "However the express match is depending on the number of drivers inside the airport queue itself, So if there are enough number of drivers waiting in the queue the express match won't be available",
-    "But you will receive it normally if there is a request, But because this is an important option for you I will do my best to make this available as soon as possible"
+    "But you will receive it normally if there is request, But because this is an important option for you I will do my best to make this available as soon as possible"
   ]},
   { id:'airportsusp', label:'Airport Suspension', icon:'🛫', color:'#ef4444', snippets:[
     "I hear your concern about not being able to pick up from the airport. Please know this is a standard temporary step during a review, and my goal is to help you get through this as smoothly as possible",
     "I can imagine how stressful a sudden change like this is for your earnings. Rest assured, I will do my best to help you.",
+    "(Temp) *Compass Snippets*",
     "As a friendly advice, I recommend to reach the airport and inform them that you have already fixed the issue and you are eligible to get the access again.",
-    "Also if you have received an email about the deactivation, I recommend to reply to the email, And mention that you have fixed the issue successfully.",
+    "Also if you have recieved an email about the deactivation, I recommed to reply to the email, And mentuion that you have fixed the issue successfully.",
     "Also you can still provide other rides. I'm here to support you in resolving this specific hold so you can."
   ]},
   { id:'lowdemand', label:'Low Demand Area', icon:'📉', color:'#14b8a6', snippets:[
     "I understand how important it is to be online and ready to work, and I appreciate your commitment. We want your experience to be smooth and rewarding.",
-    "Upon checking on your account I can see that, It's working perfectly, So it's a matter of demand.",
+    "upon checking on your account I can see that, It's working perfectly, So it's a matter of demand.",
     "To increase the number of rides you receive:\n- Make sure all filters (like destination mode or ride type) are turned off\n- Go closer to areas of high demand",
     "- Keep phone interactions to a minimum\n- Drive safely in accordance with local traffic laws and follow Lyft's Community Guidelines",
-    "I will document your feedback and report about this. We take kinds of this reports very seriously,"
+    "I will document your feedback and report about this We take kinds of this reports very seriously,"
   ]},
   { id:'network', label:'Network Issue', icon:'📶', color:'#3b82f6', snippets:[
     "I hear you and I know how it feels to be in a busy area and not receiving any pings.",
@@ -532,10 +533,11 @@ const SECTIONS = [
     "I checked our current list, and although your car is great, it isn't currently on the approved vehicle list for [Premium Type] in your specific city.",
     "You can check the list here https://www.lyft.com/driver/eligible-premium-vehicles",
     "Your feedback is important to me so I made sure to document it, So please make sure to keep an eye on the list, It will be added very soon.",
-    "It looks like [Premium Type] isn't currently offered in your specific region. We constantly review market demand to see which ride types will be most profitable for drivers there"
+    "It looks like [Premium Type] isn't currently offered in your specific region. We constantly review market demand to see which ride types will be most profitable for drivers ther"
   ]},
   { id:'fraud', label:'Flagged for Fraud', icon:'🚨', color:'#dc2626', snippets:[
-    "I know how important it is to have access to your earnings right away, especially after putting in the time and effort for that trip, I will do my best to help you and make this clear.",
+    "I know how important it is to have access to your earnings right away,",
+    "especially after putting in the time and effort for that trip, I will do my best to help you and make this clear.",
     "I want to be clear: this doesn't mean you've done anything wrong.",
     "It's just a standard review to verify the ride details. My goal is to help get this cleared up so that money moves into your 'Available to Cash Out' balance as fast as possible",
     "I've noted this ride for an expedited review because I know how much you're counting on those funds. Thank you for your patience while we get this finalized for you."
@@ -543,21 +545,21 @@ const SECTIONS = [
   { id:'reduceaccess', label:'Reduce Access', icon:'📅', color:'#6366f1', snippets:[
     "I understand how important scheduled rides are for planning your time. Access to scheduled rides can change when several scheduled rides aren't completed.",
     "A scheduled ride is counted as not completed if it's canceled before pickup, canceled after accepting, declined, missed, or if the app request comes through while you're offline.",
-    "I completely understand why this situation feels discouraging, especially when scheduled rides are part of how you plan your time and earnings.\nI want you to know your experience is valid, and I'm here to support you through it.\nI want you to know your feedback is truly heard, Your perspective matters, and we value you bringing this to our attention."
+    "I completely understand why this situation feels discouraging, especially when scheduled rides are part of how you plan your time and earnings.\nI want you to know your experience is valid, and I'm here to support you through it.\nI want you to know your feedback is truly heard,  Your perspective matters, and we value you bringing this to our attention."
   ]},
   { id:'ptc', label:'PTC License', icon:'📋', color:'#06b6d4', snippets:[
-    "Thanks for your patience. Your PTC license application has already been submitted on Lyft's end.",
+    "Thanks for your patience. Your PTC license application has already been submitted on Lyft's end. At this stage,",
     "We totally understand you're eager to get online. Your PTC application has already been submitted on Lyft's end, and now we're just waiting for ML&S to finish their review and send the license.",
-    "These usually don't take long, and as soon as ML&S approves it, it will automatically show up in your Lyft Driver app. Thanks for hanging in there — you're almost set!",
+    "These usually don't take long, and as soon as ML&S approves it, it will automatically show up in your Lyft Driver app. Thanks for hanging in there  you're almost set!",
     "If you'd prefer not to wait, you can also switch your driving region to another GTA area like Mississauga, Brampton, Oakville, Burlington, Vaughan, Markham, and Richmond Hill, where a PTC license isn't required.",
-    "You can update your region in the app and start driving right away. You've got options, and you're very close — you're doing great!"
+    "You can update your region in the app and start driving right away. You've got options, and you're very close you're doing great!"
   ]},
   { id:'rentaldeposit', label:'Rental Deposit', icon:'💳', color:'#10b981', snippets:[
-    "I completely understand why you're checking on the status of your rental deposit — waiting for money to come back is never ideal, and I'm glad you asked.",
+    "I completely understand why you're checking on the status of your rental deposit waiting for money to come back is never ideal, and I'm glad you asked.",
     "Just to clarify how the process works, Lyft Express Drive rental deposits are generally refunded to your original payment method within 3 weeks after the rental return is finalized.",
-    "The deposit is used to cover outstanding rental fees, tolls, damage, or cleaning fees. Deposits are typically refunded 5-7 business days after processing, That's why it may feel like it's taking a little longer.",
+    "The deposit is used to cover outstanding rental fees, tolls, damage, or cleaning fees. Deposits are typically refunded 5-7 business days after processing,  That's why it may feel like it's taking a little longer.",
     "The refund is already moving through the system, and you don't need to do anything else at this point.",
-    "I truly appreciate you sharing how you feel, and I want you to know your experience matters to me. I understand how important your deposit is and I completely understand why you want everything to move smoothly. Your patience means a lot, and I'm here to support you through this."
+    "I truly appreciate you sharing how you feel, and I want you to know your experience matters to me. I understand how important your deposit is\nand I completely understand why you want everything to move smoothly. Your patience means a lot, and I'm here to support you through this."
   ]}
 ];
 
