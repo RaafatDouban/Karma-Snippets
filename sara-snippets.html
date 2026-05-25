@@ -149,7 +149,7 @@
       width: 4px; border-radius: 4px 0 0 4px;
     }
     .snip-card:hover { transform: translateX(5px); box-shadow: var(--shadow); }
-    .snip-card:hover::after { content: '📋'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; opacity: 0.45; }
+    .snip-card:hover::after { content: '📋'; position: absolute; right: 10px; bottom: 8px; font-size: 1rem; opacity: 0.45; }
     .snip-card.flashing { border-color: #10b981 !important; background: rgba(16,185,129,0.07) !important; }
     .snip-text { font-size: 0.88rem; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
 
@@ -260,7 +260,8 @@
     /* ── CUSTOM SNIPPETS ── */
     .snip-card.custom { border-style:dashed; }
     .snip-custom-del { position:absolute; right:10px; top:10px; background:none; border:none; cursor:pointer; font-size:0.8rem; opacity:0; transition:opacity 0.15s; color:var(--muted); line-height:1; padding:2px 4px; z-index:2; }
-    .snip-card.custom:hover .snip-custom-del { opacity:0.6; }
+    .snip-card:hover .snip-custom-del { opacity:0.6; }
+    .snip-card.custom .snip-custom-del { opacity:0.45; }
     .snip-custom-del:hover { opacity:1 !important; color:#ef4444; }
     .add-snip-btn { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:14px; padding:11px 16px; border:2px dashed var(--border); border-radius:12px; cursor:pointer; color:var(--muted); font-size:0.85rem; font-weight:600; background:transparent; width:100%; transition:all 0.15s; font-family:inherit; }
     .add-snip-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(139,92,246,0.05); }
@@ -382,13 +383,13 @@
 // ═══════════════════════════════════════════════
 const SECTIONS = [
   { id:'greeting', label:'Greeting', icon:'⭐', color:'#f59e0b', snippets:[
-    "Hello ,Thank you for contacting Lyft support, This is X, It will be my pleasure to assist you today.",
-    "Hello ,Thank you for contacting Lyft support and thank you for being a X driver. This is X, It will be my pleasure to assist you today.",
+    "Hello XXX, Thank you for contacting Lyft support, This is X, It will be my pleasure to assist you today.",
+    "Hello XXX, Thank you for contacting Lyft support and thank you for being a X driver. This is X, It will be my pleasure to assist you today.",
     "Allow me a moment please to review the previous conversation",
     "I hope that you are doing great!",
     "Could you please walk me through what happened exactly?",
     "Can you please elaborate more about your concern so I can help you?",
-    "Hello , Thank you for replying back to us, This is Sara, I will be jumping on behalf of my colleague, it'll be my pleasure to continue looking into this for you.",
+    "Hello XXX, Thank you for replying back to us, This is Sara, I will be jumping on behalf of my colleague, it'll be my pleasure to continue looking into this for you.",
     "I want to thank you so much for being a X tier driver",
     "At this time we are facing a technical issue and our specialized team is working on it and once it got solved you will get notified in your email.",
     "First of all, I'm really sorry about the long wait time, We are facing a huge number of chats today, But I can assure you I will do my best to help."
@@ -764,6 +765,13 @@ function deleteCustom(id) {
   pushToServer();
 }
 
+function deleteRecent(idx) {
+  recentList.splice(idx, 1);
+  store.set('recent', JSON.stringify(recentList));
+  showSection('recent');
+  pushToServer();
+}
+
 // ═══════════════════════════════════════════════
 // FILL-IN PLACEHOLDERS
 // ═══════════════════════════════════════════════
@@ -898,9 +906,10 @@ function showSection(id) {
   selId = id; closeSidebar();
 
   if (id === 'recent') {
-    var rcards = recentList.map(function(t) {
+    var rcards = recentList.map(function(t, i) {
       var applied = applyName(t);
       return '<div class="snip-card" onclick="maybeFill(this)" data-text="' + escAttr(applied) + '" style="border-left-color:#f59e0b55;">' +
+        '<button class="snip-custom-del" onclick="event.stopPropagation();deleteRecent(' + i + ')" title="Remove from recent">✕</button>' +
         '<div class="snip-text">' + esc(applied) + '</div></div>';
     }).join('');
     document.getElementById('contentBody').innerHTML =
