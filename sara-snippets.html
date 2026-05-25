@@ -227,6 +227,50 @@
     .dock-item[data-tooltip]:hover::before { opacity: 1; transform: translateX(-50%) translateY(0); }
     .dock-bounce { animation: dockBounce 0.4s cubic-bezier(0.36,0.07,0.19,0.97); }
     @keyframes dockBounce { 0%,100% { transform: translateY(0); } 30% { transform: translateY(-14px); } 60% { transform: translateY(-4px); } }
+
+    /* ── FAVORITES ── */
+    .snip-fav { position:absolute; right:10px; top:10px; background:none; border:none; cursor:pointer; font-size:0.85rem; opacity:0.2; transition:opacity 0.15s,transform 0.15s; line-height:1; padding:2px 4px; z-index:2; }
+    .snip-card:hover .snip-fav { opacity:0.55; }
+    .snip-fav.active { opacity:1; filter:drop-shadow(0 0 3px gold); }
+    .snip-card.custom .snip-fav { right:32px; }
+
+    /* ── KEYBOARD FOCUS ── */
+    .snip-card.kbd-focus { border-color:var(--accent) !important; box-shadow:0 0 0 3px rgba(139,92,246,0.22) !important; }
+
+    /* ── COPY COUNTER ── */
+    .copy-counter { background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.25); color:white; font-size:0.9rem; font-weight:800; padding:5px 12px; border-radius:20px; text-align:center; line-height:1.2; min-width:46px; cursor:default; }
+    .copy-counter small { font-size:0.58rem; opacity:0.65; display:block; font-weight:600; letter-spacing:0.05em; }
+
+    /* ── FILL MODAL ── */
+    .fill-modal { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1200; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
+    .fill-box { background:var(--surface); border-radius:20px; padding:26px 28px; width:90%; max-width:440px; box-shadow:0 24px 64px rgba(0,0,0,0.3),0 0 0 1px var(--border); }
+    .fill-box h3 { font-size:1rem; font-weight:800; margin-bottom:12px; }
+    .fill-preview { font-size:0.8rem; color:var(--muted); margin-bottom:18px; line-height:1.55; background:var(--bg); padding:10px 14px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; word-break:break-word; }
+    .fill-field { margin-bottom:12px; }
+    .fill-field label { font-size:0.72rem; font-weight:700; color:var(--muted); display:block; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.05em; }
+    .fill-field input { width:100%; padding:10px 14px; border:2px solid var(--border); border-radius:12px; font-size:0.9rem; outline:none; background:var(--bg); color:var(--text); transition:border-color 0.15s; font-family:inherit; }
+    .fill-field input:focus { border-color:var(--accent); }
+    .fill-actions { display:flex; gap:10px; margin-top:18px; }
+    .fill-actions button { flex:1; padding:11px; border:none; border-radius:12px; font-size:0.88rem; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+    .fill-cancel { background:var(--bg); color:var(--muted); border:2px solid var(--border) !important; }
+    .fill-cancel:hover { border-color:var(--accent) !important; color:var(--accent); }
+    .fill-copy { background:var(--grad); color:white; box-shadow:0 4px 14px rgba(139,92,246,0.35); }
+    .fill-copy:hover { opacity:0.9; transform:translateY(-1px); }
+
+    /* ── CUSTOM SNIPPETS ── */
+    .snip-card.custom { border-style:dashed; }
+    .snip-custom-del { position:absolute; right:10px; top:10px; background:none; border:none; cursor:pointer; font-size:0.8rem; opacity:0; transition:opacity 0.15s; color:var(--muted); line-height:1; padding:2px 4px; z-index:2; }
+    .snip-card.custom:hover .snip-custom-del { opacity:0.6; }
+    .snip-custom-del:hover { opacity:1 !important; color:#ef4444; }
+    .add-snip-btn { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:14px; padding:11px 16px; border:2px dashed var(--border); border-radius:12px; cursor:pointer; color:var(--muted); font-size:0.85rem; font-weight:600; background:transparent; width:100%; transition:all 0.15s; font-family:inherit; }
+    .add-snip-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(139,92,246,0.05); }
+
+    /* ── DRAG REORDER ── */
+    .drag-handle { cursor:grab; color:var(--muted); opacity:0; font-size:0.9rem; flex-shrink:0; line-height:1; margin-right:-2px; transition:opacity 0.15s; }
+    .nav-item:hover .drag-handle { opacity:0.4; }
+    .nav-item.dragging { opacity:0.3; }
+    .nav-item.drag-over { box-shadow:inset 0 2px 0 var(--accent); }
+    .nav-item.syn { border:1px dashed var(--border); margin-bottom:4px; }
   </style>
 </head>
 <body>
@@ -272,6 +316,7 @@
         </div>
       </div>
     </div>
+    <div class="copy-counter" title="Snippets copied today"><div id="copyCounter">0</div><small>today</small></div>
     <div class="agent-badge" onclick="promptChangeName()">
       <div class="av" id="agentAvatar">?</div>
       <div>
@@ -317,7 +362,7 @@
 // FAVICON
 // ═══════════════════════════════════════════════
 (function(){
-  const l = document.createElement('link');
+  var l = document.createElement('link');
   l.rel = 'icon'; l.type = 'image/svg+xml';
   l.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>";
   document.head.appendChild(l);
@@ -566,33 +611,78 @@ const SECTIONS = [
 // ═══════════════════════════════════════════════
 // STORAGE
 // ═══════════════════════════════════════════════
-const store = {
-  get(k) { try { return localStorage.getItem(k); } catch(e) { return null; } },
-  set(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+var store = {
+  get: function(k) { try { return localStorage.getItem(k); } catch(e) { return null; } },
+  set: function(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
 };
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+var agentName   = store.get('chat_agent_name') || '';
+var favorites   = new Set(JSON.parse(store.get('favs')       || '[]'));
+var recentList  = JSON.parse(store.get('recent')     || '[]');
+var customs     = JSON.parse(store.get('customs')    || '[]');
+var sectionOrder= JSON.parse(store.get('sect_order') || 'null');
+var copyCount   = 0;
+var selId       = null;
+var fillCard    = null;
+var dragId      = null;
+
+// ═══════════════════════════════════════════════
+// COPY COUNTER
+// ═══════════════════════════════════════════════
+function loadCopyCount() {
+  var today = new Date().toDateString();
+  var saved = JSON.parse(store.get('copy_stats') || '{"date":"","count":0}');
+  copyCount = saved.date === today ? saved.count : 0;
+}
+function bumpCopyCount() {
+  copyCount++;
+  store.set('copy_stats', JSON.stringify({ date: new Date().toDateString(), count: copyCount }));
+  updateCounter();
+}
+function updateCounter() {
+  var el = document.getElementById('copyCounter');
+  if (el) el.textContent = copyCount;
+}
+
+// ═══════════════════════════════════════════════
+// SECTION ORDER
+// ═══════════════════════════════════════════════
+function getSortedSections() {
+  if (!sectionOrder) return SECTIONS;
+  return SECTIONS.slice().sort(function(a, b) {
+    var ai = sectionOrder.indexOf(a.id), bi = sectionOrder.indexOf(b.id);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(t) { return String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function hi(text, q) { return text.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>'); }
 
 // ═══════════════════════════════════════════════
 // AGENT NAME
 // ═══════════════════════════════════════════════
-let agentName = store.get('chat_agent_name') || '';
-
 function applyName(text) {
   if (!agentName) return text;
   return text
-    .replace(/This is X\b/g, `This is ${agentName}`)
-    .replace(/This is Sara\b/g, `This is ${agentName}`)
-    .replace(/\bThis is X,/g, `This is ${agentName},`);
+    .replace(/This is X\b/g, 'This is ' + agentName)
+    .replace(/This is Sara\b/g, 'This is ' + agentName)
+    .replace(/\bThis is X,/g, 'This is ' + agentName + ',');
 }
-
 function saveAgentName() {
-  const input = document.getElementById('nameInput');
-  const val = input.value.trim();
+  var input = document.getElementById('nameInput');
+  var val = input.value.trim();
   if (!val) {
-    input.classList.remove('shake');
-    void input.offsetWidth;
-    input.classList.add('shake');
-    input.focus();
-    return;
+    input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake');
+    input.focus(); return;
   }
   agentName = val;
   store.set('chat_agent_name', val);
@@ -601,15 +691,13 @@ function saveAgentName() {
   updateHeaderName();
   if (selId) showSection(selId);
 }
-function closeNameModal() {
-  if (agentName) document.getElementById('nameModal').style.display = 'none';
-}
+function closeNameModal() { if (agentName) document.getElementById('nameModal').style.display = 'none'; }
 function promptChangeName() {
-  const i = document.getElementById('nameInput');
+  var i = document.getElementById('nameInput');
   i.value = agentName;
   document.getElementById('nameSaveBtn').disabled = !agentName;
   document.getElementById('nameModal').style.display = 'flex';
-  setTimeout(() => i.focus(), 50);
+  setTimeout(function() { i.focus(); }, 50);
 }
 function updateHeaderName() {
   document.getElementById('agentNameDisplay').textContent = agentName || '...';
@@ -617,54 +705,239 @@ function updateHeaderName() {
 }
 
 // ═══════════════════════════════════════════════
-// NAV STATE
+// FAVORITES
 // ═══════════════════════════════════════════════
-let selId = null;
+function toggleFav(key) {
+  if (favorites.has(key)) favorites.delete(key); else favorites.add(key);
+  store.set('favs', JSON.stringify(Array.from(favorites)));
+  var btn = document.querySelector('.snip-card[data-key="' + key + '"] .snip-fav');
+  if (btn) btn.classList.toggle('active', favorites.has(key));
+  renderNav();
+}
 
+// ═══════════════════════════════════════════════
+// RECENT
+// ═══════════════════════════════════════════════
+function trackRecent(text) {
+  recentList = [text].concat(recentList.filter(function(t){ return t !== text; })).slice(0, 8);
+  store.set('recent', JSON.stringify(recentList));
+}
+
+// ═══════════════════════════════════════════════
+// CUSTOM SNIPPETS
+// ═══════════════════════════════════════════════
+function openAddSnippet(sectionId) {
+  var modal = document.getElementById('addSnipModal');
+  modal.dataset.sectionId = sectionId;
+  document.getElementById('addSnipText').value = '';
+  document.getElementById('addSnipCharCount').textContent = '0';
+  modal.style.display = 'flex';
+  setTimeout(function() { document.getElementById('addSnipText').focus(); }, 50);
+}
+function closeAddSnippet() { document.getElementById('addSnipModal').style.display = 'none'; }
+function saveCustomSnippet() {
+  var modal = document.getElementById('addSnipModal');
+  var text = document.getElementById('addSnipText').value.trim();
+  if (!text) return;
+  var sectionId = modal.dataset.sectionId;
+  customs.push({ id: Date.now().toString(), sectionId: sectionId, text: text });
+  store.set('customs', JSON.stringify(customs));
+  closeAddSnippet();
+  showSection(sectionId);
+}
+function deleteCustom(id) {
+  customs = customs.filter(function(c){ return c.id !== id; });
+  store.set('customs', JSON.stringify(customs));
+  if (selId) showSection(selId);
+}
+
+// ═══════════════════════════════════════════════
+// FILL-IN PLACEHOLDERS
+// ═══════════════════════════════════════════════
+function maybeFill(el) {
+  var text = el.dataset.text;
+  var seen = {}, placeholders = [], re = /\[([^\]]+)\]/g, m;
+  while ((m = re.exec(text)) !== null) {
+    if (!seen[m[1]]) { seen[m[1]] = true; placeholders.push(m[1]); }
+  }
+  if (!placeholders.length) { copyCard(el); return; }
+  showFillModal(text, placeholders, el);
+}
+function showFillModal(text, placeholders, card) {
+  var modal = document.getElementById('fillModal');
+  document.getElementById('fillPreview').textContent = text.length > 150 ? text.slice(0,150) + '…' : text;
+  document.getElementById('fillFields').innerHTML = placeholders.map(function(p) {
+    return '<div class="fill-field"><label>' + esc(p) + '</label>' +
+      '<input type="text" data-ph="' + escAttr(p) + '" placeholder="Enter ' + esc(p) + '…" autocomplete="off" ' +
+      'onkeydown="if(event.key===\'Enter\')confirmFill()"></div>';
+  }).join('');
+  modal.dataset.origText = text;
+  fillCard = card;
+  modal.style.display = 'flex';
+  var first = modal.querySelector('.fill-field input');
+  if (first) setTimeout(function(){ first.focus(); }, 50);
+}
+function confirmFill() {
+  var modal = document.getElementById('fillModal');
+  var text = modal.dataset.origText;
+  modal.querySelectorAll('.fill-field input').forEach(function(inp) {
+    var ph = inp.dataset.ph;
+    var val = inp.value.trim() || '[' + ph + ']';
+    text = text.split('[' + ph + ']').join(val);
+  });
+  closeFillModal();
+  if (fillCard) {
+    var orig = fillCard.dataset.text;
+    fillCard.dataset.text = text;
+    copyCard(fillCard);
+    fillCard.dataset.text = orig;
+    fillCard = null;
+  }
+}
+function closeFillModal() { document.getElementById('fillModal').style.display = 'none'; fillCard = null; }
+
+// ═══════════════════════════════════════════════
+// DRAG & DROP REORDER
+// ═══════════════════════════════════════════════
+function onDragStart(e, id) {
+  dragId = id;
+  setTimeout(function(){ if(e.target) e.target.classList.add('dragging'); }, 0);
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
+function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function onDrop(e, targetId) {
+  e.preventDefault();
+  document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('dragging','drag-over'); });
+  if (!dragId || dragId === targetId) { dragId = null; return; }
+  var order = getSortedSections().map(function(s){ return s.id; });
+  var fi = order.indexOf(dragId), ti = order.indexOf(targetId);
+  if (fi === -1 || ti === -1) { dragId = null; return; }
+  order.splice(fi, 1); order.splice(ti, 0, dragId);
+  sectionOrder = order;
+  store.set('sect_order', JSON.stringify(sectionOrder));
+  dragId = null; renderNav();
+}
+
+// ═══════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════
 function renderNav() {
-  document.getElementById('navList').innerHTML = SECTIONS.map(s => `
-    <div class="nav-item${selId === s.id ? ' active' : ''}" onclick="showSection('${s.id}')"
-         style="${selId !== s.id ? '' : ''}">
-      <div class="nav-icon" style="background:${selId === s.id ? 'rgba(255,255,255,0.25)' : s.color + '22'}">${s.icon}</div>
-      <span>${esc(s.label)}</span>
-      <span class="nav-count">${s.snippets.length}</span>
-    </div>`).join('');
+  var sorted = getSortedSections();
+  var html = '';
+  if (recentList.length) {
+    html += '<div class="nav-item syn' + (selId==='recent'?' active':'') + '" onclick="showSection(\'recent\')">' +
+      '<div class="nav-icon" style="background:' + (selId==='recent'?'rgba(255,255,255,0.25)':'#f59e0b22') + '">🕐</div>' +
+      '<span>Recent</span><span class="nav-count">' + recentList.length + '</span></div>';
+  }
+  if (favorites.size) {
+    html += '<div class="nav-item syn' + (selId==='favorites'?' active':'') + '" onclick="showSection(\'favorites\')">' +
+      '<div class="nav-icon" style="background:' + (selId==='favorites'?'rgba(255,255,255,0.25)':'#f59e0b22') + '">⭐</div>' +
+      '<span>Favorites</span><span class="nav-count">' + favorites.size + '</span></div>';
+  }
+  sorted.forEach(function(s) {
+    var total = s.snippets.length + customs.filter(function(c){ return c.sectionId===s.id; }).length;
+    html += '<div class="nav-item' + (selId===s.id?' active':'') + '" onclick="showSection(\'' + s.id + '\')"' +
+      ' draggable="true"' +
+      ' ondragstart="onDragStart(event,\'' + s.id + '\')"' +
+      ' ondragover="onDragOver(event)"' +
+      ' ondrop="onDrop(event,\'' + s.id + '\')"' +
+      ' ondragleave="onDragLeave(event)"' +
+      ' ondragend="document.querySelectorAll(\'.nav-item\').forEach(function(el){el.classList.remove(\'dragging\',\'drag-over\');})">' +
+      '<span class="drag-handle">⠇</span>' +
+      '<div class="nav-icon" style="background:' + (selId===s.id?'rgba(255,255,255,0.25)':s.color+'22') + '">' + s.icon + '</div>' +
+      '<span>' + esc(s.label) + '</span>' +
+      '<span class="nav-count">' + total + '</span></div>';
+  });
+  document.getElementById('navList').innerHTML = html;
 }
 
 // ═══════════════════════════════════════════════
 // CONTENT
 // ═══════════════════════════════════════════════
-function showSection(id) {
-  selId = id;
-  const s = SECTIONS.find(x => x.id === id);
-  const cards = s.snippets.map(t => {
-    const applied = applyName(t);
-    return `<div class="snip-card" onclick="copyCard(this)" data-text="${escAttr(applied)}"
-              style="--c:${s.color}; border-left-color:${s.color}33;">
-      <div class="snip-text">${esc(applied)}</div>
-    </div>`;
+function buildCards(snippets, sectionId, color, builtinCount) {
+  return snippets.map(function(t, idx) {
+    var applied  = applyName(t);
+    var favKey   = sectionId + ':' + idx;
+    var isFav    = favorites.has(favKey);
+    var isCustom = idx >= builtinCount;
+    var myCustoms = customs.filter(function(c){ return c.sectionId===sectionId; });
+    var customId = isCustom ? (myCustoms[idx - builtinCount] || {}).id : null;
+    return '<div class="snip-card' + (isCustom?' custom':'') + '" onclick="maybeFill(this)"' +
+      ' data-text="' + escAttr(applied) + '" data-key="' + favKey + '"' +
+      ' style="border-left-color:' + color + '55;">' +
+      '<button class="snip-fav' + (isFav?' active':'') + '" onclick="event.stopPropagation();toggleFav(\'' + favKey + '\')" title="' + (isFav?'Unfavorite':'Favorite') + '">⭐</button>' +
+      (isCustom && customId ? '<button class="snip-custom-del" onclick="event.stopPropagation();deleteCustom(\'' + customId + '\')" title="Delete">✕</button>' : '') +
+      '<div class="snip-text">' + esc(applied) + '</div></div>';
   }).join('');
+}
 
-  document.getElementById('contentBody').innerHTML = `
-    <div class="section-hdr">
-      <div class="section-icon" style="background:${s.color}22;">${s.icon}</div>
-      <div>
-        <div class="section-title">${esc(s.label)}</div>
-        <div class="section-count">${s.snippets.length} snippet${s.snippets.length !== 1 ? 's' : ''} · tap to copy</div>
-      </div>
-    </div>
-    <div class="snip-grid">${cards}</div>`;
-
-  // update card ::before color via inline style workaround
-  document.querySelectorAll('.snip-card').forEach(c => {
-    c.style.setProperty('--c', s.color);
-    c.style.borderLeftColor = s.color + '55';
-    c.onmouseenter = () => { c.style.borderLeftColor = s.color; c.style.borderColor = s.color; };
-    c.onmouseleave = () => { c.style.borderLeftColor = s.color + '55'; c.style.borderColor = 'var(--border)'; };
+function wireCards(color, items) {
+  document.querySelectorAll('.snip-card').forEach(function(c, i) {
+    var col = (items && items[i] && items[i].color) ? items[i].color : color;
+    c.style.borderLeftColor = col + '55';
+    c.onmouseenter = function(){ c.style.borderLeftColor = col; c.style.borderColor = col; };
+    c.onmouseleave = function(){ c.style.borderLeftColor = col+'55'; c.style.borderColor = 'var(--border)'; };
   });
+}
 
+function showSection(id) {
+  selId = id; closeSidebar();
+
+  if (id === 'recent') {
+    var rcards = recentList.map(function(t) {
+      var applied = applyName(t);
+      return '<div class="snip-card" onclick="maybeFill(this)" data-text="' + escAttr(applied) + '" style="border-left-color:#f59e0b55;">' +
+        '<div class="snip-text">' + esc(applied) + '</div></div>';
+    }).join('');
+    document.getElementById('contentBody').innerHTML =
+      '<div class="section-hdr"><div class="section-icon" style="background:#f59e0b22;">🕐</div>' +
+      '<div><div class="section-title">Recently Used</div>' +
+      '<div class="section-count">' + recentList.length + ' snippet' + (recentList.length!==1?'s':'') + ' · tap to copy</div></div></div>' +
+      '<div class="snip-grid">' + rcards + '</div>';
+    wireCards('#f59e0b', null);
+    renderNav(); return;
+  }
+
+  if (id === 'favorites') {
+    var favSnips = [];
+    Array.from(favorites).forEach(function(key) {
+      var parts = key.split(':'); var sid = parts[0]; var idx = parseInt(parts[1]);
+      var sec = SECTIONS.find(function(s){ return s.id===sid; });
+      if (!sec) return;
+      var all = sec.snippets.concat(customs.filter(function(c){ return c.sectionId===sid; }).map(function(c){ return c.text; }));
+      if (all[idx] !== undefined) favSnips.push({ text:all[idx], key:key, color:sec.color, label:sec.label, icon:sec.icon });
+    });
+    var fcards = favSnips.map(function(f) {
+      var applied = applyName(f.text);
+      return '<div style="margin-bottom:8px"><div class="path-tag">' + f.icon + ' ' + esc(f.label) + '</div>' +
+        '<div class="snip-card" onclick="maybeFill(this)" data-text="' + escAttr(applied) + '" data-key="' + f.key + '" style="border-left-color:' + f.color + '55;">' +
+        '<button class="snip-fav active" onclick="event.stopPropagation();toggleFav(\'' + f.key + '\')" title="Unfavorite">⭐</button>' +
+        '<div class="snip-text">' + esc(applied) + '</div></div></div>';
+    }).join('');
+    document.getElementById('contentBody').innerHTML =
+      '<div class="section-hdr"><div class="section-icon" style="background:#f59e0b22;">⭐</div>' +
+      '<div><div class="section-title">Favorites</div>' +
+      '<div class="section-count">' + favSnips.length + ' snippet' + (favSnips.length!==1?'s':'') + ' · tap to copy</div></div></div>' +
+      '<div class="snip-grid">' + fcards + '</div>';
+    wireCards('#f59e0b', favSnips);
+    renderNav(); return;
+  }
+
+  var s = SECTIONS.find(function(x){ return x.id===id; });
+  if (!s) return;
+  var myCustoms = customs.filter(function(c){ return c.sectionId===id; });
+  var allSnips = s.snippets.concat(myCustoms.map(function(c){ return c.text; }));
+
+  document.getElementById('contentBody').innerHTML =
+    '<div class="section-hdr"><div class="section-icon" style="background:' + s.color + '22;">' + s.icon + '</div>' +
+    '<div><div class="section-title">' + esc(s.label) + '</div>' +
+    '<div class="section-count">' + allSnips.length + ' snippet' + (allSnips.length!==1?'s':'') + ' · tap to copy</div></div></div>' +
+    '<div class="snip-grid">' + buildCards(allSnips, id, s.color, s.snippets.length) + '</div>' +
+    '<button class="add-snip-btn" onclick="openAddSnippet(\'' + id + '\')">&#xFF0B; Add custom snippet</button>';
+
+  wireCards(s.color, null);
   renderNav();
-  closeSidebar();
 }
 
 // ═══════════════════════════════════════════════
@@ -673,144 +946,147 @@ function showSection(id) {
 function onSearch(q) {
   if (!q.trim()) {
     if (selId) showSection(selId);
-    else document.getElementById('contentBody').innerHTML = `<div class="welcome"><div class="big">💬</div><h2>Pick a section to get started</h2><p>Select any category from the sidebar<br>to instantly copy your snippets.</p></div>`;
+    else document.getElementById('contentBody').innerHTML = '<div class="welcome"><div class="big">💬</div><h2>Pick a section to get started</h2><p>Select any category from the sidebar<br>to instantly copy your snippets.</p></div>';
     return;
   }
-  const lq = q.toLowerCase();
-  const results = [];
-  SECTIONS.forEach(s => {
-    s.snippets.forEach(t => {
-      if (applyName(t).toLowerCase().includes(lq))
-        results.push({ text: t, label: s.label, icon: s.icon, color: s.color });
+  var lq = q.toLowerCase(), results = [];
+  SECTIONS.forEach(function(s) {
+    var all = s.snippets.concat(customs.filter(function(c){ return c.sectionId===s.id; }).map(function(c){ return c.text; }));
+    all.forEach(function(t) {
+      if (applyName(t).toLowerCase().includes(lq)) results.push({ text:t, label:s.label, icon:s.icon, color:s.color });
     });
   });
   if (!results.length) {
-    document.getElementById('contentBody').innerHTML = `<div class="no-results"><div class="big">🔍</div><p>No snippets found for "<strong>${esc(q)}</strong>"</p></div>`;
+    document.getElementById('contentBody').innerHTML = '<div class="no-results"><div class="big">🔍</div><p>No snippets found for "<strong>' + esc(q) + '</strong>"</p></div>';
     return;
   }
-  document.getElementById('contentBody').innerHTML = results.map(r => {
-    const applied = applyName(r.text);
-    return `<div style="margin-bottom:8px">
-      <div class="path-tag">${r.icon} ${esc(r.label)}</div>
-      <div class="snip-card" onclick="copyCard(this)" data-text="${escAttr(applied)}" style="border-left-color:${r.color}55;">
-        <div class="snip-text">${hi(esc(applied), lq)}</div>
-      </div>
-    </div>`;
+  document.getElementById('contentBody').innerHTML = results.map(function(r) {
+    var applied = applyName(r.text);
+    return '<div style="margin-bottom:8px"><div class="path-tag">' + r.icon + ' ' + esc(r.label) + '</div>' +
+      '<div class="snip-card" onclick="maybeFill(this)" data-text="' + escAttr(applied) + '" style="border-left-color:' + r.color + '55;">' +
+      '<div class="snip-text">' + hi(esc(applied), lq) + '</div></div></div>';
   }).join('');
-  document.querySelectorAll('.snip-card').forEach((c, i) => {
-    const col = results[i] && results[i].color;
-    if (!col) return;
-    c.style.borderLeftColor = col + '55';
-    c.onmouseenter = () => { c.style.borderLeftColor = col; c.style.borderColor = col; };
-    c.onmouseleave = () => { c.style.borderLeftColor = col + '55'; c.style.borderColor = 'var(--border)'; };
-  });
+  wireCards(null, results);
 }
 
 // ═══════════════════════════════════════════════
 // COPY
 // ═══════════════════════════════════════════════
-let toastTimer;
+var toastTimer;
 function showToast() {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
+  t.textContent = '✓ Copied!';
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
 }
 function copyCard(el) {
-  const text = el.dataset.text;
+  var text = el.dataset.text;
   el.classList.add('flashing');
-  setTimeout(() => el.classList.remove('flashing'), 500);
+  setTimeout(function(){ el.classList.remove('flashing'); }, 500);
+  trackRecent(text);
+  bumpCopyCount();
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(showToast);
   } else {
-    const ta = Object.assign(document.createElement('textarea'), { value: text });
-    ta.style.cssText = 'position:fixed;opacity:0';
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
     document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
     showToast();
   }
 }
 
 // ═══════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown', function(e) {
+  var tag = document.activeElement.tagName;
+  var inInput = tag === 'INPUT' || tag === 'TEXTAREA';
+  if (e.key === 'Escape') {
+    closeNameModal(); closeFillModal(); closeAddSnippet();
+    if (inInput) document.activeElement.blur();
+    return;
+  }
+  if (inInput) return;
+  if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault(); document.getElementById('sideSearch').focus(); return;
+  }
+  if (e.key >= '1' && e.key <= '9' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    var idx = parseInt(e.key) - 1;
+    var sorted = getSortedSections();
+    if (sorted[idx]) showSection(sorted[idx].id);
+    return;
+  }
+  var cards = Array.from(document.querySelectorAll('.snip-card'));
+  if (!cards.length) return;
+  var focused = document.querySelector('.snip-card.kbd-focus');
+  var fi = focused ? cards.indexOf(focused) : -1;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    fi = Math.min(fi + 1, cards.length - 1); if (fi < 0) fi = 0;
+    cards.forEach(function(c){ c.classList.remove('kbd-focus'); });
+    cards[fi].classList.add('kbd-focus');
+    cards[fi].scrollIntoView({ block:'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    fi = Math.max(fi - 1, 0);
+    cards.forEach(function(c){ c.classList.remove('kbd-focus'); });
+    cards[fi].classList.add('kbd-focus');
+    cards[fi].scrollIntoView({ block:'nearest' });
+  } else if (e.key === 'Enter' && focused) {
+    e.preventDefault(); maybeFill(focused);
+  }
+});
+
+// ═══════════════════════════════════════════════
 // MOBILE SIDEBAR
 // ═══════════════════════════════════════════════
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
-function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
-
-// ═══════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════
-function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function escAttr(t) { return t.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function hi(text, q) { return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<mark>$1</mark>'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open');  document.getElementById('sidebarOverlay').classList.remove('open'); }
 
 // ═══════════════════════════════════════════════
 // THEME
 // ═══════════════════════════════════════════════
-let isDark   = store.get('chat_theme') === 'dark';
-let curColor = store.get('chat_color') || 'violet';
-
+var isDark   = store.get('chat_theme') === 'dark';
+var curColor = store.get('chat_color') || 'violet';
 function applyTheme() {
-  const html = document.documentElement;
+  var html = document.documentElement;
   html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  if (curColor === 'violet') html.removeAttribute('data-color');
-  else html.setAttribute('data-color', curColor);
-  // update toggle
-  const track = document.getElementById('darkTrack');
+  if (curColor === 'violet') html.removeAttribute('data-color'); else html.setAttribute('data-color', curColor);
+  var track = document.getElementById('darkTrack');
   if (track) track.classList.toggle('on', isDark);
-  // update active swatch
-  document.querySelectorAll('.swatch').forEach(s =>
-    s.classList.toggle('active', s.dataset.color === curColor));
+  document.querySelectorAll('.swatch').forEach(function(s){ s.classList.toggle('active', s.dataset.color === curColor); });
 }
-function toggleTheme() {
-  isDark = !isDark;
-  store.set('chat_theme', isDark ? 'dark' : 'light');
-  applyTheme();
-}
-function setColor(c) {
-  curColor = c;
-  store.set('chat_color', c);
-  applyTheme();
-}
-function toggleThemePanel(e) {
-  e.stopPropagation();
-  document.getElementById('themePanel').classList.toggle('open');
-}
-document.addEventListener('click', () => {
-  var tp = document.getElementById('themePanel');
-  if (tp) tp.classList.remove('open');
-});
+function toggleTheme()  { isDark = !isDark; store.set('chat_theme', isDark?'dark':'light'); applyTheme(); }
+function setColor(c)    { curColor = c; store.set('chat_color', c); applyTheme(); }
+function toggleThemePanel(e) { e.stopPropagation(); document.getElementById('themePanel').classList.toggle('open'); }
+document.addEventListener('click', function(){ var tp=document.getElementById('themePanel'); if(tp) tp.classList.remove('open'); });
 var _tp = document.getElementById('themePanel');
-if (_tp) _tp.addEventListener('click', function(e) { e.stopPropagation(); });
+if (_tp) _tp.addEventListener('click', function(e){ e.stopPropagation(); });
 
 // ═══════════════════════════════════════════════
 // DOCK
 // ═══════════════════════════════════════════════
 (function() {
-  const dock = document.getElementById('dock');
+  var dock = document.getElementById('dock');
   if (!dock) return;
-  const BASE = 34, MAX = 58, SPREAD = 90;
+  var BASE = 34, MAX = 58, SPREAD = 90;
   function ease(t) { return t * t * (3 - 2 * t); }
-  dock.addEventListener('mousemove', e => {
-    dock.querySelectorAll('.dock-item').forEach(item => {
-      const r = item.getBoundingClientRect();
-      const dist = Math.abs(e.clientX - (r.left + r.width / 2));
-      const size = BASE + ease(Math.max(0, 1 - dist / SPREAD)) * (MAX - BASE);
-      item.style.width = size + 'px';
-      item.style.height = size + 'px';
+  dock.addEventListener('mousemove', function(e) {
+    dock.querySelectorAll('.dock-item').forEach(function(item) {
+      var r = item.getBoundingClientRect();
+      var dist = Math.abs(e.clientX - (r.left + r.width / 2));
+      var size = BASE + ease(Math.max(0, 1 - dist / SPREAD)) * (MAX - BASE);
+      item.style.width = size + 'px'; item.style.height = size + 'px';
     });
   });
-  dock.addEventListener('mouseleave', () => {
-    dock.querySelectorAll('.dock-item').forEach(item => {
-      item.style.width = BASE + 'px';
-      item.style.height = BASE + 'px';
-    });
+  dock.addEventListener('mouseleave', function() {
+    dock.querySelectorAll('.dock-item').forEach(function(item){ item.style.width=BASE+'px'; item.style.height=BASE+'px'; });
   });
-  dock.querySelectorAll('.dock-item').forEach(item => {
-    item.addEventListener('click', () => {
-      item.classList.remove('dock-bounce');
-      void item.offsetWidth;
-      item.classList.add('dock-bounce');
-      item.addEventListener('animationend', () => item.classList.remove('dock-bounce'), { once: true });
+  dock.querySelectorAll('.dock-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      item.classList.remove('dock-bounce'); void item.offsetWidth; item.classList.add('dock-bounce');
+      item.addEventListener('animationend', function(){ item.classList.remove('dock-bounce'); }, { once:true });
     });
   });
 })();
@@ -818,31 +1094,49 @@ if (_tp) _tp.addEventListener('click', function(e) { e.stopPropagation(); });
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
-applyTheme();
-updateHeaderName();
-renderNav();
+loadCopyCount(); applyTheme(); updateHeaderName(); updateCounter(); renderNav();
 (function() {
   var EIGHT_HOURS = 8 * 60 * 60 * 1000;
   var lastSeen = parseInt(store.get('chat_last_seen') || '0', 10);
   var freshSession = !agentName || (Date.now() - lastSeen > EIGHT_HOURS);
-  if (freshSession) {
-    var input = document.getElementById('nameInput');
-    var btn   = document.getElementById('nameSaveBtn');
-    input.value  = agentName;
-    btn.disabled = !agentName;
-    document.getElementById('nameModal').style.display = 'flex';
-    setTimeout(function() { input.focus(); }, 100);
-  } else {
-    document.getElementById('nameModal').style.display = 'none';
-  }
+  var input = document.getElementById('nameInput');
+  var btn   = document.getElementById('nameSaveBtn');
+  input.value  = agentName; btn.disabled = !agentName;
+  document.getElementById('nameModal').style.display = freshSession ? 'flex' : 'none';
+  if (freshSession) setTimeout(function(){ input.focus(); }, 100);
 })();
+document.getElementById('nameModal').addEventListener('click', function(e){ if(e.target===this) closeNameModal(); });
 
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeNameModal();
-});
-document.getElementById('nameModal').addEventListener('click', function(e) {
-  if (e.target === this) closeNameModal();
-});
 </script>
+<div class="fill-modal" id="fillModal" style="display:none" onclick="if(event.target===this)closeFillModal()">
+  <div class="fill-box">
+    <h3>Fill in placeholders</h3>
+    <div class="fill-preview" id="fillPreview"></div>
+    <div id="fillFields"></div>
+    <div class="fill-actions">
+      <button class="fill-cancel" onclick="closeFillModal()">Cancel</button>
+      <button class="fill-copy" onclick="confirmFill()">Copy ✓</button>
+    </div>
+  </div>
+</div>
+
+<div class="fill-modal" id="addSnipModal" style="display:none" onclick="if(event.target===this)closeAddSnippet()">
+  <div class="fill-box">
+    <h3>Add custom snippet</h3>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:14px;line-height:1.5">Saved to this section on this device.</p>
+    <textarea id="addSnipText" placeholder="Type your snippet here..." rows="5"
+      style="width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:0.88rem;outline:none;background:var(--bg);color:var(--text);resize:vertical;font-family:inherit;transition:border-color 0.15s;display:block"
+      oninput="document.getElementById('addSnipCharCount').textContent=this.value.length"
+      onfocus="this.style.borderColor='var(--accent)'"
+      onblur="this.style.borderColor='var(--border)'"
+      onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))saveCustomSnippet()"></textarea>
+    <div style="text-align:right;font-size:0.72rem;color:var(--muted);margin:4px 0 14px"><span id="addSnipCharCount">0</span> chars &nbsp;·&nbsp; Ctrl+Enter to save</div>
+    <div class="fill-actions">
+      <button class="fill-cancel" onclick="closeAddSnippet()">Cancel</button>
+      <button class="fill-copy" onclick="saveCustomSnippet()">Save ✓</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
