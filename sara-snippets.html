@@ -271,6 +271,14 @@
     .nav-item.dragging { opacity:0.3; }
     .nav-item.drag-over { box-shadow:inset 0 2px 0 var(--accent); }
     .nav-item.syn { border:1px dashed var(--border); margin-bottom:4px; }
+
+    /* ── SYNC STATUS ── */
+    .sync-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; transition:background 0.4s; cursor:default; }
+    .sync-dot.ok      { background:#10b981; }
+    .sync-dot.syncing { background:#f59e0b; animation:syncpulse 1.1s ease-in-out infinite; }
+    .sync-dot.err     { background:#ef4444; }
+    .sync-dot.off     { background:rgba(255,255,255,0.25); }
+    @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
   </style>
 </head>
 <body>
@@ -316,6 +324,7 @@
         </div>
       </div>
     </div>
+    <span class="sync-dot off" id="syncDot" title="Sync status"></span>
     <div class="copy-counter" title="Snippets copied today"><div id="copyCounter">0</div><small>today</small></div>
     <div class="agent-badge" onclick="promptChangeName()">
       <div class="av" id="agentAvatar">?</div>
@@ -641,6 +650,7 @@ function bumpCopyCount() {
   copyCount++;
   store.set('copy_stats', JSON.stringify({ date: new Date().toDateString(), count: copyCount }));
   updateCounter();
+  pushToServer();
 }
 function updateCounter() {
   var el = document.getElementById('copyCounter');
@@ -690,6 +700,7 @@ function saveAgentName() {
   document.getElementById('nameModal').style.display = 'none';
   updateHeaderName();
   if (selId) showSection(selId);
+  pushToServer();
 }
 function closeNameModal() { if (agentName) document.getElementById('nameModal').style.display = 'none'; }
 function promptChangeName() {
@@ -744,11 +755,13 @@ function saveCustomSnippet() {
   store.set('customs', JSON.stringify(customs));
   closeAddSnippet();
   showSection(sectionId);
+  pushToServer();
 }
 function deleteCustom(id) {
   customs = customs.filter(function(c){ return c.id !== id; });
   store.set('customs', JSON.stringify(customs));
   if (selId) showSection(selId);
+  pushToServer();
 }
 
 // ═══════════════════════════════════════════════
@@ -816,7 +829,7 @@ function onDrop(e, targetId) {
   order.splice(fi, 1); order.splice(ti, 0, dragId);
   sectionOrder = order;
   store.set('sect_order', JSON.stringify(sectionOrder));
-  dragId = null; renderNav();
+  dragId = null; renderNav(); pushToServer();
 }
 
 // ═══════════════════════════════════════════════
@@ -1057,8 +1070,8 @@ function applyTheme() {
   if (track) track.classList.toggle('on', isDark);
   document.querySelectorAll('.swatch').forEach(function(s){ s.classList.toggle('active', s.dataset.color === curColor); });
 }
-function toggleTheme()  { isDark = !isDark; store.set('chat_theme', isDark?'dark':'light'); applyTheme(); }
-function setColor(c)    { curColor = c; store.set('chat_color', c); applyTheme(); }
+function toggleTheme()  { isDark = !isDark; store.set('chat_theme', isDark?'dark':'light'); applyTheme(); pushToServer(); }
+function setColor(c)    { curColor = c; store.set('chat_color', c); applyTheme(); pushToServer(); }
 function toggleThemePanel(e) { e.stopPropagation(); document.getElementById('themePanel').classList.toggle('open'); }
 document.addEventListener('click', function(){ var tp=document.getElementById('themePanel'); if(tp) tp.classList.remove('open'); });
 var _tp = document.getElementById('themePanel');
@@ -1092,6 +1105,110 @@ if (_tp) _tp.addEventListener('click', function(e){ e.stopPropagation(); });
 })();
 
 // ═══════════════════════════════════════════════
+// CROSS-DEVICE SYNC
+// ═══════════════════════════════════════════════
+var syncAvailable = (typeof google !== 'undefined') && google.script && google.script.run;
+var syncTimer = null;
+
+function setSyncStatus(s) {
+  var dot = document.getElementById('syncDot');
+  if (!dot) return;
+  dot.className = 'sync-dot ' + s;
+  dot.title = { ok:'Synced across devices', syncing:'Syncing…', err:'Sync failed – using local storage', off:'Offline / local only' }[s] || s;
+}
+
+function pushToServer() {
+  if (!syncAvailable) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(function() {
+    setSyncStatus('syncing');
+    google.script.run
+      .withSuccessHandler(function(){ setSyncStatus('ok'); })
+      .withFailureHandler(function(){ setSyncStatus('err'); })
+      .setUserData({
+        favs:            JSON.stringify(Array.from(favorites)),
+        customs:         JSON.stringify(customs),
+        sect_order:      JSON.stringify(sectionOrder),
+        chat_agent_name: agentName,
+        chat_theme:      isDark ? 'dark' : 'light',
+        chat_color:      curColor,
+        recent:          JSON.stringify(recentList)
+      });
+  }, 1500);
+}
+
+function loadFromServer() {
+  if (!syncAvailable) { setSyncStatus('off'); return; }
+  setSyncStatus('syncing');
+  google.script.run
+    .withSuccessHandler(function(data) {
+      if (!data) { setSyncStatus('ok'); return; }
+      var changed = false;
+
+      // Favorites — union
+      if (data.favs) {
+        JSON.parse(data.favs).forEach(function(k) {
+          if (!favorites.has(k)) { favorites.add(k); changed = true; }
+        });
+      }
+
+      // Customs — merge by id
+      if (data.customs) {
+        var localIds = {};
+        customs.forEach(function(c){ localIds[c.id] = true; });
+        JSON.parse(data.customs).forEach(function(c) {
+          if (!localIds[c.id]) { customs.push(c); changed = true; }
+        });
+      }
+
+      // Section order — server wins if nothing local
+      if (data.sect_order && !sectionOrder) {
+        var parsed = JSON.parse(data.sect_order);
+        if (parsed) { sectionOrder = parsed; changed = true; }
+      }
+
+      // Agent name — server wins if local is blank
+      if (data.chat_agent_name && !agentName) {
+        agentName = data.chat_agent_name;
+        store.set('chat_agent_name', agentName);
+        changed = true;
+      }
+
+      // Theme — server wins
+      if (data.chat_theme) {
+        var newDark = data.chat_theme === 'dark';
+        if (newDark !== isDark) { isDark = newDark; store.set('chat_theme', data.chat_theme); changed = true; }
+      }
+      if (data.chat_color) {
+        if (data.chat_color !== curColor) { curColor = data.chat_color; store.set('chat_color', curColor); changed = true; }
+      }
+
+      // Recent — merge, keep freshest 8
+      if (data.recent) {
+        var serverRecent = JSON.parse(data.recent);
+        serverRecent.forEach(function(t) {
+          if (recentList.indexOf(t) === -1) recentList.push(t);
+        });
+        recentList = recentList.slice(0, 8);
+      }
+
+      // Persist merged state locally
+      store.set('favs',       JSON.stringify(Array.from(favorites)));
+      store.set('customs',    JSON.stringify(customs));
+      store.set('recent',     JSON.stringify(recentList));
+      if (sectionOrder) store.set('sect_order', JSON.stringify(sectionOrder));
+
+      setSyncStatus('ok');
+      if (changed) { applyTheme(); updateHeaderName(); renderNav(); if (selId) showSection(selId); }
+
+      // Write merged state back so all devices converge
+      pushToServer();
+    })
+    .withFailureHandler(function(){ setSyncStatus('err'); })
+    .getUserData();
+}
+
+// ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
 loadCopyCount(); applyTheme(); updateHeaderName(); updateCounter(); renderNav();
@@ -1106,6 +1223,7 @@ loadCopyCount(); applyTheme(); updateHeaderName(); updateCounter(); renderNav();
   if (freshSession) setTimeout(function(){ input.focus(); }, 100);
 })();
 document.getElementById('nameModal').addEventListener('click', function(e){ if(e.target===this) closeNameModal(); });
+loadFromServer();
 
 </script>
 <div class="fill-modal" id="fillModal" style="display:none" onclick="if(event.target===this)closeFillModal()">
