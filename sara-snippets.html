@@ -282,6 +282,20 @@
     .sync-dot.err     { background:#ef4444; }
     .sync-dot.off     { background:rgba(255,255,255,0.25); }
     @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── TAGS ── */
+    .snip-tags { margin-top:6px; display:flex; flex-wrap:wrap; gap:3px; }
+    .tag-chip { font-size:0.65rem; font-weight:700; background:rgba(139,92,246,0.1); color:var(--accent); padding:2px 8px; border-radius:20px; }
+    .nav-tags-header { font-size:0.63rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; padding:12px 10px 4px; }
+    .nav-tag-item { display:flex; align-items:center; gap:9px; padding:6px 10px; border-radius:12px; cursor:pointer; font-size:0.85rem; font-weight:600; color:var(--muted); transition:all 0.15s; margin-bottom:2px; }
+    .nav-tag-item:hover { background:rgba(139,92,246,0.09); color:var(--accent); }
+    .nav-tag-item.active { background:var(--grad); color:white; }
+    .nav-tag-item.active .nav-count { background:rgba(255,255,255,0.25); color:white; }
+
+    /* ── NAV FOOTER ── */
+    .nav-footer { padding:10px; border-top:1px solid var(--border); display:flex; gap:6px; flex-shrink:0; }
+    .nav-footer-btn { flex:1; padding:8px; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--muted); font-size:0.76rem; font-weight:600; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+    .nav-footer-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(139,92,246,0.06); }
   </style>
 </head>
 <body>
@@ -342,10 +356,15 @@
 <div class="body">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-search">
-      <input type="text" id="sideSearch" placeholder="Search snippets..." oninput="onSearch(this.value)" autocomplete="off">
+      <input type="text" id="sideSearch" placeholder="Search or #tag..." oninput="onSearch(this.value)" autocomplete="off">
     </div>
     <div class="nav-list" id="navList"></div>
+    <div class="nav-footer">
+      <button class="nav-footer-btn" onclick="exportSnippets()" title="Download custom snippets as CSV">↓ Export</button>
+      <button class="nav-footer-btn" onclick="importSnippets()" title="Import snippets from CSV">↑ Import</button>
+    </div>
   </nav>
+  <input type="file" id="importFileInput" accept=".csv,.txt" style="display:none" onchange="handleImportFile(event)">
   <div class="content">
     <div class="content-body" id="contentBody">
       <div class="welcome">
@@ -751,6 +770,7 @@ function openAddSnippet(sectionId) {
   var modal = document.getElementById('addSnipModal');
   modal.dataset.sectionId = sectionId;
   document.getElementById('addSnipText').value = '';
+  document.getElementById('addSnipTags').value = '';
   document.getElementById('addSnipCharCount').textContent = '0';
   modal.style.display = 'flex';
   setTimeout(function() { document.getElementById('addSnipText').focus(); }, 50);
@@ -761,7 +781,9 @@ function saveCustomSnippet() {
   var text = document.getElementById('addSnipText').value.trim();
   if (!text) return;
   var sectionId = modal.dataset.sectionId;
-  customs.push({ id: Date.now().toString(), sectionId: sectionId, text: text });
+  var tagsRaw = document.getElementById('addSnipTags').value.trim();
+  var tags = tagsRaw ? tagsRaw.split(/[\s,]+/).map(function(t){ return t.replace(/^#/,'').toLowerCase(); }).filter(function(t){ return t; }) : [];
+  customs.push({ id: Date.now().toString(), sectionId: sectionId, text: text, tags: tags });
   store.set('customs', JSON.stringify(customs));
   closeAddSnippet();
   showSection(sectionId);
@@ -779,6 +801,93 @@ function deleteRecent(idx) {
   store.set('recent', JSON.stringify(recentList));
   showSection('recent');
   pushToServer();
+}
+
+// ═══════════════════════════════════════════════
+// TAGS
+// ═══════════════════════════════════════════════
+function getAllTags() {
+  var seen = {}, tags = [];
+  customs.forEach(function(c) {
+    (c.tags || []).forEach(function(t) { if (!seen[t]) { seen[t] = true; tags.push(t); } });
+  });
+  return tags.sort();
+}
+
+// ═══════════════════════════════════════════════
+// EXPORT / IMPORT
+// ═══════════════════════════════════════════════
+function exportSnippets() {
+  if (!customs.length) { alert('No custom snippets to export yet.'); return; }
+  var rows = [['Section', 'Text', 'Tags']];
+  customs.forEach(function(c) {
+    rows.push([c.sectionId, c.text, (c.tags || []).map(function(t){ return '#'+t; }).join(' ')]);
+  });
+  var csv = rows.map(function(r) {
+    return r.map(function(f) {
+      if (f.indexOf(',') !== -1 || f.indexOf('\n') !== -1 || f.indexOf('"') !== -1) return '"' + f.replace(/"/g,'""') + '"';
+      return f;
+    }).join(',');
+  }).join('\n');
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'sara-snippets.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function importSnippets() { document.getElementById('importFileInput').click(); }
+
+function parseCSV(text) {
+  var rows = [], row = [], field = '', inQ = false;
+  for (var i = 0; i < text.length; i++) {
+    var ch = text[i];
+    if (inQ) {
+      if (ch === '"') { if (text[i+1] === '"') { field += '"'; i++; } else inQ = false; }
+      else field += ch;
+    } else {
+      if (ch === '"') inQ = true;
+      else if (ch === ',') { row.push(field); field = ''; }
+      else if (ch === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else if (ch !== '\r') field += ch;
+    }
+  }
+  row.push(field); rows.push(row);
+  return rows.filter(function(r){ return r.some(function(f){ return f.trim(); }); });
+}
+
+function handleImportFile(e) {
+  var file = e.target.files[0]; if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var rows = parseCSV(ev.target.result);
+    if (!rows.length) return;
+    var start = (rows[0][0] || '').toLowerCase().trim() === 'section' ? 1 : 0;
+    var added = 0;
+    for (var i = start; i < rows.length; i++) {
+      var r = rows[i];
+      if (r.length < 2) continue;
+      var sid = r[0].trim().toLowerCase();
+      var text = r[1].trim();
+      var tagsRaw = r[2] ? r[2].trim() : '';
+      var tags = tagsRaw ? tagsRaw.split(/[\s,]+/).map(function(t){ return t.replace(/^#/,'').toLowerCase(); }).filter(function(t){ return t; }) : [];
+      if (!text) continue;
+      var sec = SECTIONS.find(function(s){ return s.id === sid; });
+      if (!sec) sec = SECTIONS.find(function(s){ return s.label.toLowerCase() === sid; });
+      if (!sec) continue;
+      var exists = customs.some(function(c){ return c.sectionId === sec.id && c.text === text; });
+      if (exists) continue;
+      customs.push({ id: Date.now().toString() + i, sectionId: sec.id, text: text, tags: tags });
+      added++;
+    }
+    if (added) {
+      store.set('customs', JSON.stringify(customs));
+      pushToServer(); renderNav();
+      if (selId) showSection(selId);
+    }
+    alert(added ? added + ' snippet' + (added!==1?'s':'') + ' imported!' : 'No new snippets found to import.');
+    e.target.value = '';
+  };
+  reader.readAsText(file);
 }
 
 // ═══════════════════════════════════════════════
@@ -879,6 +988,17 @@ function renderNav() {
       '<span>' + esc(s.label) + '</span>' +
       '<span class="nav-count">' + total + '</span></div>';
   });
+  var allTags = getAllTags();
+  if (allTags.length) {
+    html += '<div class="nav-tags-header">Tags</div>';
+    allTags.forEach(function(tag) {
+      var isActive = selId === 'tag:' + tag;
+      var count = customs.filter(function(c){ return (c.tags||[]).indexOf(tag) !== -1; }).length;
+      html += '<div class="nav-tag-item' + (isActive?' active':'') + '" onclick="showSection(\'tag:' + tag + '\')">' +
+        '<div class="nav-icon" style="font-size:0.75rem;font-weight:800;background:' + (isActive?'rgba(255,255,255,0.25)':'rgba(139,92,246,0.1)') + ';color:' + (isActive?'white':'var(--accent)') + '">#</div>' +
+        '<span>#' + esc(tag) + '</span><span class="nav-count">' + count + '</span></div>';
+    });
+  }
   document.getElementById('navList').innerHTML = html;
 }
 
@@ -887,18 +1007,21 @@ function renderNav() {
 // ═══════════════════════════════════════════════
 function buildCards(snippets, sectionId, color, builtinCount) {
   return snippets.map(function(t, idx) {
-    var applied  = applyName(t);
-    var favKey   = sectionId + ':' + idx;
-    var isFav    = favorites.has(favKey);
-    var isCustom = idx >= builtinCount;
+    var applied   = applyName(t);
+    var favKey    = sectionId + ':' + idx;
+    var isFav     = favorites.has(favKey);
+    var isCustom  = idx >= builtinCount;
     var myCustoms = customs.filter(function(c){ return c.sectionId===sectionId; });
-    var customId = isCustom ? (myCustoms[idx - builtinCount] || {}).id : null;
+    var customObj = isCustom ? (myCustoms[idx - builtinCount] || null) : null;
+    var customId  = customObj ? customObj.id : null;
+    var customTags = customObj ? (customObj.tags || []) : [];
+    var tagsHtml = customTags.length ? '<div class="snip-tags">' + customTags.map(function(tag){ return '<span class="tag-chip">#' + esc(tag) + '</span>'; }).join('') + '</div>' : '';
     return '<div class="snip-card' + (isCustom?' custom':'') + '" onclick="maybeFill(this)"' +
       ' data-text="' + escAttr(applied) + '" data-key="' + favKey + '"' +
       ' style="border-left-color:' + color + '55;">' +
       '<button class="snip-fav' + (isFav?' active':'') + '" onclick="event.stopPropagation();toggleFav(\'' + favKey + '\')" title="' + (isFav?'Unfavorite':'Favorite') + '">⭐</button>' +
       (isCustom && customId ? '<button class="snip-custom-del" onclick="event.stopPropagation();deleteCustom(\'' + customId + '\')" title="Delete">✕</button>' : '') +
-      '<div class="snip-text">' + esc(applied) + '</div></div>';
+      '<div class="snip-text">' + esc(applied) + '</div>' + tagsHtml + '</div>';
   }).join('');
 }
 
@@ -955,6 +1078,29 @@ function showSection(id) {
     renderNav(); return;
   }
 
+  if (id.indexOf('tag:') === 0) {
+    var tag = id.slice(4);
+    var tagSnips = [];
+    customs.forEach(function(c) {
+      if ((c.tags || []).indexOf(tag) !== -1) {
+        var sec = SECTIONS.find(function(s){ return s.id === c.sectionId; });
+        if (sec) tagSnips.push({ text: c.text, color: sec.color, label: sec.label, icon: sec.icon });
+      }
+    });
+    var tcards = tagSnips.map(function(f) {
+      var applied = applyName(f.text);
+      return '<div style="margin-bottom:8px"><div class="path-tag">' + f.icon + ' ' + esc(f.label) + '</div>' +
+        '<div class="snip-card" onclick="maybeFill(this)" data-text="' + escAttr(applied) + '" style="border-left-color:' + f.color + '55;">' +
+        '<div class="snip-text">' + esc(applied) + '</div></div></div>';
+    }).join('');
+    document.getElementById('contentBody').innerHTML =
+      '<div class="section-hdr"><div class="section-icon" style="background:rgba(139,92,246,0.12);font-size:1rem;font-weight:800;color:var(--accent)">#</div>' +
+      '<div><div class="section-title">#' + esc(tag) + '</div>' +
+      '<div class="section-count">' + tagSnips.length + ' snippet' + (tagSnips.length!==1?'s':'') + ' · tap to copy</div></div></div>' +
+      '<div class="snip-grid">' + tcards + '</div>';
+    wireCards(null, tagSnips); renderNav(); return;
+  }
+
   var s = SECTIONS.find(function(x){ return x.id===id; });
   if (!s) return;
   var myCustoms = customs.filter(function(c){ return c.sectionId===id; });
@@ -978,6 +1124,28 @@ function onSearch(q) {
   if (!q.trim()) {
     if (selId) showSection(selId);
     else document.getElementById('contentBody').innerHTML = '<div class="welcome"><div class="big">💬</div><h2>Pick a section to get started</h2><p>Select any category from the sidebar<br>to instantly copy your snippets.</p></div>';
+    return;
+  }
+  if (q.trim().charAt(0) === '#') {
+    var tag = q.trim().slice(1).toLowerCase();
+    var tagResults = [];
+    customs.forEach(function(c) {
+      if ((c.tags || []).some(function(t){ return t.indexOf(tag) !== -1; })) {
+        var sec = SECTIONS.find(function(s){ return s.id === c.sectionId; });
+        if (sec) tagResults.push({ text: c.text, label: sec.label, icon: sec.icon, color: sec.color });
+      }
+    });
+    if (!tagResults.length) {
+      document.getElementById('contentBody').innerHTML = '<div class="no-results"><div class="big">🏷️</div><p>No snippets tagged <strong>#' + esc(tag || '…') + '</strong></p></div>';
+    } else {
+      document.getElementById('contentBody').innerHTML = tagResults.map(function(r) {
+        var applied = applyName(r.text);
+        return '<div style="margin-bottom:8px"><div class="path-tag">' + r.icon + ' ' + esc(r.label) + '</div>' +
+          '<div class="snip-card" onclick="maybeFill(this)" data-text="' + escAttr(applied) + '" style="border-left-color:' + r.color + '55;">' +
+          '<div class="snip-text">' + esc(applied) + '</div></div></div>';
+      }).join('');
+      wireCards(null, tagResults);
+    }
     return;
   }
   var lq = q.toLowerCase(), results = [];
@@ -1259,15 +1427,23 @@ loadFromServer();
 <div class="fill-modal" id="addSnipModal" style="display:none" onclick="if(event.target===this)closeAddSnippet()">
   <div class="fill-box">
     <h3>Add custom snippet</h3>
-    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:14px;line-height:1.5">Saved to this section on this device.</p>
-    <textarea id="addSnipText" placeholder="Type your snippet here..." rows="5"
-      style="width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:0.88rem;outline:none;background:var(--bg);color:var(--text);resize:vertical;font-family:inherit;transition:border-color 0.15s;display:block"
+    <textarea id="addSnipText" placeholder="Type your snippet here..." rows="4"
+      style="width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:0.88rem;outline:none;background:var(--bg);color:var(--text);resize:vertical;font-family:inherit;transition:border-color 0.15s;display:block;margin-bottom:4px"
       oninput="document.getElementById('addSnipCharCount').textContent=this.value.length"
       onfocus="this.style.borderColor='var(--accent)'"
       onblur="this.style.borderColor='var(--border)'"
       onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))saveCustomSnippet()"></textarea>
-    <div style="text-align:right;font-size:0.72rem;color:var(--muted);margin:4px 0 14px"><span id="addSnipCharCount">0</span> chars &nbsp;·&nbsp; Ctrl+Enter to save</div>
-    <div class="fill-actions">
+    <div style="text-align:right;font-size:0.72rem;color:var(--muted);margin-bottom:12px"><span id="addSnipCharCount">0</span> chars</div>
+    <div class="fill-field">
+      <label>Tags <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input id="addSnipTags" type="text" placeholder="#refund  #appeal  #suspension…" autocomplete="off"
+        style="font-family:inherit"
+        onfocus="this.style.borderColor='var(--accent)'"
+        onblur="this.style.borderColor='var(--border)'"
+        onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))saveCustomSnippet()">
+      <div style="font-size:0.68rem;color:var(--muted);margin-top:5px">Separate with spaces · searchable with #tag in the search bar</div>
+    </div>
+    <div class="fill-actions" style="margin-top:14px">
       <button class="fill-cancel" onclick="closeAddSnippet()">Cancel</button>
       <button class="fill-copy" onclick="saveCustomSnippet()">Save ✓</button>
     </div>
