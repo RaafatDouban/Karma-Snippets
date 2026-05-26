@@ -268,11 +268,19 @@
     .add-snip-btn { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:14px; padding:11px 16px; border:2px dashed var(--border); border-radius:12px; cursor:pointer; color:var(--muted); font-size:0.85rem; font-weight:600; background:transparent; width:100%; transition:all 0.15s; font-family:inherit; }
     .add-snip-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(139,92,246,0.05); }
 
-    /* ── DRAG REORDER ── */
+    /* ── DRAG REORDER (nav) ── */
     .drag-handle { cursor:grab; color:var(--muted); opacity:0; font-size:0.9rem; flex-shrink:0; line-height:1; margin-right:-2px; transition:opacity 0.15s; }
     .nav-item:hover .drag-handle { opacity:0.4; }
     .nav-item.dragging { opacity:0.3; }
     .nav-item.drag-over { box-shadow:inset 0 2px 0 var(--accent); }
+
+    /* ── SNIPPET CARD DRAG ── */
+    .card-drag-handle { cursor:grab; color:var(--muted); opacity:0; font-size:0.85rem; position:absolute; left:6px; top:50%; transform:translateY(-50%); transition:opacity 0.15s; line-height:1; padding:4px 2px; z-index:2; }
+    .snip-card:hover .card-drag-handle { opacity:0.35; }
+    .snip-card.card-dragging { opacity:0.3; }
+    .snip-card.card-drag-over { box-shadow:inset 0 3px 0 var(--accent) !important; }
+
+    /* ── DRAG REORDER (cards) ── */
     .nav-item.syn { border:1px dashed var(--border); margin-bottom:4px; }
 
     /* ── SYNC STATUS ── */
@@ -291,6 +299,11 @@
     .nav-tag-item:hover { background:rgba(139,92,246,0.09); color:var(--accent); }
     .nav-tag-item.active { background:var(--grad); color:white; }
     .nav-tag-item.active .nav-count { background:rgba(255,255,255,0.25); color:white; }
+
+    /* ── CUSTOM SECTION DELETE ── */
+    .nav-csec-del { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.72rem; opacity:0; transition:opacity 0.15s; padding:0 2px 0 4px; line-height:1; flex-shrink:0; }
+    .nav-item:hover .nav-csec-del { opacity:0.45; }
+    .nav-csec-del:hover { opacity:1 !important; color:#ef4444; }
 
     /* ── NAV FOOTER ── */
     .nav-footer { padding:10px; border-top:1px solid var(--border); display:flex; gap:6px; flex-shrink:0; }
@@ -660,8 +673,21 @@ var store = {
 var agentName   = store.get('chat_agent_name') || '';
 var favorites   = new Set(JSON.parse(store.get('favs')       || '[]'));
 var recentList  = JSON.parse(store.get('recent')     || '[]');
-var customs     = JSON.parse(store.get('customs')    || '[]');
-var sectionOrder= JSON.parse(store.get('sect_order') || 'null');
+var customs        = JSON.parse(store.get('customs')         || '[]');
+var customSections = JSON.parse(store.get('custom_sections') || '[]');
+var sectionOrder   = JSON.parse(store.get('sect_order')      || 'null');
+var snippetOrder   = JSON.parse(store.get('snip_order') || '{}');
+
+// Migrate old positional favKeys (sectionId:N) → stable keys (sectionId:bN)
+(function(){
+  var changed = false; var next = new Set();
+  favorites.forEach(function(k){
+    var p = k.lastIndexOf(':'); var ref = k.slice(p + 1);
+    if (/^\d+$/.test(ref)) { next.add(k.slice(0, p) + ':b' + ref); changed = true; }
+    else next.add(k);
+  });
+  if (changed) { favorites = next; store.set('favs', JSON.stringify(Array.from(favorites))); }
+})();
 var copyCount   = 0;
 var selId       = null;
 var fillCard    = null;
@@ -690,13 +716,43 @@ function updateCounter() {
 // SECTION ORDER
 // ═══════════════════════════════════════════════
 function getSortedSections() {
-  if (!sectionOrder) return SECTIONS;
-  return SECTIONS.slice().sort(function(a, b) {
+  var all = SECTIONS.concat(customSections);
+  if (!sectionOrder) return all;
+  return all.slice().sort(function(a, b) {
     var ai = sectionOrder.indexOf(a.id), bi = sectionOrder.indexOf(b.id);
     if (ai === -1) return 1;
     if (bi === -1) return -1;
     return ai - bi;
   });
+}
+
+function findOrCreateSection(name) {
+  var lname = name.toLowerCase().trim();
+  var sec = SECTIONS.find(function(s){ return s.id === lname || s.label.toLowerCase() === lname; });
+  if (sec) return sec;
+  var safeId = 'csec_' + lname.replace(/[^a-z0-9]+/g, '_');
+  sec = customSections.find(function(s){ return s.id === safeId || s.label.toLowerCase() === lname; });
+  if (sec) return sec;
+  var palette = ['#6366f1','#f59e0b','#10b981','#ef4444','#0ea5e9','#ec4899','#f97316','#8b5cf6'];
+  var icons   = ['📝','💡','⚡','🔧','📌','🎯','💼','🔖'];
+  var newSec  = { id: safeId, label: name.trim(), icon: icons[customSections.length % icons.length], color: palette[customSections.length % palette.length] };
+  customSections.push(newSec);
+  store.set('custom_sections', JSON.stringify(customSections));
+  return newSec;
+}
+
+function deleteCustomSection(id) {
+  customSections = customSections.filter(function(s){ return s.id !== id; });
+  customs        = customs.filter(function(c){ return c.sectionId !== id; });
+  if (sectionOrder) sectionOrder = sectionOrder.filter(function(sid){ return sid !== id; });
+  store.set('custom_sections', JSON.stringify(customSections));
+  store.set('customs',         JSON.stringify(customs));
+  if (sectionOrder) store.set('sect_order', JSON.stringify(sectionOrder));
+  if (selId === id) {
+    selId = null;
+    document.getElementById('contentBody').innerHTML = '<div class="welcome"><div class="big">💬</div><h2>Pick a section to get started</h2><p>Select any category from the sidebar<br>to instantly copy your snippets.</p></div>';
+  }
+  pushToServer(); renderNav();
 }
 
 // ═══════════════════════════════════════════════
@@ -871,9 +927,7 @@ function handleImportFile(e) {
       var tagsRaw = r[2] ? r[2].trim() : '';
       var tags = tagsRaw ? tagsRaw.split(/[\s,]+/).map(function(t){ return t.replace(/^#/,'').toLowerCase(); }).filter(function(t){ return t; }) : [];
       if (!text) continue;
-      var sec = SECTIONS.find(function(s){ return s.id === sid; });
-      if (!sec) sec = SECTIONS.find(function(s){ return s.label.toLowerCase() === sid; });
-      if (!sec) continue;
+      var sec = findOrCreateSection(r[0].trim());
       var exists = customs.some(function(c){ return c.sectionId === sec.id && c.text === text; });
       if (exists) continue;
       customs.push({ id: Date.now().toString() + i, sectionId: sec.id, text: text, tags: tags });
@@ -959,6 +1013,35 @@ function onDrop(e, targetId) {
 }
 
 // ═══════════════════════════════════════════════
+// CARD DRAG & DROP
+// ═══════════════════════════════════════════════
+var cardDragKey = null;
+var cardDragSid = null;
+function onCardDragStart(e, sid, key) {
+  cardDragKey = key; cardDragSid = sid;
+  setTimeout(function(){ if(e.target) e.target.classList.add('card-dragging'); }, 0);
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onCardDragOver(e) { e.preventDefault(); e.stopPropagation(); e.dataTransfer.dropEffect='move'; e.currentTarget.classList.add('card-drag-over'); }
+function onCardDragLeave(e) { e.currentTarget.classList.remove('card-drag-over'); }
+function onCardDrop(e, sid, targetKey) {
+  e.preventDefault(); e.stopPropagation();
+  document.querySelectorAll('.snip-card').forEach(function(el){ el.classList.remove('card-dragging','card-drag-over'); });
+  if (!cardDragKey || cardDragKey === targetKey || cardDragSid !== sid) { cardDragKey = null; return; }
+  var sec = SECTIONS.find(function(s){ return s.id===sid; }) || customSections.find(function(s){ return s.id===sid; });
+  var builtins  = sec && sec.snippets ? sec.snippets : [];
+  var myCustoms = customs.filter(function(c){ return c.sectionId===sid; });
+  var order = getSnipItems(sid, builtins, myCustoms).map(function(it){ return it.key; });
+  var fi = order.indexOf(cardDragKey), ti = order.indexOf(targetKey);
+  if (fi === -1 || ti === -1) { cardDragKey = null; return; }
+  order.splice(fi, 1); order.splice(ti, 0, cardDragKey);
+  snippetOrder[sid] = order;
+  store.set('snip_order', JSON.stringify(snippetOrder));
+  cardDragKey = null;
+  showSection(sid); pushToServer();
+}
+
+// ═══════════════════════════════════════════════
 // NAV
 // ═══════════════════════════════════════════════
 function renderNav() {
@@ -975,7 +1058,10 @@ function renderNav() {
       '<span>Favorites</span><span class="nav-count">' + favorites.size + '</span></div>';
   }
   sorted.forEach(function(s) {
-    var total = s.snippets.length + customs.filter(function(c){ return c.sectionId===s.id; }).length;
+    var isCustomSec = s.id.indexOf('csec_') === 0;
+    var builtinCount = isCustomSec ? 0 : (s.snippets ? s.snippets.length : 0);
+    var total = builtinCount + customs.filter(function(c){ return c.sectionId===s.id; }).length;
+    var delBtn = isCustomSec ? '<button class="nav-csec-del" onclick="event.stopPropagation();deleteCustomSection(\'' + s.id + '\')" title="Delete section">✕</button>' : '';
     html += '<div class="nav-item' + (selId===s.id?' active':'') + '" onclick="showSection(\'' + s.id + '\')"' +
       ' draggable="true"' +
       ' ondragstart="onDragStart(event,\'' + s.id + '\')"' +
@@ -986,7 +1072,7 @@ function renderNav() {
       '<span class="drag-handle">⠇</span>' +
       '<div class="nav-icon" style="background:' + (selId===s.id?'rgba(255,255,255,0.25)':s.color+'22') + '">' + s.icon + '</div>' +
       '<span>' + esc(s.label) + '</span>' +
-      '<span class="nav-count">' + total + '</span></div>';
+      '<span class="nav-count">' + total + '</span>' + delBtn + '</div>';
   });
   var allTags = getAllTags();
   if (allTags.length) {
@@ -1005,23 +1091,45 @@ function renderNav() {
 // ═══════════════════════════════════════════════
 // CONTENT
 // ═══════════════════════════════════════════════
-function buildCards(snippets, sectionId, color, builtinCount) {
-  return snippets.map(function(t, idx) {
-    var applied   = applyName(t);
-    var favKey    = sectionId + ':' + idx;
-    var isFav     = favorites.has(favKey);
-    var isCustom  = idx >= builtinCount;
-    var myCustoms = customs.filter(function(c){ return c.sectionId===sectionId; });
-    var customObj = isCustom ? (myCustoms[idx - builtinCount] || null) : null;
-    var customId  = customObj ? customObj.id : null;
-    var customTags = customObj ? (customObj.tags || []) : [];
-    var tagsHtml = customTags.length ? '<div class="snip-tags">' + customTags.map(function(tag){ return '<span class="tag-chip">#' + esc(tag) + '</span>'; }).join('') + '</div>' : '';
-    return '<div class="snip-card' + (isCustom?' custom':'') + '" onclick="maybeFill(this)"' +
-      ' data-text="' + escAttr(applied) + '" data-key="' + favKey + '"' +
-      ' style="border-left-color:' + color + '55;">' +
-      '<button class="snip-fav' + (isFav?' active':'') + '" onclick="event.stopPropagation();toggleFav(\'' + favKey + '\')" title="' + (isFav?'Unfavorite':'Favorite') + '">⭐</button>' +
-      (isCustom && customId ? '<button class="snip-custom-del" onclick="event.stopPropagation();deleteCustom(\'' + customId + '\')" title="Delete">✕</button>' : '') +
-      '<div class="snip-text">' + esc(applied) + '</div>' + tagsHtml + '</div>';
+function getSnipItems(sectionId, builtins, myCustoms) {
+  var items = [];
+  builtins.forEach(function(text, i){
+    items.push({ key:'b'+i, stableKey:sectionId+':b'+i, text:text, isCustom:false, customObj:null });
+  });
+  myCustoms.forEach(function(c){
+    items.push({ key:'c'+c.id, stableKey:sectionId+':c'+c.id, text:c.text, isCustom:true, customObj:c });
+  });
+  var order = snippetOrder[sectionId];
+  if (order && order.length) {
+    var map = {}; items.forEach(function(it){ map[it.key] = it; });
+    var sorted = [];
+    order.forEach(function(k){ if (map[k]){ sorted.push(map[k]); delete map[k]; } });
+    items.forEach(function(it){ if (map[it.key]) sorted.push(it); });
+    items = sorted;
+  }
+  return items;
+}
+
+function buildCards(sectionId, builtins, myCustoms, color) {
+  var items = getSnipItems(sectionId, builtins, myCustoms);
+  return items.map(function(item) {
+    var applied    = applyName(item.text);
+    var isFav      = favorites.has(item.stableKey);
+    var customTags = item.customObj ? (item.customObj.tags || []) : [];
+    var tagsHtml   = customTags.length ? '<div class="snip-tags">'+customTags.map(function(t){ return '<span class="tag-chip">#'+esc(t)+'</span>'; }).join('')+'</div>' : '';
+    return '<div class="snip-card'+(item.isCustom?' custom':'')+'" onclick="maybeFill(this)"'+
+      ' draggable="true" data-snip-key="'+item.key+'"'+
+      ' ondragstart="onCardDragStart(event,\''+sectionId+'\',\''+item.key+'\')"'+
+      ' ondragover="onCardDragOver(event)"'+
+      ' ondragleave="onCardDragLeave(event)"'+
+      ' ondrop="onCardDrop(event,\''+sectionId+'\',\''+item.key+'\')"'+
+      ' ondragend="document.querySelectorAll(\'.snip-card\').forEach(function(el){el.classList.remove(\'card-dragging\',\'card-drag-over\');})"'+
+      ' data-text="'+escAttr(applied)+'" data-key="'+item.stableKey+'"'+
+      ' style="border-left-color:'+color+'55;">'+
+      '<span class="card-drag-handle">⠇</span>'+
+      '<button class="snip-fav'+(isFav?' active':'')+'" onclick="event.stopPropagation();toggleFav(\''+item.stableKey+'\')" title="'+(isFav?'Unfavorite':'Favorite')+'">⭐</button>'+
+      (item.isCustom && item.customObj ? '<button class="snip-custom-del" onclick="event.stopPropagation();deleteCustom(\''+item.customObj.id+'\')" title="Delete">✕</button>' : '')+
+      '<div class="snip-text">'+esc(applied)+'</div>'+tagsHtml+'</div>';
   }).join('');
 }
 
@@ -1056,11 +1164,13 @@ function showSection(id) {
   if (id === 'favorites') {
     var favSnips = [];
     Array.from(favorites).forEach(function(key) {
-      var parts = key.split(':'); var sid = parts[0]; var idx = parseInt(parts[1]);
-      var sec = SECTIONS.find(function(s){ return s.id===sid; });
+      var p = key.lastIndexOf(':'); var sid = key.slice(0, p); var ref = key.slice(p + 1);
+      var sec = SECTIONS.find(function(s){ return s.id===sid; }) || customSections.find(function(s){ return s.id===sid; });
       if (!sec) return;
-      var all = sec.snippets.concat(customs.filter(function(c){ return c.sectionId===sid; }).map(function(c){ return c.text; }));
-      if (all[idx] !== undefined) favSnips.push({ text:all[idx], key:key, color:sec.color, label:sec.label, icon:sec.icon });
+      var text;
+      if (ref.charAt(0) === 'b') { text = sec.snippets && sec.snippets[parseInt(ref.slice(1))]; }
+      else if (ref.charAt(0) === 'c') { var co = customs.find(function(c){ return c.id===ref.slice(1); }); text = co && co.text; }
+      if (text) favSnips.push({ text:text, key:key, color:sec.color, label:sec.label, icon:sec.icon });
     });
     var fcards = favSnips.map(function(f) {
       var applied = applyName(f.text);
@@ -1076,6 +1186,18 @@ function showSection(id) {
       '<div class="snip-grid">' + fcards + '</div>';
     wireCards('#f59e0b', favSnips);
     renderNav(); return;
+  }
+
+  if (id.indexOf('csec_') === 0) {
+    var csec = customSections.find(function(s){ return s.id === id; });
+    if (!csec) return;
+    var csCustoms = customs.filter(function(c){ return c.sectionId === id; });
+    document.getElementById('contentBody').innerHTML =
+      '<div class="section-hdr"><div class="section-icon" style="background:' + csec.color + '22;">' + csec.icon + '</div>' +
+      '<div><div class="section-title">' + esc(csec.label) + '</div>' +
+      '<div class="section-count">' + csCustoms.length + ' snippet' + (csCustoms.length!==1?'s':'') + ' · tap to copy</div></div></div>' +
+      '<div class="snip-grid">' + buildCards(id, [], csCustoms, csec.color) + '</div>' +      '<button class="add-snip-btn" onclick="openAddSnippet(\'' + id + '\')">&#xFF0B; Add custom snippet</button>';
+    wireCards(csec.color, null); renderNav(); return;
   }
 
   if (id.indexOf('tag:') === 0) {
@@ -1104,13 +1226,12 @@ function showSection(id) {
   var s = SECTIONS.find(function(x){ return x.id===id; });
   if (!s) return;
   var myCustoms = customs.filter(function(c){ return c.sectionId===id; });
-  var allSnips = s.snippets.concat(myCustoms.map(function(c){ return c.text; }));
-
+  var total = s.snippets.length + myCustoms.length;
   document.getElementById('contentBody').innerHTML =
     '<div class="section-hdr"><div class="section-icon" style="background:' + s.color + '22;">' + s.icon + '</div>' +
     '<div><div class="section-title">' + esc(s.label) + '</div>' +
-    '<div class="section-count">' + allSnips.length + ' snippet' + (allSnips.length!==1?'s':'') + ' · tap to copy</div></div></div>' +
-    '<div class="snip-grid">' + buildCards(allSnips, id, s.color, s.snippets.length) + '</div>' +
+    '<div class="section-count">' + total + ' snippet' + (total!==1?'s':'') + ' · tap to copy</div></div></div>' +
+    '<div class="snip-grid">' + buildCards(id, s.snippets, myCustoms, s.color) + '</div>' +
     '<button class="add-snip-btn" onclick="openAddSnippet(\'' + id + '\')">&#xFF0B; Add custom snippet</button>';
 
   wireCards(s.color, null);
@@ -1314,7 +1435,9 @@ function pushToServer() {
       .setUserData({
         favs:            JSON.stringify(Array.from(favorites)),
         customs:         JSON.stringify(customs),
+        custom_sections: JSON.stringify(customSections),
         sect_order:      JSON.stringify(sectionOrder),
+        snip_order:      JSON.stringify(snippetOrder),
         chat_agent_name: agentName,
         chat_theme:      isDark ? 'dark' : 'light',
         chat_color:      curColor,
@@ -1338,6 +1461,16 @@ function loadFromServer() {
         });
       }
 
+      // Custom sections — merge by id
+      if (data.custom_sections) {
+        var localSecIds = {};
+        customSections.forEach(function(s){ localSecIds[s.id] = true; });
+        JSON.parse(data.custom_sections).forEach(function(s) {
+          if (!localSecIds[s.id]) { customSections.push(s); changed = true; }
+        });
+        store.set('custom_sections', JSON.stringify(customSections));
+      }
+
       // Customs — merge by id
       if (data.customs) {
         var localIds = {};
@@ -1345,6 +1478,15 @@ function loadFromServer() {
         JSON.parse(data.customs).forEach(function(c) {
           if (!localIds[c.id]) { customs.push(c); changed = true; }
         });
+      }
+
+      // Snippet order — merge per section (server fills any section missing locally)
+      if (data.snip_order) {
+        var serverSnipOrder = JSON.parse(data.snip_order);
+        Object.keys(serverSnipOrder).forEach(function(sid) {
+          if (!snippetOrder[sid]) { snippetOrder[sid] = serverSnipOrder[sid]; changed = true; }
+        });
+        store.set('snip_order', JSON.stringify(snippetOrder));
       }
 
       // Section order — server wins if nothing local

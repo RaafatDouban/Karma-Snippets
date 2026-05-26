@@ -11,7 +11,9 @@ function getUserData() {
     return {
       favs:            p.getProperty('favs'),
       customs:         p.getProperty('customs'),
+      custom_sections: p.getProperty('custom_sections'),
       sect_order:      p.getProperty('sect_order'),
+      snip_order:      p.getProperty('snip_order'),
       chat_agent_name: p.getProperty('chat_agent_name'),
       chat_theme:      p.getProperty('chat_theme'),
       chat_color:      p.getProperty('chat_color'),
