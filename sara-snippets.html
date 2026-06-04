@@ -139,21 +139,41 @@
     /* ── SNIPPET CARDS ── */
     .snip-grid { display: flex; flex-direction: column; gap: 9px; }
     .snip-card {
-      padding: 13px 16px 13px 20px;
+      padding: 12px 44px 13px 20px;
       border: 2px solid var(--border);
       border-radius: 14px;
       cursor: pointer; transition: all 0.16s;
       background: var(--surface); position: relative; overflow: hidden;
     }
+    .snip-card.has-actions { padding-bottom: 34px; }
     .snip-card::before {
       content: '';
       position: absolute; left: 0; top: 0; bottom: 0;
       width: 4px; border-radius: 4px 0 0 4px;
     }
     .snip-card:hover { transform: translateX(5px); box-shadow: var(--shadow); }
-    .snip-card:hover::after { content: '📋'; position: absolute; right: 10px; bottom: 8px; font-size: 1rem; opacity: 0.45; }
     .snip-card.flashing { border-color: #10b981 !important; background: rgba(16,185,129,0.07) !important; }
     .snip-text { font-size: 0.88rem; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
+
+    /* ── CARD ACTION ROW ── */
+    .snip-actions { position:absolute; bottom:0; left:0; right:0; padding:4px 10px; display:flex; align-items:center; gap:1px; opacity:0; transition:opacity 0.15s; background:linear-gradient(to top,var(--surface) 55%,transparent); }
+    .snip-card:hover .snip-actions { opacity:1; }
+    .sa-btn { background:none; border:none; cursor:pointer; font-size:0.72rem; color:var(--muted); padding:3px 6px; border-radius:6px; transition:all 0.12s; line-height:1; font-family:inherit; }
+    .sa-btn:hover { background:rgba(139,92,246,0.1); color:var(--accent); }
+    .sa-btn.pinned { color:#f59e0b; }
+    .sa-btn.overridden { color:var(--accent); }
+    .snip-count-badge { margin-left:auto; font-size:0.6rem; font-weight:700; color:var(--muted); background:var(--bg); padding:2px 6px; border-radius:10px; border:1px solid var(--border); }
+
+    /* ── CASE TIMER ── */
+    /* ── SCRATCHPAD ── */
+    .scratchpad-btn { background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color:white; cursor:pointer; font-size:1rem; padding:5px 9px; border-radius:20px; transition:all 0.18s; line-height:1; }
+    .scratchpad-btn:hover { background:rgba(255,255,255,0.35); }
+    .scratchpad-panel { position:fixed; top:62px; right:20px; width:380px; background:var(--surface); border:2px solid var(--border); border-radius:16px; box-shadow:0 12px 40px rgba(0,0,0,0.25); z-index:800; display:flex; flex-direction:column; overflow:hidden; }
+    .scratchpad-hdr { padding:9px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:var(--bg); }
+    .scratchpad-hdr span { font-size:0.82rem; font-weight:700; color:var(--text); }
+    .scratchpad-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.9rem; padding:2px 5px; border-radius:6px; transition:color 0.12s; }
+    .scratchpad-close:hover { color:#ef4444; }
+    #scratchpadText { padding:12px 14px; border:none; outline:none; resize:none; font-family:inherit; font-size:0.88rem; color:var(--text); background:var(--surface); min-height:240px; line-height:1.65; }
 
     /* ── WELCOME ── */
     .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--muted); }
@@ -305,6 +325,22 @@
     .nav-item:hover .nav-csec-del { opacity:0.45; }
     .nav-csec-del:hover { opacity:1 !important; color:#ef4444; }
 
+    /* ── WHAT'S NEW MODAL ── */
+    .wn-modal { background:var(--surface); border-radius:24px; width:90%; max-width:460px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.3),0 0 0 1px var(--border); }
+    .wn-header { background:var(--grad); padding:26px 30px 22px; color:white; }
+    .wn-version { display:inline-block; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.35); border-radius:20px; padding:2px 12px; font-size:0.68rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px; }
+    .wn-header h2 { font-size:1.35rem; font-weight:800; margin-bottom:4px; }
+    .wn-header p { font-size:0.82rem; opacity:0.75; }
+    .wn-body { padding:16px 28px 8px; max-height:55vh; overflow-y:auto; }
+    .wn-feature { display:flex; align-items:flex-start; gap:13px; padding:10px 0; border-bottom:1px solid var(--border); }
+    .wn-feature:last-child { border-bottom:none; }
+    .wn-icon { font-size:1.05rem; flex-shrink:0; width:22px; text-align:center; padding-top:2px; }
+    .wn-text strong { font-size:0.87rem; font-weight:700; color:var(--text); display:block; margin-bottom:1px; }
+    .wn-text span { font-size:0.76rem; color:var(--muted); line-height:1.45; }
+    .wn-footer { padding:16px 28px 24px; }
+    .wn-btn { width:100%; padding:13px; background:var(--grad); color:white; border:none; border-radius:14px; font-size:0.95rem; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(139,92,246,0.35); transition:all 0.2s; font-family:inherit; }
+    .wn-btn:hover { opacity:0.9; transform:translateY(-1px); box-shadow:0 6px 20px rgba(139,92,246,0.45); }
+
     /* ── NAV FOOTER ── */
     .nav-footer { padding:10px; border-top:1px solid var(--border); display:flex; gap:6px; flex-shrink:0; }
     .nav-footer-btn { flex:1; padding:8px; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--muted); font-size:0.76rem; font-weight:600; cursor:pointer; transition:all 0.15s; font-family:inherit; }
@@ -355,6 +391,7 @@
       </div>
     </div>
     <span class="sync-dot off" id="syncDot" title="Sync status"></span>
+    <button class="scratchpad-btn" onclick="toggleScratchpad()" title="Notes">📝</button>
     <div class="copy-counter" title="Snippets copied today"><div id="copyCounter">0</div><small>today</small></div>
     <div class="agent-badge" onclick="promptChangeName()">
       <div class="av" id="agentAvatar">?</div>
@@ -676,7 +713,12 @@ var recentList  = JSON.parse(store.get('recent')     || '[]');
 var customs        = JSON.parse(store.get('customs')         || '[]');
 var customSections = JSON.parse(store.get('custom_sections') || '[]');
 var sectionOrder   = JSON.parse(store.get('sect_order')      || 'null');
-var snippetOrder   = JSON.parse(store.get('snip_order') || '{}');
+var snippetOrder      = JSON.parse(store.get('snip_order')  || '{}');
+var overrides         = JSON.parse(store.get('overrides')   || '{}');
+var pins              = new Set(JSON.parse(store.get('pins') || '[]'));
+var snippetCopyCounts = JSON.parse(store.get('snip_counts') || '{}');
+var CURRENT_VERSION   = '2.0';
+var seenVersion       = store.get('seen_version') || '';
 
 // Migrate old positional favKeys (sectionId:N) → stable keys (sectionId:bN)
 (function(){
@@ -825,31 +867,81 @@ function trackRecent(text) {
 function openAddSnippet(sectionId) {
   var modal = document.getElementById('addSnipModal');
   modal.dataset.sectionId = sectionId;
+  modal.dataset.mode = 'add';
+  delete modal.dataset.editId;
+  delete modal.dataset.overrideKey;
+  document.getElementById('addSnipModalTitle').textContent = 'Add custom snippet';
   document.getElementById('addSnipText').value = '';
   document.getElementById('addSnipTags').value = '';
   document.getElementById('addSnipCharCount').textContent = '0';
+  document.getElementById('addSnipTagsRow').style.display = '';
+  var resetBtn = document.getElementById('resetOverrideBtn');
+  if (resetBtn) resetBtn.style.display = 'none';
   modal.style.display = 'flex';
   setTimeout(function() { document.getElementById('addSnipText').focus(); }, 50);
 }
-function closeAddSnippet() { document.getElementById('addSnipModal').style.display = 'none'; }
+function closeAddSnippet() {
+  var modal = document.getElementById('addSnipModal');
+  modal.style.display = 'none';
+  modal.dataset.mode = 'add';
+  document.getElementById('addSnipTagsRow').style.display = '';
+  var resetBtn = document.getElementById('resetOverrideBtn');
+  if (resetBtn) resetBtn.style.display = 'none';
+}
 function saveCustomSnippet() {
   var modal = document.getElementById('addSnipModal');
   var text = document.getElementById('addSnipText').value.trim();
   if (!text) return;
   var sectionId = modal.dataset.sectionId;
+  var mode = modal.dataset.mode || 'add';
   var tagsRaw = document.getElementById('addSnipTags').value.trim();
   var tags = tagsRaw ? tagsRaw.split(/[\s,]+/).map(function(t){ return t.replace(/^#/,'').toLowerCase(); }).filter(function(t){ return t; }) : [];
+  if (mode === 'edit') {
+    var editId = modal.dataset.editId;
+    for (var i = 0; i < customs.length; i++) {
+      if (customs[i].id === editId) { customs[i].text = text; customs[i].tags = tags; break; }
+    }
+    store.set('customs', JSON.stringify(customs));
+    closeAddSnippet(); showSection(sectionId); pushToServer(); return;
+  }
+  if (mode === 'override') {
+    var overKey = modal.dataset.overrideKey;
+    overrides[overKey] = text;
+    store.set('overrides', JSON.stringify(overrides));
+    closeAddSnippet(); showSection(sectionId); pushToServer(); return;
+  }
   customs.push({ id: Date.now().toString(), sectionId: sectionId, text: text, tags: tags });
   store.set('customs', JSON.stringify(customs));
-  closeAddSnippet();
-  showSection(sectionId);
-  pushToServer();
+  closeAddSnippet(); showSection(sectionId); pushToServer();
 }
-function deleteCustom(id) {
-  customs = customs.filter(function(c){ return c.id !== id; });
-  store.set('customs', JSON.stringify(customs));
-  if (selId) showSection(selId);
-  pushToServer();
+var pendingDeleteId = null;
+var pendingDeleteTimer = null;
+function deleteCustom(btn, id) {
+  if (pendingDeleteId === id) {
+    clearTimeout(pendingDeleteTimer);
+    pendingDeleteId = null;
+    customs = customs.filter(function(c){ return c.id !== id; });
+    store.set('customs', JSON.stringify(customs));
+    if (selId) showSection(selId);
+    pushToServer();
+    return;
+  }
+  if (pendingDeleteId !== null) {
+    var old = document.querySelector('.snip-custom-del[data-confirm]');
+    if (old) { old.textContent = '✕'; old.removeAttribute('data-confirm'); old.style.color = ''; old.style.opacity = ''; }
+    clearTimeout(pendingDeleteTimer);
+  }
+  pendingDeleteId = id;
+  btn.textContent = 'Delete?';
+  btn.setAttribute('data-confirm', '1');
+  btn.style.color = '#ef4444';
+  btn.style.opacity = '1';
+  pendingDeleteTimer = setTimeout(function(){
+    pendingDeleteId = null;
+    if (btn.getAttribute('data-confirm')) {
+      btn.textContent = '✕'; btn.removeAttribute('data-confirm'); btn.style.color = ''; btn.style.opacity = '';
+    }
+  }, 3000);
 }
 
 function deleteRecent(idx) {
@@ -871,10 +963,89 @@ function getAllTags() {
 }
 
 // ═══════════════════════════════════════════════
+// SCRATCHPAD
+// ═══════════════════════════════════════════════
+function toggleScratchpad() {
+  var panel = document.getElementById('scratchpadPanel');
+  var isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'flex';
+  if (!isOpen) {
+    var ta = document.getElementById('scratchpadText');
+    ta.value = store.get('scratchpad') || '';
+    setTimeout(function(){ ta.focus(); }, 50);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// EDIT / DUPE / PIN
+// ═══════════════════════════════════════════════
+function editSnip(stableKey, sectionId, isCustom) {
+  var modal = document.getElementById('addSnipModal');
+  modal.dataset.sectionId = sectionId;
+  var prefillText = '';
+  if (isCustom) {
+    var p = stableKey.lastIndexOf(':');
+    var customId = stableKey.slice(p + 2);
+    var co = customs.find(function(c){ return c.id === customId; });
+    prefillText = co ? co.text : '';
+    modal.dataset.mode = 'edit';
+    modal.dataset.editId = customId;
+    document.getElementById('addSnipTags').value = co && co.tags ? co.tags.map(function(t){ return '#'+t; }).join(' ') : '';
+    document.getElementById('addSnipTagsRow').style.display = '';
+  } else {
+    var card = document.querySelector('.snip-card[data-key="'+stableKey+'"]');
+    prefillText = overrides[stableKey] || (card ? card.dataset.rawText : '');
+    modal.dataset.mode = 'override';
+    modal.dataset.overrideKey = stableKey;
+    document.getElementById('addSnipTagsRow').style.display = 'none';
+    var resetBtn = document.getElementById('resetOverrideBtn');
+    if (resetBtn) resetBtn.style.display = overrides[stableKey] ? '' : 'none';
+  }
+  document.getElementById('addSnipModalTitle').textContent = isCustom ? 'Edit snippet' : 'Override snippet';
+  document.getElementById('addSnipText').value = prefillText;
+  document.getElementById('addSnipCharCount').textContent = prefillText.length;
+  modal.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('addSnipText').focus(); }, 50);
+}
+function dupeSnip(stableKey, sectionId) {
+  var card = document.querySelector('.snip-card[data-key="'+stableKey+'"]');
+  var rawText = card ? card.dataset.rawText : '';
+  var modal = document.getElementById('addSnipModal');
+  modal.dataset.sectionId = sectionId;
+  modal.dataset.mode = 'add';
+  delete modal.dataset.editId;
+  delete modal.dataset.overrideKey;
+  document.getElementById('addSnipModalTitle').textContent = 'Duplicate snippet';
+  document.getElementById('addSnipText').value = rawText;
+  document.getElementById('addSnipCharCount').textContent = rawText.length;
+  document.getElementById('addSnipTags').value = '';
+  document.getElementById('addSnipTagsRow').style.display = '';
+  modal.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('addSnipText').focus(); }, 50);
+}
+function resetOverride() {
+  var modal = document.getElementById('addSnipModal');
+  var overKey = modal.dataset.overrideKey;
+  if (overKey && overrides[overKey] !== undefined) {
+    delete overrides[overKey];
+    store.set('overrides', JSON.stringify(overrides));
+  }
+  closeAddSnippet();
+  if (selId) showSection(selId);
+  pushToServer();
+}
+function togglePin(stableKey) {
+  if (pins.has(stableKey)) pins.delete(stableKey); else pins.add(stableKey);
+  store.set('pins', JSON.stringify(Array.from(pins)));
+  if (selId) showSection(selId);
+  pushToServer();
+}
+
+// ═══════════════════════════════════════════════
 // EXPORT / IMPORT
 // ═══════════════════════════════════════════════
 function exportSnippets() {
-  if (!customs.length) { alert('No custom snippets to export yet.'); return; }
+  if (!customs.length) { showToast('No custom snippets to export'); return; }
   var rows = [['Section', 'Text', 'Tags']];
   customs.forEach(function(c) {
     rows.push([c.sectionId, c.text, (c.tags || []).map(function(t){ return '#'+t; }).join(' ')]);
@@ -938,7 +1109,7 @@ function handleImportFile(e) {
       pushToServer(); renderNav();
       if (selId) showSection(selId);
     }
-    alert(added ? added + ' snippet' + (added!==1?'s':'') + ' imported!' : 'No new snippets found to import.');
+    showToast(added ? added + ' snippet' + (added!==1?'s':'') + ' imported!' : 'No new snippets found');
     e.target.value = '';
   };
   reader.readAsText(file);
@@ -1094,10 +1265,12 @@ function renderNav() {
 function getSnipItems(sectionId, builtins, myCustoms) {
   var items = [];
   builtins.forEach(function(text, i){
-    items.push({ key:'b'+i, stableKey:sectionId+':b'+i, text:text, isCustom:false, customObj:null });
+    var sk = sectionId + ':b' + i;
+    var displayText = overrides[sk] || text;
+    items.push({ key:'b'+i, stableKey:sk, text:displayText, rawText:text, isCustom:false, customObj:null, isOverridden:!!overrides[sk] });
   });
   myCustoms.forEach(function(c){
-    items.push({ key:'c'+c.id, stableKey:sectionId+':c'+c.id, text:c.text, isCustom:true, customObj:c });
+    items.push({ key:'c'+c.id, stableKey:sectionId+':c'+c.id, text:c.text, rawText:c.text, isCustom:true, customObj:c, isOverridden:false });
   });
   var order = snippetOrder[sectionId];
   if (order && order.length) {
@@ -1107,7 +1280,9 @@ function getSnipItems(sectionId, builtins, myCustoms) {
     items.forEach(function(it){ if (map[it.key]) sorted.push(it); });
     items = sorted;
   }
-  return items;
+  var pinned   = items.filter(function(it){ return  pins.has(it.stableKey); });
+  var unpinned = items.filter(function(it){ return !pins.has(it.stableKey); });
+  return pinned.concat(unpinned);
 }
 
 function buildCards(sectionId, builtins, myCustoms, color) {
@@ -1115,21 +1290,29 @@ function buildCards(sectionId, builtins, myCustoms, color) {
   return items.map(function(item) {
     var applied    = applyName(item.text);
     var isFav      = favorites.has(item.stableKey);
+    var isPinned   = pins.has(item.stableKey);
+    var count      = snippetCopyCounts[item.stableKey] || 0;
     var customTags = item.customObj ? (item.customObj.tags || []) : [];
     var tagsHtml   = customTags.length ? '<div class="snip-tags">'+customTags.map(function(t){ return '<span class="tag-chip">#'+esc(t)+'</span>'; }).join('')+'</div>' : '';
-    return '<div class="snip-card'+(item.isCustom?' custom':'')+'" onclick="maybeFill(this)"'+
+    var actionsHtml = '<div class="snip-actions">'+
+      '<button class="sa-btn'+(item.isOverridden?' overridden':'')+'" onclick="event.stopPropagation();editSnip(\''+item.stableKey+'\',\''+sectionId+'\','+item.isCustom+')" title="'+(item.isCustom?'Edit':'Override')+'">✏ '+(item.isCustom?'Edit':'Override')+'</button>'+
+      '<button class="sa-btn" onclick="event.stopPropagation();dupeSnip(\''+item.stableKey+'\',\''+sectionId+'\')" title="Duplicate">⊕ Dupe</button>'+
+      '<button class="sa-btn'+(isPinned?' pinned':'')+'" onclick="event.stopPropagation();togglePin(\''+item.stableKey+'\')" title="Pin to top">📌</button>'+
+      (count > 0 ? '<span class="snip-count-badge">'+count+'×</span>' : '')+
+      '</div>';
+    return '<div class="snip-card has-actions'+(item.isCustom?' custom':'')+'" onclick="maybeFill(this)"'+
       ' draggable="true" data-snip-key="'+item.key+'"'+
       ' ondragstart="onCardDragStart(event,\''+sectionId+'\',\''+item.key+'\')"'+
       ' ondragover="onCardDragOver(event)"'+
       ' ondragleave="onCardDragLeave(event)"'+
       ' ondrop="onCardDrop(event,\''+sectionId+'\',\''+item.key+'\')"'+
       ' ondragend="document.querySelectorAll(\'.snip-card\').forEach(function(el){el.classList.remove(\'card-dragging\',\'card-drag-over\');})"'+
-      ' data-text="'+escAttr(applied)+'" data-key="'+item.stableKey+'"'+
+      ' data-text="'+escAttr(applied)+'" data-raw-text="'+escAttr(item.rawText)+'" data-key="'+item.stableKey+'"'+
       ' style="border-left-color:'+color+'55;">'+
       '<span class="card-drag-handle">⠇</span>'+
       '<button class="snip-fav'+(isFav?' active':'')+'" onclick="event.stopPropagation();toggleFav(\''+item.stableKey+'\')" title="'+(isFav?'Unfavorite':'Favorite')+'">⭐</button>'+
-      (item.isCustom && item.customObj ? '<button class="snip-custom-del" onclick="event.stopPropagation();deleteCustom(\''+item.customObj.id+'\')" title="Delete">✕</button>' : '')+
-      '<div class="snip-text">'+esc(applied)+'</div>'+tagsHtml+'</div>';
+      (item.isCustom && item.customObj ? '<button class="snip-custom-del" onclick="event.stopPropagation();deleteCustom(this,\''+item.customObj.id+'\')" title="Delete">✕</button>' : '')+
+      '<div class="snip-text">'+esc(applied)+'</div>'+tagsHtml+actionsHtml+'</div>';
   }).join('');
 }
 
@@ -1241,6 +1424,11 @@ function showSection(id) {
 // ═══════════════════════════════════════════════
 // SEARCH
 // ═══════════════════════════════════════════════
+function fuzzyMatch(text, q) {
+  var tl = text.toLowerCase(), ql = q.toLowerCase(), qi = 0;
+  for (var i = 0; i < tl.length && qi < ql.length; i++) { if (tl[i] === ql[qi]) qi++; }
+  return qi === ql.length;
+}
 function onSearch(q) {
   if (!q.trim()) {
     if (selId) showSection(selId);
@@ -1276,6 +1464,23 @@ function onSearch(q) {
       if (applyName(t).toLowerCase().includes(lq)) results.push({ text:t, label:s.label, icon:s.icon, color:s.color });
     });
   });
+  customSections.forEach(function(s) {
+    customs.filter(function(c){ return c.sectionId===s.id; }).forEach(function(c) {
+      if (applyName(c.text).toLowerCase().includes(lq)) results.push({ text:c.text, label:s.label, icon:s.icon, color:s.color });
+    });
+  });
+  if (!results.length) {
+    SECTIONS.forEach(function(s) {
+      s.snippets.concat(customs.filter(function(c){ return c.sectionId===s.id; }).map(function(c){ return c.text; })).forEach(function(t) {
+        if (fuzzyMatch(applyName(t), q)) results.push({ text:t, label:s.label, icon:s.icon, color:s.color });
+      });
+    });
+    customSections.forEach(function(s) {
+      customs.filter(function(c){ return c.sectionId===s.id; }).forEach(function(c) {
+        if (fuzzyMatch(applyName(c.text), q)) results.push({ text:c.text, label:s.label, icon:s.icon, color:s.color });
+      });
+    });
+  }
   if (!results.length) {
     document.getElementById('contentBody').innerHTML = '<div class="no-results"><div class="big">🔍</div><p>No snippets found for "<strong>' + esc(q) + '</strong>"</p></div>';
     return;
@@ -1293,19 +1498,35 @@ function onSearch(q) {
 // COPY
 // ═══════════════════════════════════════════════
 var toastTimer;
-function showToast() {
+function showToast(msg) {
   var t = document.getElementById('toast');
-  t.textContent = '✓ Copied!';
+  t.textContent = msg || '✓ Copied!';
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
 }
 function copyCard(el) {
   var text = el.dataset.text;
+  var stableKey = el.dataset.key;
   el.classList.add('flashing');
   setTimeout(function(){ el.classList.remove('flashing'); }, 500);
   trackRecent(text);
   bumpCopyCount();
+  if (stableKey) {
+    snippetCopyCounts[stableKey] = (snippetCopyCounts[stableKey] || 0) + 1;
+    store.set('snip_counts', JSON.stringify(snippetCopyCounts));
+    var cnt = snippetCopyCounts[stableKey];
+    var badge = el.querySelector('.snip-count-badge');
+    if (badge) { badge.textContent = cnt + '×'; }
+    else {
+      var actions = el.querySelector('.snip-actions');
+      if (actions) {
+        var nb = document.createElement('span');
+        nb.className = 'snip-count-badge'; nb.textContent = cnt + '×';
+        actions.appendChild(nb);
+      }
+    }
+  }
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(showToast);
   } else {
@@ -1323,6 +1544,8 @@ document.addEventListener('keydown', function(e) {
   var tag = document.activeElement.tagName;
   var inInput = tag === 'INPUT' || tag === 'TEXTAREA';
   if (e.key === 'Escape') {
+    var sp = document.getElementById('scratchpadPanel');
+    if (sp && sp.style.display !== 'none') { sp.style.display = 'none'; return; }
     closeNameModal(); closeFillModal(); closeAddSnippet();
     if (inInput) document.activeElement.blur();
     return;
@@ -1438,10 +1661,14 @@ function pushToServer() {
         custom_sections: JSON.stringify(customSections),
         sect_order:      JSON.stringify(sectionOrder),
         snip_order:      JSON.stringify(snippetOrder),
+        overrides:       JSON.stringify(overrides),
+        pins:            JSON.stringify(Array.from(pins)),
         chat_agent_name: agentName,
         chat_theme:      isDark ? 'dark' : 'light',
         chat_color:      curColor,
-        recent:          JSON.stringify(recentList)
+        recent:          JSON.stringify(recentList),
+        scratchpad:      store.get('scratchpad') || '',
+        seen_version:    seenVersion === CURRENT_VERSION ? CURRENT_VERSION : null
       });
   }, 1500);
 }
@@ -1495,10 +1722,29 @@ function loadFromServer() {
         if (parsed) { sectionOrder = parsed; changed = true; }
       }
 
-      // Agent name — server wins if local is blank
+      // Overrides — merge (server fills any missing locally)
+      if (data.overrides) {
+        var serverOverrides = JSON.parse(data.overrides);
+        Object.keys(serverOverrides).forEach(function(k) {
+          if (!overrides[k]) { overrides[k] = serverOverrides[k]; changed = true; }
+        });
+        store.set('overrides', JSON.stringify(overrides));
+      }
+
+      // Pins — union
+      if (data.pins) {
+        JSON.parse(data.pins).forEach(function(k) {
+          if (!pins.has(k)) { pins.add(k); changed = true; }
+        });
+        store.set('pins', JSON.stringify(Array.from(pins)));
+      }
+
+      // Agent name — server wins if local is blank; dismiss modal if name arrives
       if (data.chat_agent_name && !agentName) {
         agentName = data.chat_agent_name;
         store.set('chat_agent_name', agentName);
+        store.set('chat_last_seen', Date.now().toString());
+        document.getElementById('nameModal').style.display = 'none';
         changed = true;
       }
 
@@ -1509,6 +1755,16 @@ function loadFromServer() {
       }
       if (data.chat_color) {
         if (data.chat_color !== curColor) { curColor = data.chat_color; store.set('chat_color', curColor); changed = true; }
+      }
+
+      // Scratchpad — server wins if local is empty; keep whichever is longer
+      if (data.scratchpad) {
+        var localScratch = store.get('scratchpad') || '';
+        if (!localScratch || data.scratchpad.length > localScratch.length) {
+          store.set('scratchpad', data.scratchpad);
+          var ta = document.getElementById('scratchpadText');
+          if (ta && document.getElementById('scratchpadPanel').style.display !== 'none') ta.value = data.scratchpad;
+        }
       }
 
       // Recent — merge, keep freshest 8
@@ -1528,12 +1784,43 @@ function loadFromServer() {
 
       setSyncStatus('ok');
       if (changed) { applyTheme(); updateHeaderName(); renderNav(); if (selId) showSection(selId); }
+      // If sync completed and still no name, prompt for it now
+      if (!agentName) {
+        document.getElementById('nameModal').style.display = 'flex';
+        setTimeout(function(){ document.getElementById('nameInput').focus(); }, 100);
+      }
+
+      // What's New — if server already saw this version, mark locally and skip modal
+      if (data.seen_version === CURRENT_VERSION) {
+        seenVersion = CURRENT_VERSION;
+        store.set('seen_version', CURRENT_VERSION);
+      } else if (seenVersion !== CURRENT_VERSION) {
+        showWhatsNew();
+      }
 
       // Write merged state back so all devices converge
       pushToServer();
     })
-    .withFailureHandler(function(){ setSyncStatus('err'); })
+    .withFailureHandler(function(){
+      setSyncStatus('err');
+      if (!agentName) {
+        document.getElementById('nameModal').style.display = 'flex';
+        setTimeout(function(){ document.getElementById('nameInput').focus(); }, 100);
+      }
+      if (seenVersion !== CURRENT_VERSION) showWhatsNew();
+    })
     .getUserData();
+}
+
+// ═══════════════════════════════════════════════
+// WHAT'S NEW
+// ═══════════════════════════════════════════════
+function showWhatsNew() { document.getElementById('whatsNewModal').style.display = 'flex'; }
+function closeWhatsNew() {
+  seenVersion = CURRENT_VERSION;
+  store.set('seen_version', CURRENT_VERSION);
+  document.getElementById('whatsNewModal').style.display = 'none';
+  pushToServer();
 }
 
 // ═══════════════════════════════════════════════
@@ -1541,14 +1828,22 @@ function loadFromServer() {
 // ═══════════════════════════════════════════════
 loadCopyCount(); applyTheme(); updateHeaderName(); updateCounter(); renderNav();
 (function() {
-  var EIGHT_HOURS = 8 * 60 * 60 * 1000;
-  var lastSeen = parseInt(store.get('chat_last_seen') || '0', 10);
-  var freshSession = !agentName || (Date.now() - lastSeen > EIGHT_HOURS);
   var input = document.getElementById('nameInput');
   var btn   = document.getElementById('nameSaveBtn');
-  input.value  = agentName; btn.disabled = !agentName;
-  document.getElementById('nameModal').style.display = freshSession ? 'flex' : 'none';
-  if (freshSession) setTimeout(function(){ input.focus(); }, 100);
+  input.value = agentName; btn.disabled = !agentName;
+  // Only show the modal when we genuinely have no name yet.
+  // If name is missing but sync is available, wait for loadFromServer before prompting.
+  var needsName = !agentName;
+  if (needsName && !syncAvailable) {
+    document.getElementById('nameModal').style.display = 'flex';
+    setTimeout(function(){ input.focus(); }, 100);
+  } else if (!needsName) {
+    document.getElementById('nameModal').style.display = 'none';
+  }
+  // When sync is available and name is missing, loadFromServer will either
+  // fill it in (and dismiss the modal) or show it after the sync completes.
+  // What's New: if offline and unseen, show immediately
+  if (seenVersion !== CURRENT_VERSION && !syncAvailable) showWhatsNew();
 })();
 document.getElementById('nameModal').addEventListener('click', function(e){ if(e.target===this) closeNameModal(); });
 loadFromServer();
@@ -1568,7 +1863,7 @@ loadFromServer();
 
 <div class="fill-modal" id="addSnipModal" style="display:none" onclick="if(event.target===this)closeAddSnippet()">
   <div class="fill-box">
-    <h3>Add custom snippet</h3>
+    <h3 id="addSnipModalTitle">Add custom snippet</h3>
     <textarea id="addSnipText" placeholder="Type your snippet here..." rows="4"
       style="width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:0.88rem;outline:none;background:var(--bg);color:var(--text);resize:vertical;font-family:inherit;transition:border-color 0.15s;display:block;margin-bottom:4px"
       oninput="document.getElementById('addSnipCharCount').textContent=this.value.length"
@@ -1576,7 +1871,7 @@ loadFromServer();
       onblur="this.style.borderColor='var(--border)'"
       onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))saveCustomSnippet()"></textarea>
     <div style="text-align:right;font-size:0.72rem;color:var(--muted);margin-bottom:12px"><span id="addSnipCharCount">0</span> chars</div>
-    <div class="fill-field">
+    <div class="fill-field" id="addSnipTagsRow">
       <label>Tags <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
       <input id="addSnipTags" type="text" placeholder="#refund  #appeal  #suspension…" autocomplete="off"
         style="font-family:inherit"
@@ -1586,10 +1881,44 @@ loadFromServer();
       <div style="font-size:0.68rem;color:var(--muted);margin-top:5px">Separate with spaces · searchable with #tag in the search bar</div>
     </div>
     <div class="fill-actions" style="margin-top:14px">
+      <button id="resetOverrideBtn" class="fill-cancel" onclick="resetOverride()" style="display:none">↩ Reset</button>
       <button class="fill-cancel" onclick="closeAddSnippet()">Cancel</button>
       <button class="fill-copy" onclick="saveCustomSnippet()">Save ✓</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" id="whatsNewModal" style="display:none" onclick="if(event.target===this)closeWhatsNew()">
+  <div class="wn-modal">
+    <div class="wn-header">
+      <div class="wn-version">Version 2.0</div>
+      <h2>✨ What's New</h2>
+      <p>Sara Snippets just got a major upgrade.</p>
+    </div>
+    <div class="wn-body">
+      <div class="wn-feature"><div class="wn-icon">✏️</div><div class="wn-text"><strong>Edit &amp; Override snippets</strong><span>Edit your custom snippets, or swap any built-in one with your own version.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">⊕</div><div class="wn-text"><strong>Duplicate snippets</strong><span>Copy any snippet as a starting point and tweak it to your liking.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📌</div><div class="wn-text"><strong>Pin to top</strong><span>Pin your most-used snippets so they always appear first in their section.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📝</div><div class="wn-text"><strong>Synced scratchpad</strong><span>A floating notepad for case IDs and quick notes — synced across all your devices.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">🔍</div><div class="wn-text"><strong>Fuzzy search</strong><span>Search still finds the right snippet even if you have a typo or partial word.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📊</div><div class="wn-text"><strong>Copy count per snippet</strong><span>See how many times you've copied each snippet to spot your most-used ones.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">↕️</div><div class="wn-text"><strong>Drag to reorder</strong><span>Rearrange both sections and individual snippets by dragging them into your preferred order.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">🏷️</div><div class="wn-text"><strong>Tags &amp; #tag search</strong><span>Tag your custom snippets and search across all sections at once with #tagname.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📤</div><div class="wn-text"><strong>Export &amp; Import (CSV)</strong><span>Back up your snippets or share your entire setup with a teammate in one file.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">🔄</div><div class="wn-text"><strong>Cross-device sync</strong><span>Snippets, settings, pins, scratchpad — everything stays in sync across devices automatically.</span></div></div>
+    </div>
+    <div class="wn-footer">
+      <button class="wn-btn" onclick="closeWhatsNew()">Got it, let's go! →</button>
+    </div>
+  </div>
+</div>
+
+<div class="scratchpad-panel" id="scratchpadPanel" style="display:none">
+  <div class="scratchpad-hdr">
+    <span>📝 Scratchpad</span>
+    <button class="scratchpad-close" onclick="toggleScratchpad()">✕</button>
+  </div>
+  <textarea id="scratchpadText" placeholder="Notes, case IDs, quick thoughts…" oninput="store.set('scratchpad',this.value);pushToServer()"></textarea>
 </div>
 
 </body>

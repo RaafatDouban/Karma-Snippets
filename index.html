@@ -9,24 +9,27 @@
       --pink: #FF00BF;
       --pink-light: rgba(255,0,191,0.1);
       --dark: #16162a;
-      --border: #e6e8ef;
+      --grad: linear-gradient(135deg, #FF00BF, #a000ff);
+      --border: #f0e0f8;
       --text: #1a1d2e;
       --muted: #9097b0;
       --success: #10b981;
-      --bg: #f2f4f8;
+      --bg: #fdf5ff;
       --surface: #ffffff;
-      --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+      --shadow: 0 4px 20px rgba(255,0,191,0.1);
       --sidebar-w: 262px;
     }
-    [data-theme="dark"] {
-      --border: #272742;
-      --text: #dde1f2;
-      --muted: #7070a0;
-      --bg: #0c0c1a;
-      --surface: #181828;
-      --pink-light: rgba(255,0,191,0.14);
-      --shadow: 0 1px 4px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2);
-    }
+    /* ── COLOR THEMES ── */
+    [data-color="ocean"]  { --pink:#0ea5e9; --pink-light:rgba(14,165,233,0.1); --grad:linear-gradient(135deg,#0ea5e9,#06b6d4); --bg:#f0f9ff; --border:#bae6fd; --muted:#5b8fa8; --shadow:0 4px 20px rgba(14,165,233,0.1); }
+    [data-color="sunset"] { --pink:#f97316; --pink-light:rgba(249,115,22,0.1); --grad:linear-gradient(135deg,#f97316,#ef4444); --bg:#fff7ed; --border:#fed7aa; --muted:#a87050; --shadow:0 4px 20px rgba(249,115,22,0.1); }
+    [data-color="forest"] { --pink:#10b981; --pink-light:rgba(16,185,129,0.1); --grad:linear-gradient(135deg,#10b981,#059669); --bg:#f0fdf4; --border:#bbf7d0; --muted:#507a60; --shadow:0 4px 20px rgba(16,185,129,0.1); }
+    [data-color="violet"] { --pink:#8b5cf6; --pink-light:rgba(139,92,246,0.1); --grad:linear-gradient(135deg,#8b5cf6,#ec4899); --bg:#faf5ff; --border:#ede9fe; --muted:#7c6a9a; --shadow:0 4px 20px rgba(139,92,246,0.1); }
+    /* ── DARK MODE ── */
+    [data-theme="dark"]                { --border:#272742; --text:#dde1f2; --muted:#7070a0; --bg:#0c0c1a; --surface:#181828; --pink-light:rgba(255,0,191,0.14); --shadow:0 4px 20px rgba(0,0,0,0.4); }
+    [data-theme="dark"][data-color="ocean"]  { --bg:#020d18; --surface:#0a1e2e; --border:#0d3050; --muted:#4080a0; }
+    [data-theme="dark"][data-color="sunset"] { --bg:#18080a; --surface:#2a120c; --border:#502010; --muted:#a06040; }
+    [data-theme="dark"][data-color="forest"] { --bg:#02100a; --surface:#0a2018; --border:#0d4025; --muted:#40806a; }
+    [data-theme="dark"][data-color="violet"] { --bg:#0c0818; --surface:#18102e; --border:#2d1f4a; --muted:#7060a0; }
     [data-theme="dark"] mark { background: rgba(255,0,191,0.28); color: var(--text); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,30 +43,43 @@
 
     /* ── HEADER ── */
     .hdr {
-      background: var(--dark); color: white;
+      background: var(--grad); color: white;
       padding: 11px 20px;
       display: flex; align-items: center; justify-content: space-between;
       flex-shrink: 0; z-index: 300;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.45);
-      border-bottom: 2px solid rgba(255,0,191,0.45);
+      box-shadow: 0 4px 24px rgba(255,0,191,0.4);
     }
     .hdr-left { display: flex; align-items: center; gap: 12px; }
     .hdr h1 { font-size: 1.08rem; font-weight: 800; letter-spacing: -0.01em; }
-    .hdr h1 span { color: var(--pink); }
-    .hdr-sub { font-size: 0.62rem; color: rgba(255,255,255,0.38); margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .hdr-sub { font-size: 0.62rem; color: rgba(255,255,255,0.6); margin-top: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
     .burger { background: none; border: none; color: white; cursor: pointer; font-size: 1.25rem; display: none; padding: 4px; }
-    .theme-btn { background: none; border: 1px solid rgba(255,255,255,0.18); color: white; cursor: pointer; font-size: 1rem; padding: 5px 10px; border-radius: 8px; transition: all 0.18s; line-height: 1; }
-    .theme-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
+    /* theme picker */
+    .theme-picker-wrap { position: relative; }
+    .palette-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; font-size: 1rem; padding: 5px 10px; border-radius: 20px; transition: all 0.18s; line-height: 1; }
+    .palette-btn:hover { background: rgba(255,255,255,0.35); }
+    .theme-panel { position: absolute; top: calc(100% + 10px); right: 0; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 14px 16px; display: none; flex-direction: column; gap: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.5); z-index: 500; min-width: 160px; }
+    .theme-panel.open { display: flex; }
+    .theme-panel-label { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+    .swatches { display: flex; gap: 8px; align-items: center; }
+    .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s, box-shadow 0.15s; flex-shrink: 0; }
+    .swatch:hover { transform: scale(1.15); }
+    .swatch.active { box-shadow: 0 0 0 2px #1a1a2e, 0 0 0 4px white; }
+    .dark-toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .dark-toggle span { font-size: 0.78rem; color: rgba(255,255,255,0.7); font-weight: 600; }
+    .toggle-track { width: 38px; height: 20px; border-radius: 10px; background: rgba(255,255,255,0.15); position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+    .toggle-track.on { background: rgba(255,255,255,0.4); }
+    .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: white; transition: left 0.2s; }
+    .toggle-track.on .toggle-thumb { left: 20px; }
     .agent-badge {
       display: flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25);
       border-radius: 24px; padding: 5px 14px 5px 5px;
       cursor: pointer; transition: all 0.18s; white-space: nowrap;
     }
-    .agent-badge:hover { background: rgba(255,0,191,0.18); border-color: rgba(255,0,191,0.5); }
-    .av { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--pink) 0%, #a000ff 100%); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .agent-badge:hover { background: rgba(255,255,255,0.3); }
+    .av { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; flex-shrink: 0; }
     .agent-badge .aname { font-size: 0.82rem; font-weight: 600; color: white; }
-    .agent-badge .ahint { font-size: 0.6rem; color: rgba(255,255,255,0.38); }
+    .agent-badge .ahint { font-size: 0.6rem; color: rgba(255,255,255,0.6); }
 
     /* ── BODY ── */
     .body { display: flex; flex: 1; overflow: hidden; }
@@ -119,6 +135,10 @@
     .ni .chev { margin-left: auto; font-size: 0.6rem; flex-shrink: 0; transition: transform 0.2s; }
     .ni .chev.open { transform: rotate(90deg); }
     .ni .soon { font-size: 0.62rem; color: var(--muted); margin-left: auto; }
+    .drag-handle { cursor: grab; color: var(--muted); opacity: 0; font-size: 0.9rem; flex-shrink: 0; line-height: 1; margin-right: -2px; transition: opacity 0.15s; user-select: none; }
+    .ni:hover .drag-handle { opacity: 0.4; }
+    .ni.dragging { opacity: 0.3; }
+    .ni.drag-over { box-shadow: inset 0 -2px 0 var(--pink) !important; }
 
     /* ── CONTENT ── */
     .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
@@ -187,12 +207,12 @@
     .toast {
       position: fixed; bottom: 28px; left: 50%;
       transform: translateX(-50%) translateY(16px);
-      background: var(--success); color: white;
+      background: var(--grad); color: white;
       padding: 10px 26px; border-radius: 30px;
       font-weight: 700; font-size: 0.87rem;
       opacity: 0; transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
       z-index: 600; pointer-events: none; white-space: nowrap;
-      box-shadow: 0 4px 20px rgba(16,185,129,0.4);
+      box-shadow: 0 6px 24px rgba(255,0,191,0.4);
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -205,9 +225,9 @@
     .modal-box input { width: 100%; padding: 12px 14px; border: 2px solid var(--border); border-radius: 11px; font-size: 0.98rem; outline: none; text-align: center; margin-bottom: 12px; transition: border-color 0.2s, box-shadow 0.2s; background: var(--bg); color: var(--text); }
     .modal-box input::placeholder { color: var(--muted); }
     .modal-box input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(255,0,191,0.12); }
-    .modal-box button { width: 100%; padding: 12px; background: var(--dark); color: white; border: none; border-radius: 11px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-    .modal-box button:hover { background: var(--pink); box-shadow: 0 4px 16px rgba(255,0,191,0.3); }
-    .modal-box button:disabled { background: var(--border); color: var(--muted); cursor: default; box-shadow: none; }
+    .modal-box button { width: 100%; padding: 12px; background: var(--grad); color: white; border: none; border-radius: 11px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(255,0,191,0.35); }
+    .modal-box button:hover { opacity: 0.9; transform: translateY(-1px); }
+    .modal-box button:disabled { background: var(--border); color: var(--muted); cursor: default; box-shadow: none; transform: none; opacity: 1; }
 
     /* mobile sidebar overlay */
     .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 250; }
@@ -223,6 +243,162 @@
       .sidebar-overlay.open { display: block; }
       .dock-wrapper { display: none; }
     }
+
+    /* ── CONTEXT BAR ── */
+    .ctx-bar { display:flex; align-items:center; gap:8px; padding:7px 16px; background:var(--surface); border-bottom:1px solid var(--border); flex-shrink:0; flex-wrap:wrap; }
+    .ctx-btn { background:var(--grad); color:white; border:none; border-radius:20px; padding:5px 12px; font-size:0.75rem; font-weight:700; cursor:pointer; white-space:nowrap; transition:opacity 0.15s; }
+    .ctx-btn:hover { opacity:0.85; }
+    .ctx-divider { width:1px; height:20px; background:var(--border); flex-shrink:0; }
+    .cx-wrap { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+    .cx-label { font-size:0.78rem; color:var(--muted); font-weight:600; white-space:nowrap; }
+    .cx-input { padding:5px 10px; border:1.5px solid var(--border); border-radius:20px; font-size:0.82rem; outline:none; color:var(--text); background:var(--bg); width:140px; transition:border-color 0.15s,box-shadow 0.15s; }
+    .cx-input:focus { border-color:var(--pink); box-shadow:0 0 0 3px var(--pink-light); }
+    .cx-select { padding:5px 8px; border:1.5px solid var(--border); border-radius:20px; font-size:0.82rem; outline:none; color:var(--text); background:var(--bg); cursor:pointer; transition:border-color 0.15s; }
+    .cx-select:focus { border-color:var(--pink); }
+    /* Timer */
+    .timer-wrap { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+    .timer-display { font-size:0.85rem; font-weight:800; font-family:monospace; color:var(--muted); min-width:40px; transition:color 0.3s; }
+    .timer-display.warn { color:#f97316; }
+    .timer-display.danger { color:#ef4444; animation:timerpulse 1s ease-in-out infinite; }
+    @keyframes timerpulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    .timer-btn { background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer; border-radius:50%; width:22px; height:22px; font-size:0.7rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; padding:0; }
+    .timer-btn:hover { border-color:var(--pink); color:var(--pink); }
+    /* Queue badge */
+    /* Case blocks (side by side) */
+    .case-block { display:flex; align-items:center; gap:6px; padding:5px 10px; border-radius:12px; border:2px solid var(--border); cursor:pointer; transition:all 0.15s; flex-shrink:0; }
+    .case-block:not(.active):hover { border-color:var(--muted); }
+    .case-block.active { border-color:var(--pink); background:var(--pink-light); }
+    .case-label { font-size:0.7rem; font-weight:800; color:var(--muted); white-space:nowrap; flex-shrink:0; }
+    .case-block.active .case-label { color:var(--pink); }
+    .case-block .cx-input { width:105px; }
+    .case-reset { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.85rem; padding:0 2px; border-radius:6px; transition:color 0.12s; flex-shrink:0; }
+    .case-reset:hover { color:#ef4444; }
+    .queue-hdr-btn { display:flex; align-items:center; gap:5px; background:var(--bg); border:1.5px solid var(--border); color:var(--text); border-radius:20px; padding:4px 10px; font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.15s; flex-shrink:0; }
+    .queue-hdr-btn:hover { border-color:var(--pink); color:var(--pink); }
+    .queue-hdr-btn.has-items { border-color:var(--pink); background:var(--pink-light); color:var(--pink); }
+    .q-badge { background:var(--pink); color:white; border-radius:10px; padding:1px 6px; font-size:0.65rem; font-weight:800; }
+
+    /* ── QUEUE PANEL ── */
+    .queue-panel { position:fixed; bottom:80px; right:20px; width:340px; background:var(--surface); border:2px solid var(--border); border-radius:16px; box-shadow:0 12px 40px rgba(0,0,0,0.25); z-index:800; display:flex; flex-direction:column; max-height:480px; overflow:hidden; }
+    .queue-panel-hdr { padding:10px 14px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); background:var(--bg); flex-shrink:0; }
+    .queue-panel-hdr strong { font-size:0.85rem; flex:1; }
+    .qp-btn { background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:8px; transition:all 0.12s; white-space:nowrap; }
+    .qp-btn:hover { border-color:var(--pink); color:var(--pink); }
+    .qp-btn.primary { background:var(--grad); color:white; border-color:transparent; }
+    .qp-btn.primary:hover { opacity:0.85; }
+    .qp-btn.danger:hover { border-color:#ef4444; color:#ef4444; }
+    .queue-list { flex:1; overflow-y:auto; padding:8px; }
+    .queue-item { display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:10px; margin-bottom:4px; background:var(--bg); border:1px solid var(--border); font-size:0.8rem; line-height:1.5; position:relative; }
+    .queue-item.current { border-color:var(--pink); background:var(--pink-light); }
+    .queue-item.done { opacity:0.4; text-decoration:line-through; }
+    .qi-num { font-size:0.65rem; font-weight:800; color:var(--muted); flex-shrink:0; padding-top:2px; min-width:14px; }
+    .qi-text { flex:1; white-space:pre-wrap; word-break:break-word; }
+    .qi-del { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.75rem; opacity:0.4; transition:opacity 0.12s; flex-shrink:0; padding:0 2px; }
+    .qi-del:hover { opacity:1; color:#ef4444; }
+    .queue-empty { text-align:center; padding:30px 20px; color:var(--muted); font-size:0.83rem; }
+    .queue-footer { padding:8px 10px; border-top:1px solid var(--border); display:flex; gap:6px; flex-wrap:wrap; flex-shrink:0; background:var(--bg); }
+
+    /* ── SEQUENCE PLAYER ── */
+    .seq-player-hdr { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:2px solid var(--border); }
+    .seq-step-badge { font-size:0.7rem; font-weight:800; background:var(--pink-light); color:var(--pink); padding:3px 10px; border-radius:20px; flex-shrink:0; }
+    .snip-para.seq-current { border-color:var(--pink); background:var(--pink-light); }
+    .snip-para.seq-done { opacity:0.4; }
+
+    /* ── STATS DASHBOARD ── */
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+    .stat-card { background:var(--bg); border:1.5px solid var(--border); border-radius:14px; padding:14px 16px; }
+    .stat-num { font-size:2rem; font-weight:800; color:var(--pink); line-height:1; }
+    .stat-label { font-size:0.72rem; color:var(--muted); margin-top:4px; font-weight:600; }
+    .stats-section-title { font-size:0.75rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin:18px 0 10px; }
+    .stat-row { display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-bottom:6px; font-size:0.83rem; }
+    .stat-row-count { margin-left:auto; font-size:0.7rem; font-weight:800; background:var(--pink-light); color:var(--pink); padding:2px 8px; border-radius:10px; flex-shrink:0; }
+
+    /* ── SNIPPET PARA v2 ── */
+    .snip-para { padding: 13px 44px 13px 32px; }
+    .snip-para.has-actions { padding-bottom: 34px; }
+    .para-drag-handle { position:absolute; left:6px; top:50%; transform:translateY(-50%); cursor:grab; color:var(--muted); opacity:0; font-size:1rem; line-height:1; padding:4px 2px; z-index:2; user-select:none; transition:opacity 0.15s; }
+    .snip-para:hover .para-drag-handle { opacity:0.4; }
+    .snip-para.card-dragging { opacity:0.35; }
+    .snip-para.card-drag-over { box-shadow:inset 0 3px 0 var(--pink) !important; }
+    .snip-para::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:4px 0 0 4px; background:rgba(255,0,191,0.4); }
+    .snip-para:hover::before { background: var(--pink); }
+    .snip-para:hover::after { content:none; }
+    .snip-fav { position:absolute; right:10px; top:10px; background:none; border:none; cursor:pointer; font-size:0.85rem; opacity:0.2; transition:opacity 0.15s,transform 0.15s; line-height:1; padding:2px 4px; z-index:2; }
+    .snip-para:hover .snip-fav { opacity:0.55; }
+    .snip-fav.active { opacity:1; filter:drop-shadow(0 0 3px gold); }
+    .snip-para.custom { border-style:dashed; }
+    .snip-para.kbd-focus { border-color:var(--pink) !important; box-shadow:0 0 0 3px rgba(255,0,191,0.2) !important; }
+    .snip-actions { position:absolute; bottom:0; left:0; right:0; padding:4px 10px; display:flex; align-items:center; gap:1px; opacity:0; transition:opacity 0.15s; background:linear-gradient(to top,var(--surface) 55%,transparent); }
+    .snip-para:hover .snip-actions { opacity:1; }
+    .sa-btn { background:none; border:none; cursor:pointer; font-size:0.72rem; color:var(--muted); padding:3px 6px; border-radius:6px; transition:all 0.12s; line-height:1; font-family:inherit; }
+    .sa-btn:hover { background:rgba(255,0,191,0.1); color:var(--pink); }
+    .sa-btn.pinned { color:#f59e0b; }
+    .sa-btn.overridden { color:var(--pink); }
+    .snip-count-badge { margin-left:auto; font-size:0.6rem; font-weight:700; color:var(--muted); background:var(--bg); padding:2px 6px; border-radius:10px; border:1px solid var(--border); }
+    .para-del { position:absolute; right:10px; top:28px; background:none; border:none; cursor:pointer; font-size:0.72rem; opacity:0; transition:opacity 0.15s; color:var(--muted); line-height:1; padding:2px 4px; z-index:2; }
+    .snip-para:hover .para-del { opacity:0.5; }
+    .para-del:hover { opacity:1 !important; color:#ef4444; }
+    .add-snip-btn { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:14px; padding:11px 16px; border:2px dashed var(--border); border-radius:10px; cursor:pointer; color:var(--muted); font-size:0.85rem; font-weight:600; background:transparent; width:100%; transition:all 0.15s; font-family:inherit; }
+    .add-snip-btn:hover { border-color:var(--pink); color:var(--pink); background:var(--pink-light); }
+
+    /* ── COPY COUNTER ── */
+    .copy-counter { background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.25); color:white; font-size:0.9rem; font-weight:800; padding:5px 12px; border-radius:20px; text-align:center; line-height:1.2; min-width:46px; cursor:default; }
+    .copy-counter small { font-size:0.58rem; opacity:0.65; display:block; font-weight:600; letter-spacing:0.05em; }
+
+    /* ── SYNC DOT ── */
+    .sync-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; transition:background 0.4s; cursor:default; }
+    .sync-dot.ok      { background:#10b981; }
+    .sync-dot.syncing { background:#f59e0b; animation:syncpulse 1.1s ease-in-out infinite; }
+    .sync-dot.err     { background:#ef4444; }
+    .sync-dot.off     { background:rgba(255,255,255,0.25); }
+    @keyframes syncpulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── SCRATCHPAD ── */
+    .scratchpad-btn { background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color:white; cursor:pointer; font-size:1rem; padding:5px 9px; border-radius:20px; transition:all 0.18s; line-height:1; }
+    .scratchpad-btn:hover { background:rgba(255,255,255,0.35); }
+    .scratchpad-panel { position:fixed; top:62px; right:20px; width:360px; background:var(--surface); border:2px solid var(--border); border-radius:16px; box-shadow:0 12px 40px rgba(0,0,0,0.25); z-index:800; display:flex; flex-direction:column; overflow:hidden; }
+    .scratchpad-hdr { padding:9px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:var(--bg); }
+    .scratchpad-hdr span { font-size:0.82rem; font-weight:700; color:var(--text); }
+    .scratchpad-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.9rem; padding:2px 5px; border-radius:6px; }
+    .scratchpad-close:hover { color:#ef4444; }
+    #scratchpadText { padding:12px 14px; border:none; outline:none; resize:none; font-family:inherit; font-size:0.88rem; color:var(--text); background:var(--surface); min-height:220px; line-height:1.65; }
+
+    /* ── NAV FOOTER ── */
+    .nav-footer { padding:10px; border-top:1px solid var(--border); display:flex; gap:6px; flex-shrink:0; }
+    .nav-footer-btn { flex:1; padding:8px; border:1px solid var(--border); border-radius:10px; background:transparent; color:var(--muted); font-size:0.76rem; font-weight:600; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+    .nav-footer-btn:hover { border-color:var(--pink); color:var(--pink); background:var(--pink-light); }
+
+    /* ── FILL MODAL ── */
+    .fill-modal { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1200; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
+    .fill-box { background:var(--surface); border-radius:20px; padding:26px 28px; width:90%; max-width:440px; box-shadow:0 24px 64px rgba(0,0,0,0.3),0 0 0 1px var(--border); }
+    .fill-box h3 { font-size:1rem; font-weight:800; margin-bottom:12px; }
+    .fill-preview { font-size:0.8rem; color:var(--muted); margin-bottom:18px; line-height:1.55; background:var(--bg); padding:10px 14px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; word-break:break-word; }
+    .fill-field { margin-bottom:12px; }
+    .fill-field label { font-size:0.72rem; font-weight:700; color:var(--muted); display:block; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.05em; }
+    .fill-field input { width:100%; padding:10px 14px; border:2px solid var(--border); border-radius:12px; font-size:0.9rem; outline:none; background:var(--bg); color:var(--text); transition:border-color 0.15s; font-family:inherit; }
+    .fill-field input:focus { border-color:var(--pink); }
+    .fill-actions { display:flex; gap:10px; margin-top:18px; }
+    .fill-actions button { flex:1; padding:11px; border:none; border-radius:12px; font-size:0.88rem; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+    .fill-cancel { background:var(--bg); color:var(--muted); border:2px solid var(--border) !important; }
+    .fill-cancel:hover { border-color:var(--pink) !important; color:var(--pink); }
+    .fill-copy { background:var(--grad); color:white; box-shadow:0 4px 14px rgba(255,0,191,0.35); }
+    .fill-copy:hover { opacity:0.9; transform:translateY(-1px); }
+
+    /* ── WHAT'S NEW ── */
+    .wn-modal { background:var(--surface); border-radius:24px; width:90%; max-width:460px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.3),0 0 0 1px var(--border); }
+    .wn-header { background:var(--grad); padding:26px 30px 22px; color:white; }
+    .wn-version { display:inline-block; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.35); border-radius:20px; padding:2px 12px; font-size:0.68rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px; }
+    .wn-header h2 { font-size:1.35rem; font-weight:800; margin-bottom:4px; }
+    .wn-header p { font-size:0.82rem; opacity:0.75; }
+    .wn-body { padding:16px 28px 8px; max-height:55vh; overflow-y:auto; }
+    .wn-feature { display:flex; align-items:flex-start; gap:13px; padding:10px 0; border-bottom:1px solid var(--border); }
+    .wn-feature:last-child { border-bottom:none; }
+    .wn-icon { font-size:1.05rem; flex-shrink:0; width:22px; text-align:center; padding-top:2px; }
+    .wn-text strong { font-size:0.87rem; font-weight:700; color:var(--text); display:block; margin-bottom:1px; }
+    .wn-text span { font-size:0.76rem; color:var(--muted); line-height:1.45; }
+    .wn-footer { padding:16px 28px 24px; }
+    .wn-btn { width:100%; padding:13px; background:var(--grad); color:white; border:none; border-radius:14px; font-size:0.95rem; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(255,0,191,0.35); transition:all 0.2s; font-family:inherit; }
+    .wn-btn:hover { opacity:0.9; transform:translateY(-1px); }
 
     /* ── DOCK ── */
     .dock-wrapper {
@@ -287,12 +463,32 @@
   <div class="hdr-left">
     <button class="burger" onclick="toggleSidebar()">☰</button>
     <div>
-      <h1>✨ RiseForce <span>Snippets</span></h1>
+      <h1>✨ RiseForce Snippets</h1>
       <div class="hdr-sub">Personalized Chat Flow</div>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
-    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
+    <span class="sync-dot off" id="syncDot" title="Sync status"></span>
+    <button class="scratchpad-btn" onclick="toggleScratchpad()" title="Scratchpad">📝</button>
+    <div class="copy-counter" title="Snippets copied today"><div id="copyCounter">0</div><small>today</small></div>
+    <div class="theme-picker-wrap">
+      <button class="palette-btn" onclick="toggleThemePanel(event)">🎨</button>
+      <div class="theme-panel" id="themePanel">
+        <div class="theme-panel-label">Color</div>
+        <div class="swatches">
+          <div class="swatch" data-color="karma"  style="background:linear-gradient(135deg,#FF00BF,#a000ff)" title="Karma"  onclick="setColor('karma')"></div>
+          <div class="swatch" data-color="ocean"  style="background:linear-gradient(135deg,#0ea5e9,#06b6d4)" title="Ocean"  onclick="setColor('ocean')"></div>
+          <div class="swatch" data-color="sunset" style="background:linear-gradient(135deg,#f97316,#ef4444)" title="Sunset" onclick="setColor('sunset')"></div>
+          <div class="swatch" data-color="forest" style="background:linear-gradient(135deg,#10b981,#059669)" title="Forest" onclick="setColor('forest')"></div>
+          <div class="swatch" data-color="violet" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)" title="Violet" onclick="setColor('violet')"></div>
+        </div>
+        <div class="theme-panel-label">Mode</div>
+        <div class="dark-toggle" onclick="toggleTheme()">
+          <span>Dark mode</span>
+          <div class="toggle-track" id="darkTrack"><div class="toggle-thumb"></div></div>
+        </div>
+      </div>
+    </div>
     <div class="agent-badge" onclick="promptChangeName()">
       <div class="av" id="agentAvatar">?</div>
       <div>
@@ -304,6 +500,39 @@
 </div>
 
 <!-- Body -->
+<div class="ctx-bar" id="ctxBar">
+  <div class="case-block active" id="caseBlock0" onclick="setActiveCase(0)">
+    <span class="case-label">Case 1</span>
+    <input class="cx-input" id="cxName0" type="text" placeholder="Name…" autocomplete="off" maxlength="40"
+      oninput="setCxNameFor(0,this.value)" onclick="event.stopPropagation();setActiveCase(0)">
+    <select class="cx-select" id="cxTier0" onchange="setCxTierFor(0,this.value)" onclick="event.stopPropagation();setActiveCase(0)">
+      <option value="">Tier…</option>
+      <option value="Silver">Silver</option>
+      <option value="Gold">Gold</option>
+      <option value="Platinum">Platinum</option>
+      <option value="Elite">Elite</option>
+    </select>
+    <button class="case-reset" onclick="event.stopPropagation();newCaseFor(0)" title="Reset Case 1">↺</button>
+  </div>
+  <div class="case-block" id="caseBlock1" onclick="setActiveCase(1)">
+    <span class="case-label">Case 2</span>
+    <input class="cx-input" id="cxName1" type="text" placeholder="Name…" autocomplete="off" maxlength="40"
+      oninput="setCxNameFor(1,this.value)" onclick="event.stopPropagation();setActiveCase(1)">
+    <select class="cx-select" id="cxTier1" onchange="setCxTierFor(1,this.value)" onclick="event.stopPropagation();setActiveCase(1)">
+      <option value="">Tier…</option>
+      <option value="Silver">Silver</option>
+      <option value="Gold">Gold</option>
+      <option value="Platinum">Platinum</option>
+      <option value="Elite">Elite</option>
+    </select>
+    <button class="case-reset" onclick="event.stopPropagation();newCaseFor(1)" title="Reset Case 2">↺</button>
+  </div>
+  <div class="ctx-divider"></div>
+  <button class="queue-hdr-btn" id="queueHdrBtn" onclick="toggleQueuePanel()">
+    📋 Queue <span class="q-badge" id="queueBadge" style="display:none">0</span>
+  </button>
+</div>
+
 <div class="body">
 
   <!-- Sidebar -->
@@ -312,7 +541,12 @@
       <input type="text" id="sideSearch" placeholder="Search snippets..." oninput="onSearch(this.value)" autocomplete="off">
     </div>
     <div class="nav-tree" id="navTree"></div>
+    <div class="nav-footer">
+      <button class="nav-footer-btn" onclick="exportCustoms()" title="Export custom snippets">↓ Export</button>
+      <button class="nav-footer-btn" onclick="document.getElementById('importFile').click()" title="Import snippets">↑ Import</button>
+    </div>
   </nav>
+  <input type="file" id="importFile" accept=".csv,.txt" style="display:none" onchange="handleImport(event)">
 
   <!-- Content -->
   <div class="content">
@@ -327,7 +561,103 @@
 
 </div>
 
-<div class="toast" id="toast"> Copied!</div>
+<div class="toast" id="toast">✓ Copied!</div>
+
+<!-- Fill-in modal -->
+<div class="fill-modal" id="fillModal" style="display:none" onclick="if(event.target===this)closeFillModal()">
+  <div class="fill-box">
+    <h3>Fill in placeholders</h3>
+    <div class="fill-preview" id="fillPreview"></div>
+    <div id="fillFields"></div>
+    <div class="fill-actions">
+      <button class="fill-cancel" onclick="closeFillModal()">Cancel</button>
+      <button class="fill-copy" onclick="confirmFill()">Copy ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit custom snippet modal -->
+<div class="fill-modal" id="addSnipModal" style="display:none" onclick="if(event.target===this)closeAddSnip()">
+  <div class="fill-box">
+    <h3 id="addSnipTitle">Add custom snippet</h3>
+    <textarea id="addSnipText" placeholder="Type your snippet here…" rows="5"
+      style="width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:0.88rem;outline:none;background:var(--bg);color:var(--text);resize:vertical;font-family:inherit;margin-bottom:12px;display:block"
+      onfocus="this.style.borderColor='var(--pink)'"
+      onblur="this.style.borderColor='var(--border)'"
+      onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))saveCustomSnip()"></textarea>
+    <div class="fill-actions">
+      <button id="resetOverrideBtn" class="fill-cancel" onclick="resetOverride()" style="display:none">↩ Reset</button>
+      <button class="fill-cancel" onclick="closeAddSnip()">Cancel</button>
+      <button class="fill-copy" onclick="saveCustomSnip()">Save ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- What's New modal -->
+<div class="modal-overlay" id="whatsNewModal" style="display:none" onclick="if(event.target===this)closeWhatsNew()">
+  <div class="wn-modal">
+    <div class="wn-header">
+      <div class="wn-version">Version 2.0</div>
+      <h2>✨ What's New</h2>
+      <p>RiseForce Snippets just got a major upgrade.</p>
+    </div>
+    <div class="wn-body">
+      <div class="wn-feature"><div class="wn-icon">🎨</div><div class="wn-text"><strong>5 Color Themes</strong><span>Switch between Karma pink, Ocean, Sunset, Forest, and Violet — plus dark mode.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">⭐</div><div class="wn-text"><strong>Favorites</strong><span>Star any snippet paragraph to save it. Access all favorites from the sidebar.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">✏️</div><div class="wn-text"><strong>Edit &amp; Override</strong><span>Override any built-in snippet with your own version, or edit custom ones.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📌</div><div class="wn-text"><strong>Pin to top</strong><span>Pin your most-used paragraphs so they always appear first in their section.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">➕</div><div class="wn-text"><strong>Custom snippets</strong><span>Add your own snippets to any section — they stay saved across sessions.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📋</div><div class="wn-text"><strong>Fill-in placeholders</strong><span>Snippets with [xxx] markers now prompt you to fill them before copying.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📊</div><div class="wn-text"><strong>Copy count per snippet</strong><span>See how many times you've used each snippet to spot your favourites.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📝</div><div class="wn-text"><strong>Scratchpad</strong><span>A floating notepad for case IDs and quick notes — synced across devices.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">⌨️</div><div class="wn-text"><strong>Keyboard shortcuts</strong><span>/ to search, ↑↓ to navigate cards, Enter to copy.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">🔄</div><div class="wn-text"><strong>Cross-device sync</strong><span>Favorites, pins, custom snippets — everything syncs when deployed on GAS.</span></div></div>
+    </div>
+    <div class="wn-footer">
+      <button class="wn-btn" onclick="closeWhatsNew()">Got it, let's go! →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Queue panel -->
+<div class="queue-panel" id="queuePanel" style="display:none">
+  <div class="queue-panel-hdr">
+    <strong>📋 Snippet Queue</strong>
+    <button class="qp-btn" onclick="toggleQueuePanel()">✕</button>
+  </div>
+  <div class="queue-list" id="queueList"><div class="queue-empty">No snippets queued yet.<br>Hit + on any snippet to add it.</div></div>
+  <div class="queue-footer">
+    <button class="qp-btn primary" onclick="copyNext()" id="copyNextBtn">▶ Copy Next</button>
+    <button class="qp-btn" onclick="copyAllQueue()">Copy All</button>
+    <button class="qp-btn" onclick="openSaveSeq()">💾 Save Sequence</button>
+    <button class="qp-btn danger" onclick="clearQueue()">✕ Clear</button>
+  </div>
+</div>
+
+<!-- Save sequence name modal -->
+<div class="fill-modal" id="saveSeqModal" style="display:none" onclick="if(event.target===this)closeSaveSeq()">
+  <div class="fill-box">
+    <h3>💾 Save as Sequence</h3>
+    <div class="fill-field">
+      <label>Sequence name</label>
+      <input id="seqNameInput" type="text" placeholder="e.g. Underpaid + Bonus Flow" autocomplete="off"
+        onkeydown="if(event.key==='Enter')confirmSaveSeq()">
+    </div>
+    <div class="fill-actions">
+      <button class="fill-cancel" onclick="closeSaveSeq()">Cancel</button>
+      <button class="fill-copy" onclick="confirmSaveSeq()">Save ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scratchpad panel -->
+<div class="scratchpad-panel" id="scratchpadPanel" style="display:none">
+  <div class="scratchpad-hdr">
+    <span>📝 Scratchpad</span>
+    <button class="scratchpad-close" onclick="toggleScratchpad()">✕</button>
+  </div>
+  <textarea id="scratchpadText" placeholder="Case IDs, quick notes, anything…" oninput="store.set('riseforce_scratch',this.value);pushToServer()"></textarea>
+</div>
 
 <!-- Dock -->
 <div class="dock-wrapper">
@@ -347,6 +677,44 @@
   l.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>";
   document.head.appendChild(l);
 })();
+
+// ═══════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch(e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+};
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let agentName   = store.get('riseforce_agent_name') || '';
+let favorites   = new Set(JSON.parse(store.get('rf_favs')     || '[]'));
+let customs     = JSON.parse(store.get('rf_customs')          || '[]');
+let pins        = new Set(JSON.parse(store.get('rf_pins')     || '[]'));
+let overrides   = JSON.parse(store.get('rf_overrides')        || '{}');
+let snipCounts  = JSON.parse(store.get('rf_counts')           || '{}');
+let recentList  = JSON.parse(store.get('rf_recent')           || '[]');
+let copyCount   = 0;
+const CURRENT_VERSION = '2.0';
+let seenVersion = store.get('rf_seen_version') || '';
+let fillCard    = null;
+// Context bar — active case vars (mirror of caseData[activeCaseIdx])
+let cxName      = '';
+let cxTier      = '';
+let queue       = [];
+let queueCursor = 0;
+// Both cases stored here; activeCaseIdx controls which applies to snippets
+let activeCaseIdx = 0;
+const caseData = [{ cxName:'', cxTier:'' }, { cxName:'', cxTier:'' }];
+// Sequences
+let sequences   = JSON.parse(store.get('rf_sequences') || '[]');
+let seqPlayIdx  = -1; // which sequence is actively playing (-1 = none)
+// Para drag-to-reorder
+let paraOrder   = JSON.parse(store.get('rf_para_order') || '{}');
+let paraDragKey = null;
+let paraDragPath = null;
 
 // ═══════════════════════════════════════════════
 // DATA
@@ -986,18 +1354,8 @@ Thank you for reaching Lyft's safety team. If there are any other questions feel
 };
 
 // ═══════════════════════════════════════════════
-// STORAGE (safe — GAS iframes block localStorage)
-// ═══════════════════════════════════════════════
-const store = {
-  get(k) { try { return localStorage.getItem(k); } catch(e) { return null; } },
-  set(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
-};
-
-// ═══════════════════════════════════════════════
 // AGENT NAME
 // ═══════════════════════════════════════════════
-let agentName = store.get('riseforce_agent_name') || '';
-
 function saveAgentName() {
   const val = document.getElementById('nameInput').value.trim();
   if (!val) return;
@@ -1008,6 +1366,7 @@ function saveAgentName() {
   updateHeaderName();
   renderTree();
   if (selPath) showSnippets(selPath);
+  pushToServer();
 }
 function promptChangeName() {
   const m = document.getElementById('nameModal');
@@ -1022,28 +1381,55 @@ function updateHeaderName() {
   document.getElementById('agentAvatar').textContent = agentName ? agentName.charAt(0).toUpperCase() : '?';
 }
 function applyName(text) {
-  if (!agentName) return text;
-  return text
-    .replace(/\( Agent's name \)/g, agentName)
-    .replace(/xxxxxx/g, agentName)
-    .replace(/(My name is )xxxx\b/g, `$1${agentName}`)
-    .replace(/(name is )xxxx\b/g, `$1${agentName}`);
+  let t = text;
+  // Agent name (specific patterns first to avoid conflict with CX substitution)
+  if (agentName) {
+    t = t
+      .replace(/\( Agent's name \)/g, agentName)
+      .replace(/\bxxxxxx\b/g, agentName)
+      .replace(/(My name is )xxxx\b/gi, `$1${agentName}`)
+      .replace(/(name is )xxxx\b/gi, `$1${agentName}`);
+  }
+  // CX (customer) name — only replaces in clear name contexts, not generic xxx placeholders
+  if (cxName) {
+    t = t
+      .replace(/\( Customer's name \)/gi, cxName)
+      // After greeting words: "Hello xxx", "Hi xxx", "Dear xxx", "Greetings xxx"
+      .replace(/((?:Hello|Hi|Hey|Greetings|Dear|Hi there),?\s+)(xxxxx|xxxx|xxx|\*{2,4})\b/gi, `$1${cxName}`)
+      // "( cx name )" style explicit markers
+      .replace(/\b_NAME_\b/g, cxName)
+      // After "Thank you," or "Thank you so much," — common opener
+      .replace(/(Thank you(?:\s+so much)?,?\s+)(xxx|xxxx)\b/gi, `$1${cxName}`);
+  }
+  // Tier substitution
+  if (cxTier) {
+    t = t
+      .replace(/\*INSERT TIER\*/gi, cxTier)
+      .replace(/\bINSERT TIER\b/gi, cxTier)
+      .replace(/\bXXX tier\b/gi, `${cxTier} tier`)
+      .replace(/\bX tier\b/gi, `${cxTier} tier`)
+      .replace(/\bamazing X driver\b/gi, `amazing ${cxTier} driver`)
+      .replace(/\bbeing a X driver\b/gi, `being a ${cxTier} driver`)
+      .replace(/\bfor being a X driver\b/gi, `for being a ${cxTier} driver`)
+      .replace(/\bI see that you are a X driver\b/gi, `I see that you are a ${cxTier} driver`)
+      .replace(/\bX driver(?!\s*app)\b/gi, `${cxTier} driver`);
+  }
+  return t;
 }
 
 // ═══════════════════════════════════════════════
 // NAV STATE
 // ═══════════════════════════════════════════════
 let selPath = null;
-let expLobs   = new Set(['driver']);
-let expPhases = new Set();
+let expLobs   = new Set(['driver', 'safety']); // both open by default
 let expCases  = new Set();
+// Nav drag-to-reorder
+let navOrder   = JSON.parse(store.get('rf_nav_order') || '{}');
+let navDragKey = null;
+let navDragLob = null;
 
 function toggleLob(k) {
   expLobs.has(k) ? expLobs.delete(k) : expLobs.add(k);
-  renderTree();
-}
-function togglePhase(k) {
-  expPhases.has(k) ? expPhases.delete(k) : expPhases.add(k);
   renderTree();
 }
 function toggleCase(k) {
@@ -1053,10 +1439,9 @@ function toggleCase(k) {
 
 function selectPath(path) {
   selPath = path;
-  // auto-expand parents
   const parts = path.split('.');
   expLobs.add(parts[0]);
-  if (parts[2]) expPhases.add(parts[0] + '.' + parts[1]);
+  // auto-expand parent case when a subcase is selected (4-part path: lk.pk.ck.sk)
   if (parts[3]) expCases.add(parts[0] + '.' + parts[1] + '.' + parts[2]);
   renderTree();
   showSnippets(path);
@@ -1068,54 +1453,139 @@ function selectPath(path) {
 // ═══════════════════════════════════════════════
 function renderTree() {
   let h = '';
+
+  // ── Stats ──
+  h += `<div class="ni${selPath === '__stats__' ? ' active' : ''}" onclick="showStats()">
+    <span style="font-size:1rem">📊</span> Stats
+  </div>`;
+
+  // ── Sequences ──
+  if (sequences.length) {
+    h += `<div class="lob-label" style="cursor:default;pointer-events:none"><span>🎬 Sequences</span></div>`;
+    sequences.forEach(seq => {
+      h += `<div class="ni${selPath === `__seq__${seq.id}` ? ' active' : ''} indent1" onclick="playSequence('${seq.id}')">
+        <span>▶</span> ${esc(seq.name)}
+        <button onclick="event.stopPropagation();deleteSequence('${seq.id}')" title="Delete"
+          style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.7rem;margin-left:auto;opacity:0.5;padding:0 2px"
+          onmouseenter="this.style.color='#ef4444';this.style.opacity='1'"
+          onmouseleave="this.style.color='';this.style.opacity='0.5'">✕</button>
+      </div>`;
+    });
+  }
+
+  // ── Favorites ──
+  if (favorites.size) {
+    h += `<div class="ni${selPath === '__favs__' ? ' active' : ''}" onclick="showFavsView()">
+      <span>⭐</span> Favorites
+      <span style="font-size:0.65rem;font-weight:700;background:var(--bg);color:var(--muted);padding:2px 7px;border-radius:10px;margin-left:auto">${favorites.size}</span>
+    </div>`;
+  }
+
+  // ── LOBs ──
   Object.entries(D).forEach(([lk, lob]) => {
     const lobOpen = expLobs.has(lk);
     h += `<div class="lob-label" onclick="toggleLob('${lk}')">
       <span><span class="lob-icon">${lob.icon}</span>${lob.label}</span>
       <span class="chev ${lobOpen ? 'open' : ''}">▶</span>
     </div>`;
-    if (lobOpen) {
-      h += `<div class="lob-body">`;
-      Object.entries(lob.phases).forEach(([pk, phase]) => {
-        const phKey = lk + '.' + pk;
-        if (phase.snippets) {
-          const active = selPath === phKey;
-          h += ni(phase.icon + ' ' + phase.label, `selectPath('${phKey}')`, 'indent1', active);
-        } else if (phase.cases) {
-          const phOpen = expPhases.has(phKey);
-          h += ni(phase.icon + ' ' + phase.label + `<span class="chev ${phOpen?'open':''}" style="margin-left:auto;font-size:.6rem">▶</span>`,
-            `togglePhase('${phKey}')`, 'indent1', false, true);
-          if (phOpen) {
-            Object.entries(phase.cases).forEach(([ck, c]) => {
-              const cKey = phKey + '.' + ck;
-              if (c._empty) {
-                h += `<div class="ni indent2 disabled">${c.icon||'📌'} ${c.label}<span class="soon">soon</span></div>`;
-              } else if (c.snippets) {
-                const active = selPath === cKey;
-                h += ni((c.icon||'📌') + ' ' + c.label, `selectPath('${cKey}')`, 'indent2', active);
-              } else if (c.subcases) {
-                const cOpen = expCases.has(cKey);
-                h += ni((c.icon||'📌') + ' ' + c.label + `<span class="chev ${cOpen?'open':''}" style="margin-left:auto;font-size:.6rem">▶</span>`,
-                  `toggleCase('${cKey}')`, 'indent2', false, true);
-                if (cOpen) {
-                  Object.entries(c.subcases).forEach(([sk, sub]) => {
-                    const sKey = cKey + '.' + sk;
-                    const active = selPath === sKey;
-                    h += ni('📋 ' + sub.label, `selectPath('${sKey}')`, 'indent3', active);
-                  });
-                }
-              }
-            });
-          }
-        }
+    if (!lobOpen) return;
+
+    // Build flat item list — Resolution Delivery (and any container phase) is transparent;
+    // its cases appear directly at the same level as other phases
+    const items = [];
+    Object.entries(lob.phases).forEach(([pk, phase]) => {
+      if (phase.snippets) {
+        items.push({ key: pk, path: `${lk}.${pk}`, label: phase.label, icon: phase.icon, type: 'leaf' });
+      } else if (phase.cases) {
+        Object.entries(phase.cases).forEach(([ck, c]) => {
+          const cPath = `${lk}.${pk}.${ck}`;
+          items.push({
+            key: ck, path: cPath, label: c.label, icon: c.icon || '📌',
+            type: c._empty ? 'empty' : c.snippets ? 'leaf' : 'node',
+            subcases: c.subcases || null
+          });
+        });
+      }
+    });
+
+    // Apply custom nav order if set
+    const order = navOrder[lk];
+    if (order && order.length) {
+      items.sort((a, b) => {
+        const ai = order.indexOf(a.key), bi = order.indexOf(b.key);
+        if (ai === -1) return 1; if (bi === -1) return -1;
+        return ai - bi;
       });
-      h += `</div>`;
     }
+
+    const dAttr = (key) =>
+      `draggable="true" data-nav-key="${key}" data-nav-lob="${lk}"
+       ondragstart="onNavDragStart(event,'${key}','${lk}')"
+       ondragover="onNavDragOver(event)"
+       ondragleave="onNavDragLeave(event)"
+       ondrop="onNavDrop(event,'${key}','${lk}')"
+       ondragend="document.querySelectorAll('.ni.drag-over,.ni.dragging').forEach(el=>el.classList.remove('drag-over','dragging'))"`;
+
+    h += `<div class="lob-body">`;
+    items.forEach(item => {
+      const active = selPath === item.path || (item.type === 'node' && selPath && selPath.startsWith(item.path + '.'));
+      if (item.type === 'empty') {
+        h += `<div class="ni indent1 disabled" ${dAttr(item.key)}>
+          <span class="drag-handle">⠇</span>${item.icon} ${esc(item.label)}<span class="soon">soon</span>
+        </div>`;
+      } else if (item.type === 'leaf') {
+        h += `<div class="ni indent1${active ? ' active' : ''}" onclick="selectPath('${item.path}')" ${dAttr(item.key)}>
+          <span class="drag-handle">⠇</span>${item.icon} ${esc(item.label)}
+        </div>`;
+      } else if (item.type === 'node') {
+        const open = expCases.has(item.path);
+        h += `<div class="ni indent1${active ? ' active' : ''}" onclick="toggleCase('${item.path}')" ${dAttr(item.key)}>
+          <span class="drag-handle">⠇</span>${item.icon} ${esc(item.label)}
+          <span class="chev ${open ? 'open' : ''}" style="margin-left:auto;font-size:.6rem">▶</span>
+        </div>`;
+        if (open && item.subcases) {
+          Object.entries(item.subcases).forEach(([sk, sub]) => {
+            const sPath = `${item.path}.${sk}`;
+            h += `<div class="ni indent2${selPath === sPath ? ' active' : ''}" onclick="selectPath('${sPath}')">
+              📋 ${esc(sub.label)}
+            </div>`;
+          });
+        }
+      }
+    });
+    h += `</div>`;
   });
+
   document.getElementById('navTree').innerHTML = h;
 }
 
-function ni(label, onclick, cls, active, noHover) {
+// ── Nav drag-to-reorder ──
+function onNavDragStart(e, key, lob) {
+  navDragKey = key; navDragLob = lob;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => {
+    const el = document.querySelector(`[data-nav-key="${key}"][data-nav-lob="${lob}"]`);
+    if (el) el.classList.add('dragging');
+  }, 0);
+}
+function onNavDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function onNavDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function onNavDrop(e, targetKey, lob) {
+  e.preventDefault();
+  document.querySelectorAll('.ni.drag-over,.ni.dragging').forEach(el => el.classList.remove('drag-over', 'dragging'));
+  if (!navDragKey || navDragKey === targetKey || navDragLob !== lob) { navDragKey = null; return; }
+  const allKeys = [...document.querySelectorAll(`[data-nav-lob="${lob}"]`)].map(el => el.dataset.navKey).filter(Boolean);
+  const fi = allKeys.indexOf(navDragKey), ti = allKeys.indexOf(targetKey);
+  if (fi === -1 || ti === -1) { navDragKey = null; return; }
+  allKeys.splice(fi, 1); allKeys.splice(ti, 0, navDragKey);
+  navOrder[lob] = allKeys;
+  store.set('rf_nav_order', JSON.stringify(navOrder));
+  navDragKey = null;
+  renderTree();
+  pushToServer();
+}
+
+function ni(label, onclick, cls, active) {
   return `<div class="ni ${cls}${active ? ' active' : ''}" onclick="${onclick}">${label}</div>`;
 }
 
@@ -1125,60 +1595,283 @@ function ni(label, onclick, cls, active, noHover) {
 function buildBreadcrumb(path) {
   const [lk, pk, ck, sk] = path.split('.');
   const crumbs = [D[lk].label];
-  if (pk) crumbs.push(D[lk].phases[pk].label);
-  if (ck && D[lk].phases[pk].cases) crumbs.push(D[lk].phases[pk].cases[ck].label);
-  if (sk && D[lk].phases[pk].cases[ck].subcases) crumbs.push(D[lk].phases[pk].cases[ck].subcases[sk].label);
+  const phase = D[lk]?.phases[pk];
+  // Only show phase label if it has direct snippets (not a container like Resolution Delivery)
+  if (pk && phase?.snippets) crumbs.push(phase.label);
+  if (ck && phase?.cases) crumbs.push(phase.cases[ck].label);
+  if (sk && phase?.cases?.[ck]?.subcases) crumbs.push(phase.cases[ck].subcases[sk].label);
   return crumbs;
 }
 
 // ═══════════════════════════════════════════════
 // CONTENT
 // ═══════════════════════════════════════════════
+function buildParaCard(sk, displayText, rawText, isFav, isPinned, count, isCustom, customId) {
+  const overridden = !isCustom && overrides[sk];
+  const actHtml = `<div class="snip-actions">
+    <button class="sa-btn${overridden ? ' overridden' : ''}" onclick="event.stopPropagation();editPara('${sk}',${isCustom},${customId ? `'${customId}'` : 'null'})" title="${isCustom ? 'Edit' : 'Override'}">✏ ${isCustom ? 'Edit' : 'Override'}</button>
+    <button class="sa-btn${isPinned ? ' pinned' : ''}" onclick="event.stopPropagation();togglePin('${sk}')" title="Pin">📌</button>
+    <button class="sa-btn" onclick="event.stopPropagation();addToQueue(this)" title="Add to queue">＋ Queue</button>
+    ${count > 0 ? `<span class="snip-count-badge">${count}×</span>` : ''}
+    ${isCustom ? `<button class="sa-btn" style="color:#ef4444;margin-left:auto" onclick="event.stopPropagation();deleteCustomPara('${customId}')" title="Delete">✕</button>` : ''}
+  </div>`;
+  const pathKey = sk.split('|')[0];
+  return `<div class="snip-para has-actions${isCustom ? ' custom' : ''}" onclick="maybeFill(this)" data-text="${escAttr(displayText)}" data-raw="${escAttr(rawText)}" data-key="${sk}" data-para-key="${sk}"
+    draggable="true"
+    ondragstart="onParaDragStart(event,'${sk}','${pathKey}')"
+    ondragover="onParaDragOver(event)"
+    ondragleave="onParaDragLeave(event)"
+    ondrop="onParaDrop(event,'${sk}','${pathKey}')"
+    ondragend="document.querySelectorAll('.snip-para').forEach(c=>c.classList.remove('card-dragging','card-drag-over'))">
+    <span class="para-drag-handle" title="Drag to reorder">⠿</span>
+    <button class="snip-fav${isFav ? ' active' : ''}" onclick="event.stopPropagation();toggleFav('${sk}')" title="${isFav ? 'Unfavorite' : 'Favorite'}">⭐</button>
+    <div class="snip-text">${esc(displayText)}</div>
+    ${actHtml}
+  </div>`;
+}
+
+function resolveSnips(path) {
+  const [lk, pk, ck, sk] = path.split('.');
+  const lob = D[lk]; const phase = lob.phases[pk];
+  if (phase.snippets) return { snips: phase.snippets, title: phase.label, icon: phase.icon };
+  const c = phase.cases[ck];
+  if (c._empty) return { snips: null, title: c.label, icon: c.icon || '🚧', empty: true };
+  if (c.snippets) return { snips: c.snippets, title: c.label, icon: c.icon || '📌' };
+  const sub = c.subcases[sk];
+  return { snips: sub.snippets, title: sub.label, icon: '📋' };
+}
+
 function showSnippets(path) {
-  const parts = path.split('.');
-  const [lk, pk, ck, sk] = parts;
-  const lob = D[lk];
-  const phase = lob.phases[pk];
-
-  let snips, title, icon;
-  if (phase.snippets) {
-    snips = phase.snippets; title = phase.label; icon = phase.icon;
-  } else {
-    const c = phase.cases[ck];
-    if (c._empty) {
-      document.getElementById('contentBody').innerHTML = `
-        <div class="welcome">
-          <div class="big">🚧</div>
-          <h2>${c.label}</h2>
-          <p>Snippets for this case haven't been loaded yet.<br>Ask your manager to add them!</p>
-        </div>`;
-      return;
-    }
-    if (c.snippets) {
-      snips = c.snippets; title = c.label; icon = c.icon || '📌';
-    } else {
-      const sub = c.subcases[sk];
-      snips = sub.snippets; title = sub.label; icon = '📋';
-    }
-  }
-
-  const cards = snips.map(s => {
-    const paras = applyName(s.text).split(/\n\n+/).map(p => p.trim()).filter(Boolean);
-    return `<div class="snippet-group">
-      <div class="snip-label">${esc(s.label)}</div>
-      ${paras.map(p => `<div class="snip-para" onclick="copyPara(this)" data-text="${escAttr(p)}"><div class="snip-text">${esc(p)}</div></div>`).join('')}
-    </div>`;
-  }).join('');
-
+  const { snips, title, icon, empty } = resolveSnips(path);
   const crumbs = buildBreadcrumb(path);
   const bc = `<div class="breadcrumb">${crumbs.map((c, i) =>
     `<span>${esc(c)}</span>${i < crumbs.length - 1 ? '<span class="bc-sep">›</span>' : ''}`
   ).join('')}</div>`;
 
+  if (empty) {
+    document.getElementById('contentBody').innerHTML = `${bc}<div class="welcome"><div class="big">🚧</div><h2>${esc(title)}</h2><p>Snippets for this case haven't been loaded yet.</p></div>`;
+    return;
+  }
+
+  const myCustoms = customs.filter(c => c.pathKey === path);
+
+  // Build all para items flat, then either group them or order them by paraOrder
+  const allItems = [];
+  snips.forEach((s, si) => {
+    const rawParas = s.text.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+    rawParas.forEach((rawPara, pi) => {
+      const sk = `${path}|s${si}|p${pi}`;
+      const displayText = overrides[sk] || applyName(rawPara);
+      allItems.push({ sk, displayText, rawText: rawPara, groupLabel: s.label });
+    });
+  });
+  myCustoms.forEach(c => {
+    const sk = `${path}|c${c.id}`;
+    allItems.push({ sk, displayText: applyName(c.text), rawText: c.text, groupLabel: '✨ Custom', isCustom: true, customId: c.id });
+  });
+
+  let html = '';
+  const order = paraOrder[path];
+  if (order && order.length) {
+    // Flat ordered view when custom order exists
+    const keyMap = {}; allItems.forEach(it => keyMap[it.sk] = it);
+    const orderedItems = [];
+    order.forEach(sk => { if (keyMap[sk]) { orderedItems.push(keyMap[sk]); delete keyMap[sk]; } });
+    allItems.forEach(it => { if (keyMap[it.sk]) orderedItems.push(it); });
+    html = orderedItems.map(it =>
+      `<div style="margin-bottom:4px"><div class="path-tag" style="margin-bottom:4px">${esc(it.groupLabel)}</div>${buildParaCard(it.sk, it.displayText, it.rawText, favorites.has(it.sk), pins.has(it.sk), snipCounts[it.sk]||0, !!it.isCustom, it.customId||null)}</div>`
+    ).join('');
+    html += `<button class="add-snip-btn" style="margin-top:4px" onclick="resetParaOrder('${path}')">↺ Reset order</button>`;
+  } else {
+    // Default grouped view
+    snips.forEach((s, si) => {
+      const rawParas = s.text.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+      const cards = rawParas.map((rawPara, pi) => {
+        const sk = `${path}|s${si}|p${pi}`;
+        const displayText = overrides[sk] || applyName(rawPara);
+        return buildParaCard(sk, displayText, rawPara, favorites.has(sk), pins.has(sk), snipCounts[sk]||0, false, null);
+      });
+      const pinned   = cards.filter((_, pi) => pins.has(`${path}|s${si}|p${pi}`));
+      const unpinned = cards.filter((_, pi) => !pins.has(`${path}|s${si}|p${pi}`));
+      html += `<div class="snippet-group"><div class="snip-label">${esc(s.label)}</div>${pinned.concat(unpinned).join('')}</div>`;
+    });
+    if (myCustoms.length) {
+      html += `<div class="snippet-group"><div class="snip-label">✨ Custom</div>${myCustoms.map(c => {
+        const sk = `${path}|c${c.id}`;
+        return buildParaCard(sk, applyName(c.text), c.text, favorites.has(sk), pins.has(sk), snipCounts[sk]||0, true, c.id);
+      }).join('')}</div>`;
+    }
+  }
+
   document.getElementById('contentBody').innerHTML = `
     ${bc}
     <div class="content-title"><span class="icon">${icon}</span>${esc(title)}</div>
-    ${cards}`;
+    ${html}
+    <button class="add-snip-btn" onclick="openAddSnip('${path}')">＋ Add custom snippet</button>`;
+}
+
+// ═══════════════════════════════════════════════
+// FAVORITES
+// ═══════════════════════════════════════════════
+function toggleFav(sk) {
+  favorites.has(sk) ? favorites.delete(sk) : favorites.add(sk);
+  store.set('rf_favs', JSON.stringify([...favorites]));
+  const btn = document.querySelector(`.snip-para[data-key="${sk}"] .snip-fav`);
+  if (btn) btn.classList.toggle('active', favorites.has(sk));
+  pushToServer();
+}
+
+// ═══════════════════════════════════════════════
+// PINS
+// ═══════════════════════════════════════════════
+function togglePin(sk) {
+  pins.has(sk) ? pins.delete(sk) : pins.add(sk);
+  store.set('rf_pins', JSON.stringify([...pins]));
+  if (selPath) showSnippets(selPath);
+  pushToServer();
+}
+
+// ═══════════════════════════════════════════════
+// CUSTOM SNIPPETS
+// ═══════════════════════════════════════════════
+let _addSnipPath = null, _editId = null, _overrideKey = null;
+
+function openAddSnip(path) {
+  _addSnipPath = path; _editId = null; _overrideKey = null;
+  document.getElementById('addSnipTitle').textContent = 'Add custom snippet';
+  document.getElementById('addSnipText').value = '';
+  document.getElementById('resetOverrideBtn').style.display = 'none';
+  document.getElementById('addSnipModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('addSnipText').focus(), 50);
+}
+
+function editPara(sk, isCustom, customId) {
+  if (isCustom) {
+    const c = customs.find(x => x.id === customId);
+    _editId = customId; _overrideKey = null; _addSnipPath = sk.split('|')[0];
+    document.getElementById('addSnipTitle').textContent = 'Edit snippet';
+    document.getElementById('addSnipText').value = c ? c.text : '';
+    document.getElementById('resetOverrideBtn').style.display = 'none';
+  } else {
+    _editId = null; _overrideKey = sk; _addSnipPath = sk.split('|')[0];
+    const card = document.querySelector(`.snip-para[data-key="${sk}"]`);
+    document.getElementById('addSnipTitle').textContent = 'Override snippet';
+    document.getElementById('addSnipText').value = overrides[sk] || (card ? card.dataset.raw : '');
+    document.getElementById('resetOverrideBtn').style.display = overrides[sk] ? '' : 'none';
+  }
+  document.getElementById('addSnipModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('addSnipText').focus(), 50);
+}
+
+function saveCustomSnip() {
+  const text = document.getElementById('addSnipText').value.trim();
+  if (!text) return;
+  if (_overrideKey) {
+    overrides[_overrideKey] = text;
+    store.set('rf_overrides', JSON.stringify(overrides));
+  } else if (_editId) {
+    const c = customs.find(x => x.id === _editId);
+    if (c) { c.text = text; store.set('rf_customs', JSON.stringify(customs)); }
+  } else if (_addSnipPath) {
+    customs.push({ id: Date.now().toString(), pathKey: _addSnipPath, text });
+    store.set('rf_customs', JSON.stringify(customs));
+  }
+  closeAddSnip();
+  if (selPath) showSnippets(selPath);
+  pushToServer();
+}
+
+function resetOverride() {
+  if (_overrideKey && overrides[_overrideKey] !== undefined) {
+    delete overrides[_overrideKey];
+    store.set('rf_overrides', JSON.stringify(overrides));
+  }
+  closeAddSnip();
+  if (selPath) showSnippets(selPath);
+  pushToServer();
+}
+
+function closeAddSnip() {
+  document.getElementById('addSnipModal').style.display = 'none';
+  _addSnipPath = null; _editId = null; _overrideKey = null;
+}
+
+function deleteCustomPara(id) {
+  customs = customs.filter(c => c.id !== id);
+  store.set('rf_customs', JSON.stringify(customs));
+  if (selPath) showSnippets(selPath);
+  pushToServer();
+}
+
+// ═══════════════════════════════════════════════
+// FILL-IN PLACEHOLDERS
+// ═══════════════════════════════════════════════
+function maybeFill(el) {
+  const text = el.dataset.text;
+  const seen = {}, placeholders = [];
+  let m; const re = /\[([^\]]+)\]/g;
+  while ((m = re.exec(text)) !== null) {
+    if (!seen[m[1]]) { seen[m[1]] = true; placeholders.push(m[1]); }
+  }
+  if (!placeholders.length) { copyPara(el); return; }
+  fillCard = el;
+  document.getElementById('fillPreview').textContent = text.length > 150 ? text.slice(0,150) + '…' : text;
+  document.getElementById('fillFields').innerHTML = placeholders.map(p =>
+    `<div class="fill-field"><label>${esc(p)}</label><input type="text" data-ph="${escAttr(p)}" placeholder="Enter ${esc(p)}…" autocomplete="off" onkeydown="if(event.key==='Enter')confirmFill()"></div>`
+  ).join('');
+  document.getElementById('fillModal').dataset.origText = text;
+  document.getElementById('fillModal').style.display = 'flex';
+  const first = document.querySelector('#fillFields input');
+  if (first) setTimeout(() => first.focus(), 50);
+}
+
+function confirmFill() {
+  let text = document.getElementById('fillModal').dataset.origText;
+  document.querySelectorAll('#fillFields input').forEach(inp => {
+    const val = inp.value.trim() || '[' + inp.dataset.ph + ']';
+    text = text.split('[' + inp.dataset.ph + ']').join(val);
+  });
+  closeFillModal();
+  if (fillCard) { const orig = fillCard.dataset.text; fillCard.dataset.text = text; copyPara(fillCard); fillCard.dataset.text = orig; fillCard = null; }
+}
+
+function closeFillModal() { document.getElementById('fillModal').style.display = 'none'; fillCard = null; }
+
+// ═══════════════════════════════════════════════
+// COPY COUNTER
+// ═══════════════════════════════════════════════
+function loadCopyCount() {
+  const today = new Date().toDateString();
+  const saved = JSON.parse(store.get('rf_copy_stats') || '{"date":"","count":0}');
+  copyCount = saved.date === today ? saved.count : 0;
+}
+function bumpCopyCount() {
+  copyCount++;
+  store.set('rf_copy_stats', JSON.stringify({ date: new Date().toDateString(), count: copyCount }));
+  const el = document.getElementById('copyCounter');
+  if (el) el.textContent = copyCount;
+}
+
+// ═══════════════════════════════════════════════
+// RECENT
+// ═══════════════════════════════════════════════
+function trackRecent(text) {
+  recentList = [text, ...recentList.filter(t => t !== text)].slice(0, 8);
+  store.set('rf_recent', JSON.stringify(recentList));
+}
+
+// ═══════════════════════════════════════════════
+// SCRATCHPAD
+// ═══════════════════════════════════════════════
+function toggleScratchpad() {
+  const panel = document.getElementById('scratchpadPanel');
+  const open = panel.style.display !== 'none';
+  panel.style.display = open ? 'none' : 'flex';
+  if (!open) {
+    const ta = document.getElementById('scratchpadText');
+    ta.value = store.get('riseforce_scratch') || '';
+    setTimeout(() => ta.focus(), 50);
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -1186,18 +1879,17 @@ function showSnippets(path) {
 // ═══════════════════════════════════════════════
 function onSearch(q) {
   if (!q.trim()) {
-    // restore content if there's a selected path
     if (selPath) showSnippets(selPath);
     else document.getElementById('contentBody').innerHTML = `<div class="welcome"><div class="big">👈</div><h2>Pick a section from the sidebar</h2><p>Select any category on the left<br>to instantly see your snippets here.</p></div>`;
     return;
   }
   const lq = q.toLowerCase();
   const results = [];
-  function scan(snips, path, icon) {
+  function scan(snips, pathLabel, icon) {
     snips.forEach(s => {
       const applied = applyName(s.text);
       if (s.label.toLowerCase().includes(lq) || applied.toLowerCase().includes(lq))
-        results.push({ label: s.label, text: s.text, path, icon });
+        results.push({ label: s.label, text: s.text, pathLabel, icon });
     });
   }
   Object.entries(D).forEach(([,lob]) =>
@@ -1211,6 +1903,11 @@ function onSearch(q) {
       });
     })
   );
+  // Also search custom snippets
+  customs.forEach(c => {
+    if (applyName(c.text).toLowerCase().includes(lq))
+      results.push({ label: 'Custom', text: c.text, pathLabel: c.pathKey, icon: '✨', isCustom: true });
+  });
 
   if (!results.length) {
     document.getElementById('contentBody').innerHTML = `<div class="no-results"><div class="big">🔍</div><p>No snippets found for "<strong>${esc(q)}</strong>"</p></div>`;
@@ -1219,7 +1916,7 @@ function onSearch(q) {
   document.getElementById('contentBody').innerHTML = results.map(r => {
     const paras = applyName(r.text).split(/\n\n+/).map(p => p.trim()).filter(Boolean);
     return `<div class="snippet-group">
-      <div class="path-tag">${esc(r.path)}</div>
+      <div class="path-tag">${esc(r.pathLabel)}</div>
       <div class="snip-label" style="margin-top:8px">${esc(r.label)}</div>
       ${paras.map(p => `<div class="snip-para" onclick="copyPara(this)" data-text="${escAttr(p)}"><div class="snip-text">${hi(esc(p), lq)}</div></div>`).join('')}
     </div>`;
@@ -1227,27 +1924,498 @@ function onSearch(q) {
 }
 
 // ═══════════════════════════════════════════════
+// EXPORT / IMPORT
+// ═══════════════════════════════════════════════
+function exportCustoms() {
+  if (!customs.length) { showToast('No custom snippets to export'); return; }
+  const rows = [['Path', 'Text']];
+  customs.forEach(c => rows.push([c.pathKey, c.text]));
+  const csv = rows.map(r => r.map(f => (f.includes(',') || f.includes('\n') || f.includes('"')) ? `"${f.replace(/"/g,'""')}"` : f).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'riseforce-custom-snippets.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function handleImport(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const lines = ev.target.result.split('\n').filter(Boolean);
+    let added = 0;
+    lines.slice(1).forEach(line => {
+      const parts = line.split(',');
+      if (parts.length < 2) return;
+      const pathKey = parts[0].trim().replace(/^"|"$/g, '');
+      const text = parts.slice(1).join(',').trim().replace(/^"|"$/g, '').replace(/""/g, '"');
+      if (!text || customs.some(c => c.pathKey === pathKey && c.text === text)) return;
+      customs.push({ id: Date.now().toString() + added, pathKey, text });
+      added++;
+    });
+    if (added) { store.set('rf_customs', JSON.stringify(customs)); if (selPath) showSnippets(selPath); pushToServer(); }
+    showToast(added ? `${added} snippet${added !== 1 ? 's' : ''} imported!` : 'No new snippets found');
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ═══════════════════════════════════════════════
 // COPY
 // ═══════════════════════════════════════════════
 let toastTimer;
-function showToast() {
+function showToast(msg) {
   const t = document.getElementById('toast');
+  t.textContent = msg || '✓ Copied!';
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
 }
 function copyPara(el) {
   const text = el.dataset.text;
+  const sk = el.dataset.key;
   el.classList.add('flashing');
   setTimeout(() => el.classList.remove('flashing'), 500);
+  trackRecent(text);
+  bumpCopyCount();
+  if (sk) {
+    snipCounts[sk] = (snipCounts[sk] || 0) + 1;
+    store.set('rf_counts', JSON.stringify(snipCounts));
+    const badge = el.querySelector('.snip-count-badge');
+    const cnt = snipCounts[sk];
+    if (badge) badge.textContent = cnt + '×';
+    else {
+      const acts = el.querySelector('.snip-actions');
+      if (acts) { const nb = document.createElement('span'); nb.className = 'snip-count-badge'; nb.textContent = cnt + '×'; acts.insertBefore(nb, acts.querySelector('button.sa-btn[title="Delete"]') || null); }
+    }
+  }
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(showToast);
+    navigator.clipboard.writeText(text).then(() => showToast());
   } else {
     const ta = Object.assign(document.createElement('textarea'), { value: text });
     ta.style.cssText = 'position:fixed;opacity:0';
     document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
     showToast();
   }
+}
+
+// ═══════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  const tag = document.activeElement.tagName;
+  const inInput = tag === 'INPUT' || tag === 'TEXTAREA';
+  if (e.key === 'Escape') {
+    closeFillModal(); closeAddSnip();
+    const sp = document.getElementById('scratchpadPanel');
+    if (sp && sp.style.display !== 'none') { sp.style.display = 'none'; return; }
+    if (inInput) document.activeElement.blur();
+    return;
+  }
+  if (inInput) return;
+  if (e.key === '/' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); document.getElementById('sideSearch').focus(); return; }
+  const cards = [...document.querySelectorAll('.snip-para')];
+  if (!cards.length) return;
+  const focused = document.querySelector('.snip-para.kbd-focus');
+  let fi = focused ? cards.indexOf(focused) : -1;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault(); fi = Math.min(fi + 1, cards.length - 1); if (fi < 0) fi = 0;
+    cards.forEach(c => c.classList.remove('kbd-focus')); cards[fi].classList.add('kbd-focus'); cards[fi].scrollIntoView({ block:'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault(); fi = Math.max(fi - 1, 0);
+    cards.forEach(c => c.classList.remove('kbd-focus')); cards[fi].classList.add('kbd-focus'); cards[fi].scrollIntoView({ block:'nearest' });
+  } else if (e.key === 'Enter' && focused) { e.preventDefault(); maybeFill(focused); }
+});
+
+// ═══════════════════════════════════════════════
+// FAVORITES VIEW
+// ═══════════════════════════════════════════════
+function showFavsView() {
+  selPath = '__favs__';
+  renderTree();
+  const favItems = [];
+  favorites.forEach(sk => {
+    const [dotpath, ref] = sk.split('|');
+    let text = null;
+    try {
+      if (ref && ref.startsWith('s')) {
+        const [si, pi] = ref.slice(1).split('p').map(Number);
+        const { snips } = resolveSnips(dotpath);
+        const rawText = snips[si]?.text.split(/\n\n+/).map(p => p.trim()).filter(Boolean)[pi];
+        text = overrides[sk] || rawText;
+      } else if (ref && ref.startsWith('c')) {
+        const c = customs.find(x => x.id === ref.slice(1));
+        text = c?.text;
+      }
+    } catch {}
+    if (text) {
+      const crumbs = (() => { try { return buildBreadcrumb(dotpath).join(' › '); } catch { return dotpath; } })();
+      favItems.push({ sk, text, crumbs });
+    }
+  });
+  const cards = favItems.map(f =>
+    `<div style="margin-bottom:8px">
+      <div class="path-tag">${esc(f.crumbs)}</div>
+      <div class="snip-para" onclick="maybeFill(this)" data-text="${escAttr(applyName(f.text))}" data-key="${f.sk}">
+        <button class="snip-fav active" onclick="event.stopPropagation();toggleFav('${f.sk}');showFavsView()" title="Unfavorite">⭐</button>
+        <div class="snip-text">${esc(applyName(f.text))}</div>
+      </div>
+    </div>`
+  ).join('');
+  document.getElementById('contentBody').innerHTML = `
+    <div class="content-title"><span class="icon">⭐</span>Favorites</div>
+    ${favItems.length ? `<div class="snip-grid">${cards}</div>` : '<div class="welcome"><div class="big">⭐</div><p>Star any snippet paragraph to save it here.</p></div>'}`;
+}
+
+// ═══════════════════════════════════════════════
+// CONTEXT BAR — CX NAME & TIER
+// ═══════════════════════════════════════════════
+function setCxNameFor(idx, v) {
+  caseData[idx].cxName = v.trim();
+  if (idx === activeCaseIdx) { cxName = caseData[idx].cxName; if (selPath && !selPath.startsWith('__')) showSnippets(selPath); }
+}
+function setCxTierFor(idx, v) {
+  caseData[idx].cxTier = v;
+  if (idx === activeCaseIdx) { cxTier = caseData[idx].cxTier; if (selPath && !selPath.startsWith('__')) showSnippets(selPath); }
+}
+function setActiveCase(idx) {
+  activeCaseIdx = idx;
+  cxName = caseData[idx].cxName;
+  cxTier = caseData[idx].cxTier;
+  document.querySelectorAll('.case-block').forEach((b, i) => b.classList.toggle('active', i === idx));
+  if (selPath && !selPath.startsWith('__')) showSnippets(selPath);
+}
+function newCaseFor(idx) {
+  caseData[idx] = { cxName:'', cxTier:'' };
+  document.getElementById(`cxName${idx}`).value = '';
+  document.getElementById(`cxTier${idx}`).value = '';
+  if (idx === activeCaseIdx) { cxName = ''; cxTier = ''; if (selPath && !selPath.startsWith('__')) showSnippets(selPath); }
+  showToast(`Case ${idx + 1} cleared`);
+}
+
+// ═══════════════════════════════════════════════
+// CASE TIMER
+// ═══════════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════
+// QUEUE
+// ═══════════════════════════════════════════════
+function addToQueue(btn) {
+  const card = btn.closest('.snip-para');
+  if (!card) return;
+  const text = card.dataset.text;
+  const preview = text.slice(0, 60) + (text.length > 60 ? '…' : '');
+  queue.push({ text, preview });
+  renderQueue();
+  showToast('Added to queue');
+  // Auto-open queue panel on first add
+  if (queue.length === 1) { const p = document.getElementById('queuePanel'); if (p) p.style.display = 'flex'; }
+}
+
+function removeFromQueue(i) {
+  queue.splice(i, 1);
+  if (queueCursor >= queue.length) queueCursor = Math.max(0, queue.length - 1);
+  renderQueue();
+}
+
+function copyNext() {
+  if (!queue.length) return;
+  const item = queue[queueCursor];
+  if (!item) return;
+  doCopy(item.text);
+  item._done = true;
+  queueCursor = Math.min(queueCursor + 1, queue.length - 1);
+  renderQueue();
+}
+
+function copyAllQueue() {
+  if (!queue.length) return;
+  doCopy(queue.map(q => q.text).join('\n\n'));
+  queue.forEach(q => q._done = true);
+  renderQueue();
+}
+
+function clearQueue() {
+  queue = []; queueCursor = 0;
+  renderQueue();
+  document.getElementById('queuePanel').style.display = 'none';
+  updateQueueBadge();
+}
+
+function toggleQueuePanel() {
+  const p = document.getElementById('queuePanel');
+  p.style.display = p.style.display === 'none' ? 'flex' : 'none';
+}
+
+function renderQueue() {
+  const list = document.getElementById('queueList');
+  if (!list) return;
+  if (!queue.length) {
+    list.innerHTML = '<div class="queue-empty">No snippets queued yet.<br>Hit <strong>＋ Queue</strong> on any snippet.</div>';
+  } else {
+    list.innerHTML = queue.map((q, i) =>
+      `<div class="queue-item${i === queueCursor && !q._done ? ' current' : ''}${q._done ? ' done' : ''}">
+        <span class="qi-num">${i + 1}</span>
+        <span class="qi-text">${esc(q.preview)}</span>
+        <button class="qi-del" onclick="removeFromQueue(${i})" title="Remove">✕</button>
+      </div>`
+    ).join('');
+  }
+  updateQueueBadge();
+}
+
+function updateQueueBadge() {
+  const badge = document.getElementById('queueBadge');
+  const btn = document.getElementById('queueHdrBtn');
+  if (!badge || !btn) return;
+  const n = queue.filter(q => !q._done).length;
+  badge.textContent = n;
+  badge.style.display = n > 0 ? '' : 'none';
+  btn.classList.toggle('has-items', n > 0);
+}
+
+function doCopy(text) {
+  trackRecent(text); bumpCopyCount();
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast());
+  } else {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// PARA DRAG-TO-REORDER
+// ═══════════════════════════════════════════════
+function onParaDragStart(e, sk, path) {
+  paraDragKey = sk; paraDragPath = path;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => { const el = document.querySelector(`[data-para-key="${sk}"]`); if (el) el.classList.add('card-dragging'); }, 0);
+}
+function onParaDragOver(e) {
+  e.preventDefault(); e.stopPropagation();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('card-drag-over');
+}
+function onParaDragLeave(e) { e.currentTarget.classList.remove('card-drag-over'); }
+function onParaDrop(e, targetSk, targetPath) {
+  e.preventDefault(); e.stopPropagation();
+  document.querySelectorAll('.snip-para').forEach(c => c.classList.remove('card-dragging', 'card-drag-over'));
+  if (!paraDragKey || paraDragKey === targetSk || paraDragPath !== targetPath) { paraDragKey = null; return; }
+  // Build current flat order for this path
+  const allCards = [...document.querySelectorAll('.snip-para[data-para-key]')].map(c => c.dataset.paraKey);
+  const fi = allCards.indexOf(paraDragKey), ti = allCards.indexOf(targetSk);
+  if (fi === -1 || ti === -1) { paraDragKey = null; return; }
+  allCards.splice(fi, 1); allCards.splice(ti, 0, paraDragKey);
+  paraOrder[targetPath] = allCards;
+  store.set('rf_para_order', JSON.stringify(paraOrder));
+  paraDragKey = null;
+  showSnippets(targetPath);
+  pushToServer();
+}
+function resetParaOrder(path) {
+  delete paraOrder[path];
+  store.set('rf_para_order', JSON.stringify(paraOrder));
+  showSnippets(path);
+}
+
+// ═══════════════════════════════════════════════
+// SEQUENCES
+// ═══════════════════════════════════════════════
+function openSaveSeq() {
+  if (!queue.length) { showToast('Queue is empty'); return; }
+  document.getElementById('seqNameInput').value = '';
+  document.getElementById('saveSeqModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('seqNameInput').focus(), 50);
+}
+function closeSaveSeq() { document.getElementById('saveSeqModal').style.display = 'none'; }
+function confirmSaveSeq() {
+  const name = document.getElementById('seqNameInput').value.trim();
+  if (!name) return;
+  sequences.push({ id: Date.now().toString(), name, items: queue.map(q => ({ text: q.text, preview: q.preview })) });
+  store.set('rf_sequences', JSON.stringify(sequences));
+  closeSaveSeq();
+  renderTree();
+  showToast(`Sequence "${name}" saved!`);
+  pushToServer();
+}
+function deleteSequence(id) {
+  sequences = sequences.filter(s => s.id !== id);
+  store.set('rf_sequences', JSON.stringify(sequences));
+  if (selPath === `__seq__${id}`) { selPath = null; document.getElementById('contentBody').innerHTML = `<div class="welcome"><div class="big">👈</div><h2>Pick a section from the sidebar</h2><p>Select any category on the left to see your snippets.</p></div>`; }
+  renderTree();
+  pushToServer();
+}
+function playSequence(id) {
+  const seq = sequences.find(s => s.id === id);
+  if (!seq) return;
+  seqPlayIdx = 0;
+  selPath = `__seq__${id}`;
+  renderTree();
+  showSequenceView(seq);
+}
+function showSequenceView(seq) {
+  const total = seq.items.length;
+  const cards = seq.items.map((item, i) => {
+    const cls = i < seqPlayIdx ? 'snip-para seq-done' : i === seqPlayIdx ? 'snip-para seq-current has-actions' : 'snip-para has-actions';
+    const actions = i === seqPlayIdx ? `<div class="snip-actions"><button class="sa-btn" style="font-weight:800;color:var(--pink)" onclick="copySeqItem(${i},'${seq.id}')">▶ Copy &amp; Next</button></div>` : '';
+    return `<div class="${cls}" onclick="${i === seqPlayIdx ? `copySeqItem(${i},'${seq.id}')` : ''}" data-text="${escAttr(item.text)}">
+      <div class="snip-text">${esc(applyName(item.text))}</div>${actions}
+    </div>`;
+  }).join('');
+  document.getElementById('contentBody').innerHTML = `
+    <div class="seq-player-hdr">
+      <div class="content-title" style="margin:0;border:none;padding:0"><span class="icon">🎬</span>${esc(seq.name)}</div>
+      <span class="seq-step-badge">Step ${Math.min(seqPlayIdx + 1, total)} of ${total}</span>
+    </div>
+    <div class="snip-grid" style="margin-top:14px">${cards}</div>`;
+}
+function copySeqItem(i, seqId) {
+  const seq = sequences.find(s => s.id === seqId);
+  if (!seq || i >= seq.items.length) return;
+  doCopy(applyName(seq.items[i].text));
+  seqPlayIdx = i + 1;
+  if (seqPlayIdx >= seq.items.length) {
+    showToast('Sequence complete! 🎉');
+    seqPlayIdx = 0;
+  }
+  showSequenceView(seq);
+}
+
+// ═══════════════════════════════════════════════
+// STATS DASHBOARD
+// ═══════════════════════════════════════════════
+function showStats() {
+  selPath = '__stats__';
+  renderTree();
+
+  // Compute top snippets
+  const sorted = Object.entries(snipCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+  // Compute most used sections (group by dotpath before |)
+  const secCounts = {};
+  Object.entries(snipCounts).forEach(([key, cnt]) => {
+    const dotpath = key.split('|')[0];
+    secCounts[dotpath] = (secCounts[dotpath] || 0) + cnt;
+  });
+  const topSecs = Object.entries(secCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+
+  const totalCopies = Object.values(snipCounts).reduce((a, b) => a + b, 0);
+  const today = new Date().toDateString();
+  const saved = JSON.parse(store.get('rf_copy_stats') || '{"date":"","count":0}');
+  const todayCount = saved.date === today ? saved.count : 0;
+
+  function getLabel(key) {
+    try {
+      const dotpath = key.split('|')[0];
+      const crumbs = buildBreadcrumb(dotpath);
+      return crumbs.join(' › ');
+    } catch { return key; }
+  }
+
+  document.getElementById('contentBody').innerHTML = `
+    <div class="content-title"><span class="icon">📊</span>Stats</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num">${todayCount}</div><div class="stat-label">Copied today</div></div>
+      <div class="stat-card"><div class="stat-num">${totalCopies}</div><div class="stat-label">All-time copies</div></div>
+      <div class="stat-card"><div class="stat-num">${sequences.length}</div><div class="stat-label">Saved sequences</div></div>
+      <div class="stat-card"><div class="stat-num">${favorites.size}</div><div class="stat-label">Favorites</div></div>
+    </div>
+    ${sorted.length ? `<div class="stats-section-title">🔥 Most copied snippets</div>
+    ${sorted.map(([key, cnt]) => {
+      const text = (() => { try { const card = document.querySelector(`.snip-para[data-key="${key}"]`); return card ? card.dataset.raw || card.dataset.text : key; } catch { return key; } })();
+      const preview = text.slice(0, 70) + (text.length > 70 ? '…' : '');
+      return `<div class="stat-row">${esc(preview)}<span class="stat-row-count">${cnt}×</span></div>`;
+    }).join('')}` : ''}
+    ${topSecs.length ? `<div class="stats-section-title">📂 Most visited sections</div>
+    ${topSecs.map(([dotpath, cnt]) => `<div class="stat-row">${esc(getLabel(dotpath))}<span class="stat-row-count">${cnt}</span></div>`).join('')}` : ''}`;
+}
+
+// ═══════════════════════════════════════════════
+// WHAT'S NEW
+// ═══════════════════════════════════════════════
+function showWhatsNew() { document.getElementById('whatsNewModal').style.display = 'flex'; }
+function closeWhatsNew() {
+  seenVersion = CURRENT_VERSION;
+  store.set('rf_seen_version', CURRENT_VERSION);
+  document.getElementById('whatsNewModal').style.display = 'none';
+  pushToServer();
+}
+
+// ═══════════════════════════════════════════════
+// SYNC
+// ═══════════════════════════════════════════════
+const syncAvailable = (typeof google !== 'undefined') && google.script && google.script.run;
+let syncTimer = null;
+function setSyncStatus(s) {
+  const dot = document.getElementById('syncDot');
+  if (!dot) return;
+  dot.className = 'sync-dot ' + s;
+  dot.title = { ok:'Synced', syncing:'Syncing…', err:'Sync failed – local only', off:'Offline / local only' }[s] || s;
+}
+function pushToServer() {
+  if (!syncAvailable) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => {
+    setSyncStatus('syncing');
+    google.script.run
+      .withSuccessHandler(() => setSyncStatus('ok'))
+      .withFailureHandler(() => setSyncStatus('err'))
+      .setUserData({
+        rf_favs:       JSON.stringify([...favorites]),
+        rf_customs:    JSON.stringify(customs),
+        rf_pins:       JSON.stringify([...pins]),
+        rf_overrides:  JSON.stringify(overrides),
+        rf_counts:     JSON.stringify(snipCounts),
+        rf_recent:     JSON.stringify(recentList),
+        rf_para_order: JSON.stringify(paraOrder),
+        rf_nav_order:  JSON.stringify(navOrder),
+        rf_sequences:  JSON.stringify(sequences),
+        riseforce_agent_name: agentName,
+        riseforce_theme:      isDark ? 'dark' : 'light',
+        riseforce_color:      curColor,
+        riseforce_scratch:    store.get('riseforce_scratch') || '',
+        rf_seen_version:      seenVersion === CURRENT_VERSION ? CURRENT_VERSION : null
+      });
+  }, 1500);
+}
+function loadFromServer() {
+  if (!syncAvailable) { setSyncStatus('off'); return; }
+  setSyncStatus('syncing');
+  google.script.run
+    .withSuccessHandler(data => {
+      if (!data) { setSyncStatus('ok'); return; }
+      let changed = false;
+      if (data.rf_favs) JSON.parse(data.rf_favs).forEach(k => { if (!favorites.has(k)) { favorites.add(k); changed = true; } });
+      if (data.rf_customs) {
+        const localIds = {}; customs.forEach(c => localIds[c.id] = true);
+        JSON.parse(data.rf_customs).forEach(c => { if (!localIds[c.id]) { customs.push(c); changed = true; } });
+      }
+      if (data.rf_pins) JSON.parse(data.rf_pins).forEach(k => { if (!pins.has(k)) { pins.add(k); changed = true; } });
+      if (data.rf_overrides) { const so = JSON.parse(data.rf_overrides); Object.keys(so).forEach(k => { if (!overrides[k]) { overrides[k] = so[k]; changed = true; } }); }
+      if (data.riseforce_agent_name && !agentName) { agentName = data.riseforce_agent_name; store.set('riseforce_agent_name', agentName); store.set('riseforce_last_seen', Date.now().toString()); document.getElementById('nameModal').style.display = 'none'; changed = true; }
+      if (data.riseforce_theme) { const nd = data.riseforce_theme === 'dark'; if (nd !== isDark) { isDark = nd; store.set('riseforce_theme', data.riseforce_theme); changed = true; } }
+      if (data.riseforce_color && data.riseforce_color !== curColor) { curColor = data.riseforce_color; store.set('riseforce_color', curColor); changed = true; }
+      if (data.riseforce_scratch) { const ls = store.get('riseforce_scratch') || ''; if (!ls || data.riseforce_scratch.length > ls.length) store.set('riseforce_scratch', data.riseforce_scratch); }
+      if (data.rf_para_order) { try { const sp = JSON.parse(data.rf_para_order); Object.keys(sp).forEach(k => { if (!paraOrder[k]) { paraOrder[k] = sp[k]; changed = true; } }); store.set('rf_para_order', JSON.stringify(paraOrder)); } catch {} }
+      if (data.rf_nav_order) { try { const sn = JSON.parse(data.rf_nav_order); Object.keys(sn).forEach(k => { if (!navOrder[k]) { navOrder[k] = sn[k]; changed = true; } }); store.set('rf_nav_order', JSON.stringify(navOrder)); } catch {} }
+      if (data.rf_sequences) { try { const ss = JSON.parse(data.rf_sequences); const localIds = {}; sequences.forEach(s => localIds[s.id] = true); ss.forEach(s => { if (!localIds[s.id]) { sequences.push(s); changed = true; } }); if (changed) store.set('rf_sequences', JSON.stringify(sequences)); } catch {} }
+      store.set('rf_favs', JSON.stringify([...favorites])); store.set('rf_customs', JSON.stringify(customs));
+      setSyncStatus('ok');
+      if (changed) { applyTheme(); updateHeaderName(); renderTree(); if (selPath) showSnippets(selPath); }
+      if (!agentName) { document.getElementById('nameModal').style.display = 'flex'; setTimeout(() => document.getElementById('nameInput').focus(), 100); }
+      if (data.rf_seen_version === CURRENT_VERSION) { seenVersion = CURRENT_VERSION; store.set('rf_seen_version', CURRENT_VERSION); }
+      else if (seenVersion !== CURRENT_VERSION) showWhatsNew();
+      pushToServer();
+    })
+    .withFailureHandler(() => {
+      setSyncStatus('err');
+      if (!agentName) { document.getElementById('nameModal').style.display = 'flex'; setTimeout(() => document.getElementById('nameInput').focus(), 100); }
+      if (seenVersion !== CURRENT_VERSION) showWhatsNew();
+    })
+    .getUserData();
 }
 
 // ═══════════════════════════════════════════════
@@ -1275,40 +2443,61 @@ function hi(text, q) {
 // ═══════════════════════════════════════════════
 // THEME
 // ═══════════════════════════════════════════════
-let isDark = store.get('riseforce_theme') === 'dark';
+let isDark    = store.get('riseforce_theme') === 'dark';
+let curColor  = store.get('riseforce_color') || 'karma';
+
 function applyTheme() {
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  const btn = document.getElementById('themeBtn');
-  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  const html = document.documentElement;
+  html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  if (curColor === 'karma') html.removeAttribute('data-color');
+  else html.setAttribute('data-color', curColor);
+  const track = document.getElementById('darkTrack');
+  if (track) track.classList.toggle('on', isDark);
+  document.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', s.dataset.color === curColor));
 }
 function toggleTheme() {
   isDark = !isDark;
   store.set('riseforce_theme', isDark ? 'dark' : 'light');
   applyTheme();
 }
+function setColor(c) {
+  curColor = c;
+  store.set('riseforce_color', c);
+  applyTheme();
+}
+function toggleThemePanel(e) {
+  e.stopPropagation();
+  document.getElementById('themePanel').classList.toggle('open');
+}
+document.addEventListener('click', () => document.getElementById('themePanel')?.classList.remove('open'));
+document.getElementById('themePanel')?.addEventListener('click', e => e.stopPropagation());
 
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
+loadCopyCount();
 applyTheme();
 updateHeaderName();
+document.getElementById('copyCounter').textContent = copyCount;
 (function() {
   const EIGHT_HOURS = 8 * 60 * 60 * 1000;
   const lastSeen = parseInt(store.get('riseforce_last_seen') || '0', 10);
   const freshSession = !agentName || (Date.now() - lastSeen > EIGHT_HOURS);
-  if (freshSession) {
-    const modal = document.getElementById('nameModal');
-    const input = document.getElementById('nameInput');
-    const btn   = document.getElementById('nameSaveBtn');
-    input.value  = agentName;
-    btn.disabled = !agentName;
-    modal.style.display = 'flex';
+  const input = document.getElementById('nameInput');
+  const btn   = document.getElementById('nameSaveBtn');
+  input.value  = agentName;
+  btn.disabled = !agentName;
+  if (freshSession && !syncAvailable) {
+    document.getElementById('nameModal').style.display = 'flex';
     setTimeout(() => input.focus(), 100);
-  } else {
+  } else if (!freshSession) {
     document.getElementById('nameModal').style.display = 'none';
   }
+  if (seenVersion !== CURRENT_VERSION && !syncAvailable) showWhatsNew();
 })();
+document.getElementById('nameModal').addEventListener('click', e => { if (e.target === document.getElementById('nameModal') && agentName) document.getElementById('nameModal').style.display = 'none'; });
 renderTree();
+loadFromServer();
 
 // ═══════════════════════════════════════════════
 // DOCK MAGNIFICATION
