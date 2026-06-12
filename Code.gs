@@ -21,7 +21,6 @@ function getUserData() {
       rf_recent:            p.getProperty('rf_recent'),
       rf_para_order:        p.getProperty('rf_para_order'),
       rf_nav_order:         p.getProperty('rf_nav_order'),
-      rf_sequences:         p.getProperty('rf_sequences'),
       riseforce_agent_name: p.getProperty('riseforce_agent_name'),
       riseforce_theme:      p.getProperty('riseforce_theme'),
       riseforce_color:      p.getProperty('riseforce_color'),

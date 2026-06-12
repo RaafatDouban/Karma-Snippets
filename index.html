@@ -23,17 +23,37 @@
     [data-color="ocean"]  { --pink:#0ea5e9; --pink-light:rgba(14,165,233,0.1); --grad:linear-gradient(135deg,#0ea5e9,#06b6d4); --bg:#f0f9ff; --border:#bae6fd; --muted:#5b8fa8; --shadow:0 4px 20px rgba(14,165,233,0.1); }
     [data-color="sunset"] { --pink:#f97316; --pink-light:rgba(249,115,22,0.1); --grad:linear-gradient(135deg,#f97316,#ef4444); --bg:#fff7ed; --border:#fed7aa; --muted:#a87050; --shadow:0 4px 20px rgba(249,115,22,0.1); }
     [data-color="forest"] { --pink:#10b981; --pink-light:rgba(16,185,129,0.1); --grad:linear-gradient(135deg,#10b981,#059669); --bg:#f0fdf4; --border:#bbf7d0; --muted:#507a60; --shadow:0 4px 20px rgba(16,185,129,0.1); }
-    [data-color="violet"] { --pink:#8b5cf6; --pink-light:rgba(139,92,246,0.1); --grad:linear-gradient(135deg,#8b5cf6,#ec4899); --bg:#faf5ff; --border:#ede9fe; --muted:#7c6a9a; --shadow:0 4px 20px rgba(139,92,246,0.1); }
+    [data-color="violet"]  { --pink:#8b5cf6; --pink-light:rgba(139,92,246,0.1);  --grad:linear-gradient(135deg,#8b5cf6,#ec4899); --bg:#faf5ff; --border:#ede9fe; --muted:#7c6a9a; --shadow:0 4px 20px rgba(139,92,246,0.1); }
+    [data-color="rose"]    { --pink:#f43f5e; --pink-light:rgba(244,63,94,0.1);   --grad:linear-gradient(135deg,#f43f5e,#fb923c); --bg:#fff1f2; --border:#fecdd3; --muted:#a05060; --shadow:0 4px 20px rgba(244,63,94,0.1); }
+    [data-color="gold"]    { --pink:#d97706; --pink-light:rgba(217,119,6,0.1);   --grad:linear-gradient(135deg,#d97706,#f59e0b); --bg:#fffbeb; --border:#fde68a; --muted:#927030; --shadow:0 4px 20px rgba(217,119,6,0.1); }
+    [data-color="crimson"] { --pink:#dc2626; --pink-light:rgba(220,38,38,0.1);   --grad:linear-gradient(135deg,#dc2626,#9f1239); --bg:#fff5f5; --border:#fecaca; --muted:#a04040; --shadow:0 4px 20px rgba(220,38,38,0.1); }
+    [data-color="midnight"]{ --pink:#3b82f6; --pink-light:rgba(59,130,246,0.1);  --grad:linear-gradient(135deg,#3b82f6,#6366f1); --bg:#eff6ff; --border:#bfdbfe; --muted:#5070a0; --shadow:0 4px 20px rgba(59,130,246,0.1); }
+    [data-color="mint"]    { --pink:#14b8a6; --pink-light:rgba(20,184,166,0.1);  --grad:linear-gradient(135deg,#14b8a6,#06b6d4); --bg:#f0fdfa; --border:#99f6e4; --muted:#408070; --shadow:0 4px 20px rgba(20,184,166,0.1); }
     /* ── DARK MODE ── */
-    [data-theme="dark"]                { --border:#272742; --text:#dde1f2; --muted:#7070a0; --bg:#0c0c1a; --surface:#181828; --pink-light:rgba(255,0,191,0.14); --shadow:0 4px 20px rgba(0,0,0,0.4); }
-    [data-theme="dark"][data-color="ocean"]  { --bg:#020d18; --surface:#0a1e2e; --border:#0d3050; --muted:#4080a0; }
-    [data-theme="dark"][data-color="sunset"] { --bg:#18080a; --surface:#2a120c; --border:#502010; --muted:#a06040; }
-    [data-theme="dark"][data-color="forest"] { --bg:#02100a; --surface:#0a2018; --border:#0d4025; --muted:#40806a; }
-    [data-theme="dark"][data-color="violet"] { --bg:#0c0818; --surface:#18102e; --border:#2d1f4a; --muted:#7060a0; }
-    [data-theme="dark"] mark { background: rgba(255,0,191,0.28); color: var(--text); }
+    [data-theme="dark"]                    { --border:#272742; --text:#dde1f2; --muted:#7070a0; --bg:#0c0c1a; --surface:#181828; --pink-light:rgba(255,0,191,0.14); --shadow:0 4px 20px rgba(0,0,0,0.4); }
+    [data-theme="dark"][data-color="ocean"]   { --bg:#020d18; --surface:#0a1e2e; --border:#0d3050; --muted:#4080a0; }
+    [data-theme="dark"][data-color="sunset"]  { --bg:#18080a; --surface:#2a120c; --border:#502010; --muted:#a06040; }
+    [data-theme="dark"][data-color="forest"]  { --bg:#02100a; --surface:#0a2018; --border:#0d4025; --muted:#40806a; }
+    [data-theme="dark"][data-color="violet"]  { --bg:#0c0818; --surface:#18102e; --border:#2d1f4a; --muted:#7060a0; }
+    [data-theme="dark"][data-color="rose"]    { --bg:#180508; --surface:#280a12; --border:#501020; --muted:#a03050; }
+    [data-theme="dark"][data-color="gold"]    { --bg:#180f00; --surface:#2a1e00; --border:#503800; --muted:#a07820; }
+    [data-theme="dark"][data-color="crimson"] { --bg:#180505; --surface:#280a0a; --border:#501010; --muted:#a03030; }
+    [data-theme="dark"][data-color="midnight"]{ --bg:#020818; --surface:#081028; --border:#102050; --muted:#4060a0; }
+    [data-theme="dark"][data-color="mint"]    { --bg:#011810; --surface:#052820; --border:#0a5040; --muted:#308060; }
+    mark { background: rgba(255,0,191,0.18); color: var(--text); border-radius: 3px; }
+    [data-theme="dark"] mark { background: rgba(255,0,191,0.32); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes cardIn    { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes floatBig  { 0%,100% { transform:translateY(0) scale(1); } 50% { transform:translateY(-8px) scale(1.04); } }
+    @keyframes shimmer   { 0%,100% { opacity:1; } 50% { opacity:0.85; } }
+    @keyframes popIn     { 0% { transform:scale(0.9); opacity:0; } 100% { transform:scale(1); opacity:1; } }
+    @keyframes slideUp   { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    .snip-para           { animation: cardIn 0.18s ease-out both; }
+    .modal-box, .wn-modal, .fill-box { animation: popIn 0.2s cubic-bezier(0.34,1.56,0.64,1) both; }
 
     /* ── SCROLLBARS ── */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -44,23 +64,24 @@
     /* ── HEADER ── */
     .hdr {
       background: var(--grad); color: white;
-      padding: 11px 20px;
+      padding: 10px 20px;
       display: flex; align-items: center; justify-content: space-between;
       flex-shrink: 0; z-index: 300;
-      box-shadow: 0 4px 24px rgba(255,0,191,0.4);
+      box-shadow: 0 2px 20px rgba(255,0,191,0.35), 0 1px 0 rgba(255,255,255,0.1) inset;
+      position: relative;
     }
     .hdr-left { display: flex; align-items: center; gap: 12px; }
-    .hdr h1 { font-size: 1.08rem; font-weight: 800; letter-spacing: -0.01em; }
-    .hdr-sub { font-size: 0.62rem; color: rgba(255,255,255,0.6); margin-top: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .hdr h1 { font-size: 1.06rem; font-weight: 900; letter-spacing: -0.02em; }
+    .hdr-sub { font-size: 0.6rem; color: rgba(255,255,255,0.55); margin-top: 1px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
     .burger { background: none; border: none; color: white; cursor: pointer; font-size: 1.25rem; display: none; padding: 4px; }
     /* theme picker */
     .theme-picker-wrap { position: relative; }
     .palette-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; font-size: 1rem; padding: 5px 10px; border-radius: 20px; transition: all 0.18s; line-height: 1; }
     .palette-btn:hover { background: rgba(255,255,255,0.35); }
-    .theme-panel { position: absolute; top: calc(100% + 10px); right: 0; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 14px 16px; display: none; flex-direction: column; gap: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.5); z-index: 500; min-width: 160px; }
+    .theme-panel { position: absolute; top: calc(100% + 10px); right: 0; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 14px 16px; display: none; flex-direction: column; gap: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.5); z-index: 500; min-width: 200px; }
     .theme-panel.open { display: flex; }
     .theme-panel-label { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
-    .swatches { display: flex; gap: 8px; align-items: center; }
+    .swatches { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; max-width: 184px; }
     .swatch { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s, box-shadow 0.15s; flex-shrink: 0; }
     .swatch:hover { transform: scale(1.15); }
     .swatch.active { box-shadow: 0 0 0 2px #1a1a2e, 0 0 0 4px white; }
@@ -101,82 +122,123 @@
     }
     .sidebar-search input::placeholder { color: var(--muted); }
     .sidebar-search input:focus { border-color: var(--pink); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(255,0,191,0.1); }
-    .nav-tree { flex: 1; overflow-y: auto; padding: 8px 0 20px; }
+    .nav-tree { flex: 1; overflow-y: auto; padding: 6px 0 20px; }
 
     /* tree items */
     .lob-label {
-      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em;
+      font-size: 0.6rem; font-weight: 800; letter-spacing: 0.14em;
       text-transform: uppercase; color: var(--muted);
-      padding: 14px 14px 5px; display: flex; align-items: center;
+      padding: 14px 14px 4px; display: flex; align-items: center;
       justify-content: space-between; cursor: pointer; user-select: none;
       transition: color 0.15s;
     }
     .lob-label:hover { color: var(--text); }
-    .lob-label .lob-icon { margin-right: 6px; }
-    .lob-label .chev { font-size: 0.6rem; transition: transform 0.2s; }
+    .lob-label .lob-icon { margin-right: 5px; }
+    .lob-label .chev { font-size: 0.55rem; transition: transform 0.2s; }
     .lob-label .chev.open { transform: rotate(90deg); }
     .lob-body { overflow: hidden; }
 
     .ni {
       display: flex; align-items: center; gap: 6px;
-      padding: 7px 10px 7px 16px;
-      font-size: 0.84rem; cursor: pointer; border-radius: 8px;
-      margin: 1px 8px; transition: all 0.12s; user-select: none;
-      line-height: 1.35;
+      padding: 6px 10px 6px 14px;
+      font-size: 0.83rem; cursor: pointer; border-radius: 8px;
+      margin: 1px 7px; transition: background 0.12s, color 0.12s; user-select: none;
+      line-height: 1.3;
     }
     .ni:hover { background: var(--pink-light); color: var(--pink); }
-    .ni.active { background: rgba(255,0,191,0.16); color: var(--pink); font-weight: 700; box-shadow: inset 4px 0 0 var(--pink); border-radius: 4px 8px 8px 4px; }
-    .ni.indent1 { padding-left: 28px; font-size: 0.83rem; }
-    .ni.indent2 { padding-left: 40px; font-size: 0.81rem; }
-    .ni.indent3 { padding-left: 52px; font-size: 0.79rem; color: var(--muted); }
+    .ni.active {
+      background: linear-gradient(90deg, rgba(255,0,191,0.18), rgba(255,0,191,0.07));
+      color: var(--pink); font-weight: 700;
+      box-shadow: inset 3px 0 0 var(--pink);
+      border-radius: 3px 8px 8px 3px;
+    }
+    .ni.indent1 { padding-left: 24px; font-size: 0.82rem; }
+    .ni.indent2 { padding-left: 36px; font-size: 0.8rem; }
+    .ni.indent3 { padding-left: 48px; font-size: 0.78rem; color: var(--muted); }
     .ni.indent3:hover { color: var(--pink); }
     .ni.disabled { opacity: 0.35; cursor: default; }
     .ni.disabled:hover { background: none; color: inherit; }
-    .ni .chev { margin-left: auto; font-size: 0.6rem; flex-shrink: 0; transition: transform 0.2s; }
+    .ni .chev { margin-left: auto; font-size: 0.55rem; flex-shrink: 0; transition: transform 0.2s; }
     .ni .chev.open { transform: rotate(90deg); }
     .ni .soon { font-size: 0.62rem; color: var(--muted); margin-left: auto; }
-    .drag-handle { cursor: grab; color: var(--muted); opacity: 0; font-size: 0.9rem; flex-shrink: 0; line-height: 1; margin-right: -2px; transition: opacity 0.15s; user-select: none; }
-    .ni:hover .drag-handle { opacity: 0.4; }
+    .ni-count { margin-left: auto; font-size: 0.6rem; font-weight: 800; background: var(--bg); color: var(--muted); padding: 1px 6px; border-radius: 8px; flex-shrink: 0; transition: background 0.12s; }
+    .ni.active .ni-count { background: rgba(255,0,191,0.2); color: var(--pink); }
+    .drag-handle { cursor: grab; color: var(--muted); opacity: 0; font-size: 0.88rem; flex-shrink: 0; line-height: 1; margin-right: -2px; transition: opacity 0.15s; user-select: none; }
+    .ni:hover .drag-handle { opacity: 0.35; }
     .ni.dragging { opacity: 0.3; }
     .ni.drag-over { box-shadow: inset 0 -2px 0 var(--pink) !important; }
 
     /* ── CONTENT ── */
     .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-    .content-body { flex: 1; overflow-y: auto; padding: 22px 24px 60px; display: flex; flex-direction: column; }
+    .content-body { flex: 1; overflow-y: auto; padding: 20px 22px 70px; display: flex; flex-direction: column; scroll-behavior: smooth; }
     .content-title {
-      font-size: 1.15rem; font-weight: 800; margin-bottom: 18px;
+      font-size: 1.1rem; font-weight: 900; margin-bottom: 16px;
       display: flex; align-items: center; gap: 10px;
-      padding-bottom: 14px; border-bottom: 2px solid var(--border);
-      letter-spacing: -0.01em;
+      padding-bottom: 12px; border-bottom: 2px solid var(--border);
+      letter-spacing: -0.02em;
     }
-    .content-title .icon { font-size: 1.4rem; }
+    .content-title .icon { font-size: 1.3rem; }
+    .content-title .ct-count { margin-left: auto; font-size: 0.68rem; font-weight: 700; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
 
-    /* snippet cards */
-    .snippet-group { margin-bottom: 22px; }
+    /* snippet groups */
+    .snippet-group { margin-bottom: 18px; }
     .snip-label {
-      font-size: 0.7rem; font-weight: 700; color: var(--pink);
-      text-transform: uppercase; letter-spacing: 0.08em;
-      margin-bottom: 9px; padding-left: 2px;
-      display: flex; align-items: center; gap: 6px;
+      font-size: 0.67rem; font-weight: 800; color: var(--pink);
+      text-transform: uppercase; letter-spacing: 0.09em;
+      margin-bottom: 7px; padding-left: 3px;
+      display: flex; align-items: center; gap: 5px;
     }
-    .snip-label::before { content: ''; display: block; width: 3px; height: 13px; background: var(--pink); border-radius: 2px; }
-    .snip-para {
-      padding: 13px 16px; border: 1.5px solid var(--border);
-      border-left: 3px solid rgba(255,0,191,0.3);
-      border-radius: 11px; cursor: pointer; transition: all 0.15s;
-      margin-bottom: 8px; background: var(--surface); position: relative;
-      box-shadow: var(--shadow);
-    }
-    .snip-para:hover { border-color: var(--pink); border-left-color: var(--pink); background: var(--pink-light); transform: translateX(4px); box-shadow: 0 4px 18px rgba(255,0,191,0.12); }
-    .snip-para:hover::after { content: '📋'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; opacity: 0.5; }
-    .snip-para.flashing { border-color: var(--success) !important; background: rgba(16,185,129,0.07) !important; box-shadow: 0 4px 16px rgba(16,185,129,0.18) !important; }
-    .snip-text { font-size: 0.9rem; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
-    .path-tag { font-size: 0.7rem; color: var(--muted); background: var(--bg); padding: 3px 10px; border-radius: 6px; border: 1px solid var(--border); display: inline-block; margin-bottom: 10px; }
+    .snip-label::before { content: ''; display: block; width: 3px; height: 12px; background: var(--pink); border-radius: 2px; flex-shrink: 0; }
 
-    /* breadcrumb */
-    .breadcrumb { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
-    .breadcrumb span { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
-    .bc-sep { color: var(--border) !important; font-weight: 400 !important; margin: 0 1px; }
+    /* snippet paragraph cards */
+    .snip-para {
+      padding: 12px 16px 12px 18px; border: 1.5px solid var(--border);
+      border-left: 3px solid rgba(255,0,191,0.35);
+      border-radius: 10px; cursor: pointer;
+      transition: border-color 0.14s, background 0.14s, transform 0.14s, box-shadow 0.14s;
+      margin-bottom: 7px; background: var(--surface); position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .snip-para:hover {
+      border-color: var(--pink); border-left-color: var(--pink);
+      background: var(--pink-light);
+      transform: translateX(3px);
+      box-shadow: 0 3px 14px rgba(255,0,191,0.1);
+    }
+    .snip-para:hover::after {
+      content: 'Copy';
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      font-size: 0.65rem; font-weight: 800; color: var(--pink);
+      background: rgba(255,0,191,0.1); padding: 3px 8px; border-radius: 6px;
+      border: 1px solid rgba(255,0,191,0.25); letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .snip-para.has-actions:hover::after { content: none; }
+    .snip-para.flashing {
+      border-color: var(--success) !important;
+      background: rgba(16,185,129,0.08) !important;
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.15) !important;
+      transform: scale(1.005) translateX(3px) !important;
+    }
+    .snip-text { font-size: 0.88rem; line-height: 1.72; white-space: pre-wrap; word-break: break-word; color: var(--text); }
+
+    /* path tag & breadcrumb */
+    .path-tag { font-size: 0.68rem; font-weight: 700; color: var(--muted); background: var(--bg); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); display: inline-block; margin-bottom: 8px; letter-spacing: 0.02em; }
+    .breadcrumb { display: flex; align-items: center; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+    .breadcrumb .bc-crumb { font-size: 0.72rem; color: var(--muted); font-weight: 700; background: var(--bg); border: 1px solid var(--border); padding: 2px 10px; border-radius: 20px; white-space: nowrap; }
+    .breadcrumb .bc-crumb:last-child { color: var(--pink); background: var(--pink-light); border-color: rgba(255,0,191,0.25); }
+    .bc-sep { color: var(--border) !important; font-size: 0.65rem !important; margin: 0; }
+
+    /* keyboard shortcut modal */
+    .kbd-modal { background:var(--surface); border-radius:20px; width:90%; max-width:400px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.3),0 0 0 1px var(--border); animation: popIn 0.2s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .kbd-header { background:var(--grad); padding:18px 22px; color:white; }
+    .kbd-header h2 { font-size:1rem; font-weight:900; }
+    .kbd-header p { font-size:0.75rem; opacity:0.7; margin-top:2px; }
+    .kbd-body { padding:12px 20px 20px; }
+    .kbd-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.83rem; }
+    .kbd-row:last-child { border-bottom:none; }
+    .kbd-row span { color:var(--muted); }
+    .kbd-key { display:inline-block; background:var(--bg); border:1.5px solid var(--border); border-radius:6px; padding:2px 8px; font-size:0.72rem; font-weight:800; font-family:monospace; color:var(--text); white-space:nowrap; }
 
     /* dock tooltip */
     .dock-item[data-tooltip]::before {
@@ -194,13 +256,16 @@
     .dock-item[data-tooltip]:hover::before { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* welcome */
-    .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--muted); }
-    .welcome .big { font-size: 3.2rem; margin-bottom: 18px; }
-    .welcome h2 { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em; }
-    .welcome p { font-size: 0.87rem; line-height: 1.7; }
+    .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px; color: var(--muted); }
+    .welcome .big { font-size: 3.5rem; margin-bottom: 16px; display: inline-block; animation: floatBig 4s ease-in-out infinite; }
+    .welcome h2 { font-size: 1.18rem; font-weight: 900; color: var(--text); margin-bottom: 8px; letter-spacing: -0.02em; }
+    .welcome p { font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+    .welcome-tips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 24px; }
+    .welcome-tip { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 20px; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+    .tip-key { background: var(--surface); border: 1.5px solid var(--border); border-radius: 5px; padding: 1px 7px; font-size: 0.7rem; font-weight: 800; font-family: monospace; color: var(--text); }
 
     /* empty search */
-    .no-results { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .no-results { text-align: center; padding: 60px 20px; color: var(--muted); animation: slideUp 0.25s ease both; }
     .no-results .big { font-size: 2.8rem; margin-bottom: 12px; }
 
     /* toast */
@@ -255,15 +320,6 @@
     .cx-input:focus { border-color:var(--pink); box-shadow:0 0 0 3px var(--pink-light); }
     .cx-select { padding:5px 8px; border:1.5px solid var(--border); border-radius:20px; font-size:0.82rem; outline:none; color:var(--text); background:var(--bg); cursor:pointer; transition:border-color 0.15s; }
     .cx-select:focus { border-color:var(--pink); }
-    /* Timer */
-    .timer-wrap { display:flex; align-items:center; gap:4px; flex-shrink:0; }
-    .timer-display { font-size:0.85rem; font-weight:800; font-family:monospace; color:var(--muted); min-width:40px; transition:color 0.3s; }
-    .timer-display.warn { color:#f97316; }
-    .timer-display.danger { color:#ef4444; animation:timerpulse 1s ease-in-out infinite; }
-    @keyframes timerpulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-    .timer-btn { background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer; border-radius:50%; width:22px; height:22px; font-size:0.7rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; padding:0; }
-    .timer-btn:hover { border-color:var(--pink); color:var(--pink); }
-    /* Queue badge */
     /* Case blocks (side by side) */
     .case-block { display:flex; align-items:center; gap:6px; padding:5px 10px; border-radius:12px; border:2px solid var(--border); cursor:pointer; transition:all 0.15s; flex-shrink:0; }
     .case-block:not(.active):hover { border-color:var(--muted); }
@@ -273,45 +329,6 @@
     .case-block .cx-input { width:105px; }
     .case-reset { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.85rem; padding:0 2px; border-radius:6px; transition:color 0.12s; flex-shrink:0; }
     .case-reset:hover { color:#ef4444; }
-    .queue-hdr-btn { display:flex; align-items:center; gap:5px; background:var(--bg); border:1.5px solid var(--border); color:var(--text); border-radius:20px; padding:4px 10px; font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.15s; flex-shrink:0; }
-    .queue-hdr-btn:hover { border-color:var(--pink); color:var(--pink); }
-    .queue-hdr-btn.has-items { border-color:var(--pink); background:var(--pink-light); color:var(--pink); }
-    .q-badge { background:var(--pink); color:white; border-radius:10px; padding:1px 6px; font-size:0.65rem; font-weight:800; }
-
-    /* ── QUEUE PANEL ── */
-    .queue-panel { position:fixed; bottom:80px; right:20px; width:340px; background:var(--surface); border:2px solid var(--border); border-radius:16px; box-shadow:0 12px 40px rgba(0,0,0,0.25); z-index:800; display:flex; flex-direction:column; max-height:480px; overflow:hidden; }
-    .queue-panel-hdr { padding:10px 14px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); background:var(--bg); flex-shrink:0; }
-    .queue-panel-hdr strong { font-size:0.85rem; flex:1; }
-    .qp-btn { background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:8px; transition:all 0.12s; white-space:nowrap; }
-    .qp-btn:hover { border-color:var(--pink); color:var(--pink); }
-    .qp-btn.primary { background:var(--grad); color:white; border-color:transparent; }
-    .qp-btn.primary:hover { opacity:0.85; }
-    .qp-btn.danger:hover { border-color:#ef4444; color:#ef4444; }
-    .queue-list { flex:1; overflow-y:auto; padding:8px; }
-    .queue-item { display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:10px; margin-bottom:4px; background:var(--bg); border:1px solid var(--border); font-size:0.8rem; line-height:1.5; position:relative; }
-    .queue-item.current { border-color:var(--pink); background:var(--pink-light); }
-    .queue-item.done { opacity:0.4; text-decoration:line-through; }
-    .qi-num { font-size:0.65rem; font-weight:800; color:var(--muted); flex-shrink:0; padding-top:2px; min-width:14px; }
-    .qi-text { flex:1; white-space:pre-wrap; word-break:break-word; }
-    .qi-del { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.75rem; opacity:0.4; transition:opacity 0.12s; flex-shrink:0; padding:0 2px; }
-    .qi-del:hover { opacity:1; color:#ef4444; }
-    .queue-empty { text-align:center; padding:30px 20px; color:var(--muted); font-size:0.83rem; }
-    .queue-footer { padding:8px 10px; border-top:1px solid var(--border); display:flex; gap:6px; flex-wrap:wrap; flex-shrink:0; background:var(--bg); }
-
-    /* ── SEQUENCE PLAYER ── */
-    .seq-player-hdr { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:2px solid var(--border); }
-    .seq-step-badge { font-size:0.7rem; font-weight:800; background:var(--pink-light); color:var(--pink); padding:3px 10px; border-radius:20px; flex-shrink:0; }
-    .snip-para.seq-current { border-color:var(--pink); background:var(--pink-light); }
-    .snip-para.seq-done { opacity:0.4; }
-
-    /* ── STATS DASHBOARD ── */
-    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
-    .stat-card { background:var(--bg); border:1.5px solid var(--border); border-radius:14px; padding:14px 16px; }
-    .stat-num { font-size:2rem; font-weight:800; color:var(--pink); line-height:1; }
-    .stat-label { font-size:0.72rem; color:var(--muted); margin-top:4px; font-weight:600; }
-    .stats-section-title { font-size:0.75rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin:18px 0 10px; }
-    .stat-row { display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-bottom:6px; font-size:0.83rem; }
-    .stat-row-count { margin-left:auto; font-size:0.7rem; font-weight:800; background:var(--pink-light); color:var(--pink); padding:2px 8px; border-radius:10px; flex-shrink:0; }
 
     /* ── SNIPPET PARA v2 ── */
     .snip-para { padding: 13px 44px 13px 32px; }
@@ -334,16 +351,18 @@
     .sa-btn:hover { background:rgba(255,0,191,0.1); color:var(--pink); }
     .sa-btn.pinned { color:#f59e0b; }
     .sa-btn.overridden { color:var(--pink); }
-    .snip-count-badge { margin-left:auto; font-size:0.6rem; font-weight:700; color:var(--muted); background:var(--bg); padding:2px 6px; border-radius:10px; border:1px solid var(--border); }
+
     .para-del { position:absolute; right:10px; top:28px; background:none; border:none; cursor:pointer; font-size:0.72rem; opacity:0; transition:opacity 0.15s; color:var(--muted); line-height:1; padding:2px 4px; z-index:2; }
     .snip-para:hover .para-del { opacity:0.5; }
     .para-del:hover { opacity:1 !important; color:#ef4444; }
     .add-snip-btn { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:14px; padding:11px 16px; border:2px dashed var(--border); border-radius:10px; cursor:pointer; color:var(--muted); font-size:0.85rem; font-weight:600; background:transparent; width:100%; transition:all 0.15s; font-family:inherit; }
     .add-snip-btn:hover { border-color:var(--pink); color:var(--pink); background:var(--pink-light); }
 
+
     /* ── COPY COUNTER ── */
     .copy-counter { background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.25); color:white; font-size:0.9rem; font-weight:800; padding:5px 12px; border-radius:20px; text-align:center; line-height:1.2; min-width:46px; cursor:default; }
     .copy-counter small { font-size:0.58rem; opacity:0.65; display:block; font-weight:600; letter-spacing:0.05em; }
+
 
     /* ── SYNC DOT ── */
     .sync-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; transition:background 0.4s; cursor:default; }
@@ -369,36 +388,62 @@
     .nav-footer-btn:hover { border-color:var(--pink); color:var(--pink); background:var(--pink-light); }
 
     /* ── FILL MODAL ── */
-    .fill-modal { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1200; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
-    .fill-box { background:var(--surface); border-radius:20px; padding:26px 28px; width:90%; max-width:440px; box-shadow:0 24px 64px rgba(0,0,0,0.3),0 0 0 1px var(--border); }
-    .fill-box h3 { font-size:1rem; font-weight:800; margin-bottom:12px; }
-    .fill-preview { font-size:0.8rem; color:var(--muted); margin-bottom:18px; line-height:1.55; background:var(--bg); padding:10px 14px; border-radius:10px; border:1px solid var(--border); white-space:pre-wrap; word-break:break-word; }
-    .fill-field { margin-bottom:12px; }
-    .fill-field label { font-size:0.72rem; font-weight:700; color:var(--muted); display:block; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.05em; }
-    .fill-field input { width:100%; padding:10px 14px; border:2px solid var(--border); border-radius:12px; font-size:0.9rem; outline:none; background:var(--bg); color:var(--text); transition:border-color 0.15s; font-family:inherit; }
-    .fill-field input:focus { border-color:var(--pink); }
-    .fill-actions { display:flex; gap:10px; margin-top:18px; }
-    .fill-actions button { flex:1; padding:11px; border:none; border-radius:12px; font-size:0.88rem; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+    .fill-modal { position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:1200; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(12px); }
+    .fill-box { background:var(--surface); border-radius:24px; width:92%; max-width:500px; overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,0.5),0 0 0 1.5px var(--border); }
+    .fill-header { background:var(--grad); padding:22px 26px 18px; color:white; }
+    .fill-header h3 { font-size:1.1rem; font-weight:800; margin:0 0 4px; letter-spacing:-0.01em; }
+    .fill-header p { font-size:0.78rem; opacity:0.82; margin:0; }
+    .fill-body { padding:20px 26px 6px; }
+    .fill-preview { font-size:0.82rem; color:var(--text); opacity:0.75; margin-bottom:18px; line-height:1.65; background:var(--bg); padding:12px 15px; border-radius:12px; border:1.5px solid var(--border); white-space:pre-wrap; word-break:break-word; max-height:140px; overflow-y:auto; }
+    .fill-field { margin-bottom:14px; }
+    .fill-field label { font-size:0.72rem; font-weight:800; color:var(--pink); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.08em; }
+    .fill-field input { width:100%; padding:11px 15px; border:2px solid var(--border); border-radius:12px; font-size:0.95rem; outline:none; background:var(--bg); color:var(--text); transition:border-color 0.15s,box-shadow 0.15s; font-family:inherit; box-sizing:border-box; }
+    .fill-field input:focus { border-color:var(--pink); box-shadow:0 0 0 4px color-mix(in srgb, var(--pink) 18%, transparent); }
+    .fill-actions { display:flex; gap:12px; padding:16px 26px 24px; }
+    .fill-actions button { flex:1; padding:13px; border:none; border-radius:14px; font-size:0.92rem; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:inherit; }
     .fill-cancel { background:var(--bg); color:var(--muted); border:2px solid var(--border) !important; }
     .fill-cancel:hover { border-color:var(--pink) !important; color:var(--pink); }
-    .fill-copy { background:var(--grad); color:white; box-shadow:0 4px 14px rgba(255,0,191,0.35); }
-    .fill-copy:hover { opacity:0.9; transform:translateY(-1px); }
+    .fill-copy { background:var(--grad); color:white; box-shadow:0 6px 20px rgba(255,0,191,0.4); font-size:1rem; }
+    .fill-copy:hover { opacity:0.92; transform:translateY(-1px); box-shadow:0 8px 26px rgba(255,0,191,0.5); }
+    /* add/edit modal h3 lives in .fill-body, not .fill-header */
+    .fill-body h3 { font-size:1.05rem; font-weight:800; margin:0 0 14px; }
 
     /* ── WHAT'S NEW ── */
-    .wn-modal { background:var(--surface); border-radius:24px; width:90%; max-width:460px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.3),0 0 0 1px var(--border); }
-    .wn-header { background:var(--grad); padding:26px 30px 22px; color:white; }
-    .wn-version { display:inline-block; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.35); border-radius:20px; padding:2px 12px; font-size:0.68rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px; }
-    .wn-header h2 { font-size:1.35rem; font-weight:800; margin-bottom:4px; }
-    .wn-header p { font-size:0.82rem; opacity:0.75; }
-    .wn-body { padding:16px 28px 8px; max-height:55vh; overflow-y:auto; }
-    .wn-feature { display:flex; align-items:flex-start; gap:13px; padding:10px 0; border-bottom:1px solid var(--border); }
-    .wn-feature:last-child { border-bottom:none; }
-    .wn-icon { font-size:1.05rem; flex-shrink:0; width:22px; text-align:center; padding-top:2px; }
-    .wn-text strong { font-size:0.87rem; font-weight:700; color:var(--text); display:block; margin-bottom:1px; }
-    .wn-text span { font-size:0.76rem; color:var(--muted); line-height:1.45; }
-    .wn-footer { padding:16px 28px 24px; }
+    .wn-modal { background:var(--surface); border-radius:24px; width:90%; max-width:480px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.3),0 0 0 1px var(--border); }
+    .wn-header { background:var(--grad); padding:18px 24px 14px; color:white; }
+    .wn-version { display:inline-block; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.35); border-radius:20px; padding:2px 10px; font-size:0.65rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+    .wn-header h2 { font-size:1.1rem; font-weight:800; margin-bottom:2px; }
+    .wn-header p { font-size:0.76rem; opacity:0.75; }
+    .wn-body { padding:12px 20px 6px; max-height:60vh; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+    .wn-feature { display:flex; align-items:flex-start; gap:8px; padding:7px 8px; border-radius:8px; }
+    .wn-feature:hover { background:var(--bg); }
+    .wn-icon { font-size:0.95rem; flex-shrink:0; width:18px; text-align:center; padding-top:1px; }
+    .wn-text strong { font-size:0.78rem; font-weight:700; color:var(--text); display:block; }
+    .wn-text span { font-size:0.7rem; color:var(--muted); line-height:1.35; }
+    .wn-footer { padding:10px 20px 18px; }
     .wn-btn { width:100%; padding:13px; background:var(--grad); color:white; border:none; border-radius:14px; font-size:0.95rem; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(255,0,191,0.35); transition:all 0.2s; font-family:inherit; }
     .wn-btn:hover { opacity:0.9; transform:translateY(-1px); }
+
+    /* ── CONTACT MODAL ── */
+    .contact-modal { background:var(--surface); border-radius:26px; width:92%; max-width:460px; overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,0.45),0 0 0 1.5px var(--border); animation:popIn 0.22s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .contact-hdr { background:var(--grad); padding:30px 26px 26px; color:white; display:flex; flex-direction:column; align-items:center; text-align:center; position:relative; }
+    .contact-avatar { width:68px; height:68px; border-radius:50%; background:rgba(255,255,255,0.18); border:2.5px solid rgba(255,255,255,0.5); display:flex; align-items:center; justify-content:center; font-size:1.55rem; font-weight:900; color:white; margin-bottom:13px; letter-spacing:-0.02em; box-shadow:0 4px 20px rgba(0,0,0,0.2); }
+    .contact-hdr h2 { font-size:1.25rem; font-weight:900; margin:0 0 5px; letter-spacing:-0.02em; }
+    .contact-hdr p { font-size:0.75rem; opacity:0.75; margin:0; }
+    .contact-hdr-divider { position:absolute; bottom:0; left:0; right:0; height:18px; background:var(--surface); border-radius:18px 18px 0 0; }
+    .contact-body { padding:6px 20px 10px; }
+    .contact-item { display:flex; align-items:center; gap:14px; padding:13px 15px; border-radius:15px; margin-bottom:9px; background:var(--bg); border:1.5px solid var(--border); text-decoration:none; transition:border-color 0.15s,transform 0.15s,box-shadow 0.15s; cursor:pointer; }
+    .contact-item:last-child { margin-bottom:0; }
+    .contact-item:hover { transform:translateY(-2px); box-shadow:0 6px 22px rgba(0,0,0,0.12); }
+    .contact-icon-box { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .contact-icon-box svg { width:22px; height:22px; }
+    .contact-info { flex:1; min-width:0; }
+    .contact-lbl { font-size:0.66rem; font-weight:700; text-transform:uppercase; letter-spacing:0.09em; margin-bottom:3px; }
+    .contact-val { font-size:0.86rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .contact-pill { font-size:0.67rem; font-weight:700; padding:3px 9px; border-radius:20px; flex-shrink:0; transition:all 0.2s; }
+    .contact-footer { padding:12px 20px 22px; }
+    .contact-close-btn { width:100%; padding:13px; border:none; border-radius:14px; background:var(--grad); color:white; font-size:0.93rem; font-weight:700; cursor:pointer; font-family:inherit; box-shadow:0 4px 16px rgba(255,0,191,0.3); transition:all 0.15s; letter-spacing:0.01em; }
+    .contact-close-btn:hover { opacity:0.9; transform:translateY(-1px); box-shadow:0 7px 22px rgba(255,0,191,0.42); }
 
     /* ── DOCK ── */
     .dock-wrapper {
@@ -470,17 +515,28 @@
   <div style="display:flex;align-items:center;gap:8px">
     <span class="sync-dot off" id="syncDot" title="Sync status"></span>
     <button class="scratchpad-btn" onclick="toggleScratchpad()" title="Scratchpad">📝</button>
+    <button class="scratchpad-btn" onclick="openContact()" title="Contact Raafat" style="display:flex;align-items:center;justify-content:center;width:34px;height:28px;padding:0">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </button>
     <div class="copy-counter" title="Snippets copied today"><div id="copyCounter">0</div><small>today</small></div>
+
     <div class="theme-picker-wrap">
       <button class="palette-btn" onclick="toggleThemePanel(event)">🎨</button>
       <div class="theme-panel" id="themePanel">
         <div class="theme-panel-label">Color</div>
         <div class="swatches">
-          <div class="swatch" data-color="karma"  style="background:linear-gradient(135deg,#FF00BF,#a000ff)" title="Karma"  onclick="setColor('karma')"></div>
-          <div class="swatch" data-color="ocean"  style="background:linear-gradient(135deg,#0ea5e9,#06b6d4)" title="Ocean"  onclick="setColor('ocean')"></div>
-          <div class="swatch" data-color="sunset" style="background:linear-gradient(135deg,#f97316,#ef4444)" title="Sunset" onclick="setColor('sunset')"></div>
-          <div class="swatch" data-color="forest" style="background:linear-gradient(135deg,#10b981,#059669)" title="Forest" onclick="setColor('forest')"></div>
-          <div class="swatch" data-color="violet" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)" title="Violet" onclick="setColor('violet')"></div>
+          <div class="swatch" data-color="karma"    style="background:linear-gradient(135deg,#FF00BF,#a000ff)" title="Karma"    onclick="setColor('karma')"></div>
+          <div class="swatch" data-color="ocean"    style="background:linear-gradient(135deg,#0ea5e9,#06b6d4)" title="Ocean"    onclick="setColor('ocean')"></div>
+          <div class="swatch" data-color="sunset"   style="background:linear-gradient(135deg,#f97316,#ef4444)" title="Sunset"   onclick="setColor('sunset')"></div>
+          <div class="swatch" data-color="forest"   style="background:linear-gradient(135deg,#10b981,#059669)" title="Forest"   onclick="setColor('forest')"></div>
+          <div class="swatch" data-color="violet"   style="background:linear-gradient(135deg,#8b5cf6,#ec4899)" title="Violet"   onclick="setColor('violet')"></div>
+          <div class="swatch" data-color="rose"     style="background:linear-gradient(135deg,#f43f5e,#fb923c)" title="Rose"     onclick="setColor('rose')"></div>
+          <div class="swatch" data-color="gold"     style="background:linear-gradient(135deg,#d97706,#f59e0b)" title="Gold"     onclick="setColor('gold')"></div>
+          <div class="swatch" data-color="crimson"  style="background:linear-gradient(135deg,#dc2626,#9f1239)" title="Crimson"  onclick="setColor('crimson')"></div>
+          <div class="swatch" data-color="midnight" style="background:linear-gradient(135deg,#3b82f6,#6366f1)" title="Midnight" onclick="setColor('midnight')"></div>
+          <div class="swatch" data-color="mint"     style="background:linear-gradient(135deg,#14b8a6,#06b6d4)" title="Mint"     onclick="setColor('mint')"></div>
         </div>
         <div class="theme-panel-label">Mode</div>
         <div class="dark-toggle" onclick="toggleTheme()">
@@ -527,10 +583,6 @@
     </select>
     <button class="case-reset" onclick="event.stopPropagation();newCaseFor(1)" title="Reset Case 2">↺</button>
   </div>
-  <div class="ctx-divider"></div>
-  <button class="queue-hdr-btn" id="queueHdrBtn" onclick="toggleQueuePanel()">
-    📋 Queue <span class="q-badge" id="queueBadge" style="display:none">0</span>
-  </button>
 </div>
 
 <div class="body">
@@ -538,7 +590,7 @@
   <!-- Sidebar -->
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-search">
-      <input type="text" id="sideSearch" placeholder="Search snippets..." oninput="onSearch(this.value)" autocomplete="off">
+      <input type="text" id="sideSearch" placeholder="Search snippets…" oninput="debouncedSearch(this.value)" autocomplete="off">
     </div>
     <div class="nav-tree" id="navTree"></div>
     <div class="nav-footer">
@@ -551,10 +603,16 @@
   <!-- Content -->
   <div class="content">
     <div class="content-body" id="contentBody">
-      <div class="welcome">
-        <div class="big">👈</div>
-        <h2>Pick a section from the sidebar</h2>
-        <p>Select any category on the left<br>to instantly see your snippets here.</p>
+      <div class="welcome" id="welcomeScreen">
+        <div class="big">✨</div>
+        <h2 id="welcomeGreeting">Welcome back</h2>
+        <p>Pick any section from the sidebar to instantly load your snippets.</p>
+        <div class="welcome-tips">
+          <div class="welcome-tip"><span class="tip-key">/</span> Search</div>
+          <div class="welcome-tip"><span class="tip-key">↑↓</span> Navigate</div>
+          <div class="welcome-tip"><span class="tip-key">↵</span> Copy</div>
+          <div class="welcome-tip"><span class="tip-key">?</span> Shortcuts</div>
+        </div>
       </div>
     </div>
   </div>
@@ -566,12 +624,17 @@
 <!-- Fill-in modal -->
 <div class="fill-modal" id="fillModal" style="display:none" onclick="if(event.target===this)closeFillModal()">
   <div class="fill-box">
-    <h3>Fill in placeholders</h3>
-    <div class="fill-preview" id="fillPreview"></div>
-    <div id="fillFields"></div>
+    <div class="fill-header">
+      <h3>Fill in placeholders</h3>
+      <p id="fillSubtitle">Replace the fields below, then press Copy or Enter</p>
+    </div>
+    <div class="fill-body">
+      <div class="fill-preview" id="fillPreview"></div>
+      <div id="fillFields"></div>
+    </div>
     <div class="fill-actions">
       <button class="fill-cancel" onclick="closeFillModal()">Cancel</button>
-      <button class="fill-copy" onclick="confirmFill()">Copy ✓</button>
+      <button class="fill-copy" id="fillCopyBtn" onclick="confirmFill()">Copy ✓</button>
     </div>
   </div>
 </div>
@@ -579,16 +642,37 @@
 <!-- Add / Edit custom snippet modal -->
 <div class="fill-modal" id="addSnipModal" style="display:none" onclick="if(event.target===this)closeAddSnip()">
   <div class="fill-box">
-    <h3 id="addSnipTitle">Add custom snippet</h3>
-    <textarea id="addSnipText" placeholder="Type your snippet here…" rows="5"
-      style="width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:0.88rem;outline:none;background:var(--bg);color:var(--text);resize:vertical;font-family:inherit;margin-bottom:12px;display:block"
-      onfocus="this.style.borderColor='var(--pink)'"
-      onblur="this.style.borderColor='var(--border)'"
-      onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))saveCustomSnip()"></textarea>
+    <div class="fill-body">
+      <h3 id="addSnipTitle">Add custom snippet</h3>
+      <textarea id="addSnipText" placeholder="Type your snippet here…" rows="5"
+        style="width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:0.88rem;outline:none;background:var(--bg);color:var(--text);resize:vertical;font-family:inherit;margin-bottom:4px;display:block;box-sizing:border-box"
+        onfocus="this.style.borderColor='var(--pink)'"
+        onblur="this.style.borderColor='var(--border)'"
+        onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))saveCustomSnip()"></textarea>
+    </div>
     <div class="fill-actions">
       <button id="resetOverrideBtn" class="fill-cancel" onclick="resetOverride()" style="display:none">↩ Reset</button>
       <button class="fill-cancel" onclick="closeAddSnip()">Cancel</button>
       <button class="fill-copy" onclick="saveCustomSnip()">Save ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Keyboard shortcuts modal -->
+<div class="modal-overlay" id="kbdModal" style="display:none" onclick="if(event.target===this)closeKbd()">
+  <div class="kbd-modal">
+    <div class="kbd-header">
+      <h2>⌨️ Keyboard Shortcuts</h2>
+      <p>Everything you can do without touching the mouse</p>
+    </div>
+    <div class="kbd-body">
+      <div class="kbd-row"><span>Focus search</span><span class="kbd-key">/</span></div>
+      <div class="kbd-row"><span>Navigate cards</span><span><span class="kbd-key">↑</span> <span class="kbd-key">↓</span></span></div>
+      <div class="kbd-row"><span>Copy selected card</span><span class="kbd-key">Enter</span></div>
+      <div class="kbd-row"><span>Jump to section 1–9</span><span><span class="kbd-key">1</span> – <span class="kbd-key">9</span></span></div>
+      <div class="kbd-row"><span>Close / dismiss</span><span class="kbd-key">Esc</span></div>
+      <div class="kbd-row"><span>This help overlay</span><span class="kbd-key">?</span></div>
+      <div class="kbd-row"><span>Open scratchpad</span><span class="kbd-key">S</span></div>
     </div>
   </div>
 </div>
@@ -602,16 +686,16 @@
       <p>RiseForce Snippets just got a major upgrade.</p>
     </div>
     <div class="wn-body">
-      <div class="wn-feature"><div class="wn-icon">🎨</div><div class="wn-text"><strong>5 Color Themes</strong><span>Switch between Karma pink, Ocean, Sunset, Forest, and Violet — plus dark mode.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">⭐</div><div class="wn-text"><strong>Favorites</strong><span>Star any snippet paragraph to save it. Access all favorites from the sidebar.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">✏️</div><div class="wn-text"><strong>Edit &amp; Override</strong><span>Override any built-in snippet with your own version, or edit custom ones.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">📌</div><div class="wn-text"><strong>Pin to top</strong><span>Pin your most-used paragraphs so they always appear first in their section.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">➕</div><div class="wn-text"><strong>Custom snippets</strong><span>Add your own snippets to any section — they stay saved across sessions.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">📋</div><div class="wn-text"><strong>Fill-in placeholders</strong><span>Snippets with [xxx] markers now prompt you to fill them before copying.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">📊</div><div class="wn-text"><strong>Copy count per snippet</strong><span>See how many times you've used each snippet to spot your favourites.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">📝</div><div class="wn-text"><strong>Scratchpad</strong><span>A floating notepad for case IDs and quick notes — synced across devices.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">⌨️</div><div class="wn-text"><strong>Keyboard shortcuts</strong><span>/ to search, ↑↓ to navigate cards, Enter to copy.</span></div></div>
-      <div class="wn-feature"><div class="wn-icon">🔄</div><div class="wn-text"><strong>Cross-device sync</strong><span>Favorites, pins, custom snippets — everything syncs when deployed on GAS.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">🎨</div><div class="wn-text"><strong>10 Themes + Dark Mode</strong><span>Karma, Ocean, Sunset, Forest, Violet, Rose, Gold, Crimson, Midnight, Mint.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">⭐</div><div class="wn-text"><strong>Favorites</strong><span>Star any paragraph — saved to the sidebar instantly.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📌</div><div class="wn-text"><strong>Pin to Top</strong><span>Your most-used paragraphs always appear first.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">✏️</div><div class="wn-text"><strong>Edit &amp; Override</strong><span>Override built-ins or add custom snippets to any section.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">👥</div><div class="wn-text"><strong>Dual Cases</strong><span>Case 1 &amp; 2 side by side — each with its own name and tier.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📋</div><div class="wn-text"><strong>Fill-in Placeholders</strong><span>Prompts you to fill [markers] before copying.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">⏱</div><div class="wn-text"><strong>Recent Snippets</strong><span>Last copied snippets in the sidebar for quick re-use.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">📝</div><div class="wn-text"><strong>Scratchpad</strong><span>Floating notepad. Press <strong>S</strong> to open anytime.</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">⌨️</div><div class="wn-text"><strong>Keyboard Shortcuts</strong><span><strong>/</strong> search · <strong>↑↓</strong> navigate · <strong>Enter</strong> copy · <strong>?</strong> help</span></div></div>
+      <div class="wn-feature"><div class="wn-icon">🔄</div><div class="wn-text"><strong>Cross-Device Sync</strong><span>Favorites, pins, customs — synced across devices.</span></div></div>
     </div>
     <div class="wn-footer">
       <button class="wn-btn" onclick="closeWhatsNew()">Got it, let's go! →</button>
@@ -619,33 +703,76 @@
   </div>
 </div>
 
-<!-- Queue panel -->
-<div class="queue-panel" id="queuePanel" style="display:none">
-  <div class="queue-panel-hdr">
-    <strong>📋 Snippet Queue</strong>
-    <button class="qp-btn" onclick="toggleQueuePanel()">✕</button>
-  </div>
-  <div class="queue-list" id="queueList"><div class="queue-empty">No snippets queued yet.<br>Hit + on any snippet to add it.</div></div>
-  <div class="queue-footer">
-    <button class="qp-btn primary" onclick="copyNext()" id="copyNextBtn">▶ Copy Next</button>
-    <button class="qp-btn" onclick="copyAllQueue()">Copy All</button>
-    <button class="qp-btn" onclick="openSaveSeq()">💾 Save Sequence</button>
-    <button class="qp-btn danger" onclick="clearQueue()">✕ Clear</button>
-  </div>
-</div>
-
-<!-- Save sequence name modal -->
-<div class="fill-modal" id="saveSeqModal" style="display:none" onclick="if(event.target===this)closeSaveSeq()">
-  <div class="fill-box">
-    <h3>💾 Save as Sequence</h3>
-    <div class="fill-field">
-      <label>Sequence name</label>
-      <input id="seqNameInput" type="text" placeholder="e.g. Underpaid + Bonus Flow" autocomplete="off"
-        onkeydown="if(event.key==='Enter')confirmSaveSeq()">
+<!-- Contact modal -->
+<div class="modal-overlay" id="contactModal" style="display:none" onclick="if(event.target===this)closeContact()">
+  <div class="contact-modal">
+    <div class="contact-hdr">
+      <div class="contact-avatar">RD</div>
+      <h2>Raafat Douban</h2>
+      <p>Tool Creator &amp; Administrator</p>
+      <div class="contact-hdr-divider"></div>
     </div>
-    <div class="fill-actions">
-      <button class="fill-cancel" onclick="closeSaveSeq()">Cancel</button>
-      <button class="fill-copy" onclick="confirmSaveSeq()">Save ✓</button>
+    <div class="contact-body">
+
+      <!-- Sutherland email -->
+      <a class="contact-item" href="mailto:Raafat.Douban@sutherlandglobal.com" style="--c:#4285f4" onmouseenter="this.style.borderColor='#4285f4'" onmouseleave="this.style.borderColor=''">
+        <div class="contact-icon-box" style="background:rgba(66,133,244,0.12)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4285f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-lbl" style="color:#4285f4">Sutherland</div>
+          <div class="contact-val">Raafat.Douban@sutherlandglobal.com</div>
+        </div>
+        <span class="contact-pill" style="background:rgba(66,133,244,0.1);color:#4285f4">open ↗</span>
+      </a>
+
+      <!-- Lyft email -->
+      <a class="contact-item" href="mailto:rhisham-sutherlland@lyft.com" onmouseenter="this.style.borderColor='var(--pink)'" onmouseleave="this.style.borderColor=''">
+        <div class="contact-icon-box" style="background:rgba(255,0,191,0.11)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-lbl" style="color:var(--pink)">Lyft</div>
+          <div class="contact-val">rhisham-sutherlland@lyft.com</div>
+        </div>
+        <span class="contact-pill" style="background:rgba(255,0,191,0.1);color:var(--pink)">open ↗</span>
+      </a>
+
+      <!-- Webex -->
+      <div class="contact-item" onclick="copyContact('Raafat Douban','webex-copied')" onmouseenter="this.style.borderColor='#00a8c8'" onmouseleave="this.style.borderColor=''">
+        <div class="contact-icon-box" style="background:rgba(0,168,200,0.11)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00a8c8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2.5"/>
+          </svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-lbl" style="color:#00a8c8">Webex</div>
+          <div class="contact-val">Raafat Douban</div>
+        </div>
+        <span class="contact-pill" id="webex-copied" style="background:rgba(0,168,200,0.1);color:#00a8c8">copy</span>
+      </div>
+
+      <!-- Slack -->
+      <div class="contact-item" onclick="copyContact('Raafat Douban','slack-copied')" onmouseenter="this.style.borderColor='#611f69'" onmouseleave="this.style.borderColor=''">
+        <div class="contact-icon-box" style="background:rgba(97,31,105,0.11)">
+          <svg viewBox="0 0 24 24" fill="#611f69" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zm10.122 2.521a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zm-1.268 0a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zm-2.523 10.122a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zm0-1.268a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
+          </svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-lbl" style="color:#611f69">Slack</div>
+          <div class="contact-val">Raafat Douban</div>
+        </div>
+        <span class="contact-pill" id="slack-copied" style="background:rgba(97,31,105,0.1);color:#611f69">copy</span>
+      </div>
+
+    </div>
+    <div class="contact-footer">
+      <button class="contact-close-btn" onclick="closeContact()">Close</button>
     </div>
   </div>
 </div>
@@ -694,23 +821,18 @@ let favorites   = new Set(JSON.parse(store.get('rf_favs')     || '[]'));
 let customs     = JSON.parse(store.get('rf_customs')          || '[]');
 let pins        = new Set(JSON.parse(store.get('rf_pins')     || '[]'));
 let overrides   = JSON.parse(store.get('rf_overrides')        || '{}');
-let snipCounts  = JSON.parse(store.get('rf_counts')           || '{}');
-let recentList  = JSON.parse(store.get('rf_recent')           || '[]');
-let copyCount   = 0;
 const CURRENT_VERSION = '2.0';
 let seenVersion = store.get('rf_seen_version') || '';
 let fillCard    = null;
 // Context bar — active case vars (mirror of caseData[activeCaseIdx])
 let cxName      = '';
 let cxTier      = '';
-let queue       = [];
-let queueCursor = 0;
 // Both cases stored here; activeCaseIdx controls which applies to snippets
 let activeCaseIdx = 0;
 const caseData = [{ cxName:'', cxTier:'' }, { cxName:'', cxTier:'' }];
-// Sequences
-let sequences   = JSON.parse(store.get('rf_sequences') || '[]');
-let seqPlayIdx  = -1; // which sequence is actively playing (-1 = none)
+let copyCount   = 0;
+const RECENT_MAX = 10;
+let recentSnips = JSON.parse(store.get('rf_recent_snips') || '[]');
 // Para drag-to-reorder
 let paraOrder   = JSON.parse(store.get('rf_para_order') || '{}');
 let paraDragKey = null;
@@ -1379,6 +1501,7 @@ function promptChangeName() {
 function updateHeaderName() {
   document.getElementById('agentNameDisplay').textContent = agentName || '...';
   document.getElementById('agentAvatar').textContent = agentName ? agentName.charAt(0).toUpperCase() : '?';
+  setWelcomeGreeting();
 }
 function applyName(text) {
   let t = text;
@@ -1454,30 +1577,20 @@ function selectPath(path) {
 function renderTree() {
   let h = '';
 
-  // ── Stats ──
-  h += `<div class="ni${selPath === '__stats__' ? ' active' : ''}" onclick="showStats()">
-    <span style="font-size:1rem">📊</span> Stats
-  </div>`;
-
-  // ── Sequences ──
-  if (sequences.length) {
-    h += `<div class="lob-label" style="cursor:default;pointer-events:none"><span>🎬 Sequences</span></div>`;
-    sequences.forEach(seq => {
-      h += `<div class="ni${selPath === `__seq__${seq.id}` ? ' active' : ''} indent1" onclick="playSequence('${seq.id}')">
-        <span>▶</span> ${esc(seq.name)}
-        <button onclick="event.stopPropagation();deleteSequence('${seq.id}')" title="Delete"
-          style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.7rem;margin-left:auto;opacity:0.5;padding:0 2px"
-          onmouseenter="this.style.color='#ef4444';this.style.opacity='1'"
-          onmouseleave="this.style.color='';this.style.opacity='0.5'">✕</button>
-      </div>`;
-    });
-  }
 
   // ── Favorites ──
   if (favorites.size) {
     h += `<div class="ni${selPath === '__favs__' ? ' active' : ''}" onclick="showFavsView()">
       <span>⭐</span> Favorites
       <span style="font-size:0.65rem;font-weight:700;background:var(--bg);color:var(--muted);padding:2px 7px;border-radius:10px;margin-left:auto">${favorites.size}</span>
+    </div>`;
+  }
+
+  // ── Recent ──
+  if (recentSnips.length) {
+    h += `<div class="ni${selPath === '__recent__' ? ' active' : ''}" onclick="showRecentView()">
+      <span>⏱</span> Recent
+      <span style="font-size:0.65rem;font-weight:700;background:var(--bg);color:var(--muted);padding:2px 7px;border-radius:10px;margin-left:auto">${recentSnips.length}</span>
     </div>`;
   }
 
@@ -1534,8 +1647,10 @@ function renderTree() {
           <span class="drag-handle">⠇</span>${item.icon} ${esc(item.label)}<span class="soon">soon</span>
         </div>`;
       } else if (item.type === 'leaf') {
+        const cnt = getPathSnipCount(item.path);
         h += `<div class="ni indent1${active ? ' active' : ''}" onclick="selectPath('${item.path}')" ${dAttr(item.key)}>
           <span class="drag-handle">⠇</span>${item.icon} ${esc(item.label)}
+          ${cnt ? `<span class="ni-count">${cnt}</span>` : ''}
         </div>`;
       } else if (item.type === 'node') {
         const open = expCases.has(item.path);
@@ -1596,23 +1711,34 @@ function buildBreadcrumb(path) {
   const [lk, pk, ck, sk] = path.split('.');
   const crumbs = [D[lk].label];
   const phase = D[lk]?.phases[pk];
-  // Only show phase label if it has direct snippets (not a container like Resolution Delivery)
   if (pk && phase?.snippets) crumbs.push(phase.label);
   if (ck && phase?.cases) crumbs.push(phase.cases[ck].label);
   if (sk && phase?.cases?.[ck]?.subcases) crumbs.push(phase.cases[ck].subcases[sk].label);
   return crumbs;
 }
 
+function renderBreadcrumb(path) {
+  const crumbs = buildBreadcrumb(path);
+  return `<div class="breadcrumb">${crumbs.map((c, i) =>
+    `<span class="bc-crumb">${esc(c)}</span>${i < crumbs.length - 1 ? '<span class="bc-sep">›</span>' : ''}`
+  ).join('')}</div>`;
+}
+
+function getPathSnipCount(path) {
+  const { snips, empty } = resolveSnips(path);
+  if (empty || !snips) return 0;
+  const base = snips.reduce((sum, s) => sum + s.text.split(/\n\n+/).map(p => p.trim()).filter(Boolean).length, 0);
+  return base + customs.filter(c => c.pathKey === path).length;
+}
+
 // ═══════════════════════════════════════════════
 // CONTENT
 // ═══════════════════════════════════════════════
-function buildParaCard(sk, displayText, rawText, isFav, isPinned, count, isCustom, customId) {
+function buildParaCard(sk, displayText, rawText, isFav, isPinned, isCustom, customId, highlightQuery) {
   const overridden = !isCustom && overrides[sk];
   const actHtml = `<div class="snip-actions">
     <button class="sa-btn${overridden ? ' overridden' : ''}" onclick="event.stopPropagation();editPara('${sk}',${isCustom},${customId ? `'${customId}'` : 'null'})" title="${isCustom ? 'Edit' : 'Override'}">✏ ${isCustom ? 'Edit' : 'Override'}</button>
     <button class="sa-btn${isPinned ? ' pinned' : ''}" onclick="event.stopPropagation();togglePin('${sk}')" title="Pin">📌</button>
-    <button class="sa-btn" onclick="event.stopPropagation();addToQueue(this)" title="Add to queue">＋ Queue</button>
-    ${count > 0 ? `<span class="snip-count-badge">${count}×</span>` : ''}
     ${isCustom ? `<button class="sa-btn" style="color:#ef4444;margin-left:auto" onclick="event.stopPropagation();deleteCustomPara('${customId}')" title="Delete">✕</button>` : ''}
   </div>`;
   const pathKey = sk.split('|')[0];
@@ -1625,7 +1751,7 @@ function buildParaCard(sk, displayText, rawText, isFav, isPinned, count, isCusto
     ondragend="document.querySelectorAll('.snip-para').forEach(c=>c.classList.remove('card-dragging','card-drag-over'))">
     <span class="para-drag-handle" title="Drag to reorder">⠿</span>
     <button class="snip-fav${isFav ? ' active' : ''}" onclick="event.stopPropagation();toggleFav('${sk}')" title="${isFav ? 'Unfavorite' : 'Favorite'}">⭐</button>
-    <div class="snip-text">${esc(displayText)}</div>
+    <div class="snip-text">${highlightQuery ? hi(esc(displayText), highlightQuery) : esc(displayText)}</div>
     ${actHtml}
   </div>`;
 }
@@ -1643,11 +1769,7 @@ function resolveSnips(path) {
 
 function showSnippets(path) {
   const { snips, title, icon, empty } = resolveSnips(path);
-  const crumbs = buildBreadcrumb(path);
-  const bc = `<div class="breadcrumb">${crumbs.map((c, i) =>
-    `<span>${esc(c)}</span>${i < crumbs.length - 1 ? '<span class="bc-sep">›</span>' : ''}`
-  ).join('')}</div>`;
-
+  const bc = renderBreadcrumb(path);
   if (empty) {
     document.getElementById('contentBody').innerHTML = `${bc}<div class="welcome"><div class="big">🚧</div><h2>${esc(title)}</h2><p>Snippets for this case haven't been loaded yet.</p></div>`;
     return;
@@ -1679,7 +1801,7 @@ function showSnippets(path) {
     order.forEach(sk => { if (keyMap[sk]) { orderedItems.push(keyMap[sk]); delete keyMap[sk]; } });
     allItems.forEach(it => { if (keyMap[it.sk]) orderedItems.push(it); });
     html = orderedItems.map(it =>
-      `<div style="margin-bottom:4px"><div class="path-tag" style="margin-bottom:4px">${esc(it.groupLabel)}</div>${buildParaCard(it.sk, it.displayText, it.rawText, favorites.has(it.sk), pins.has(it.sk), snipCounts[it.sk]||0, !!it.isCustom, it.customId||null)}</div>`
+      `<div style="margin-bottom:4px"><div class="path-tag" style="margin-bottom:4px">${esc(it.groupLabel)}</div>${buildParaCard(it.sk, it.displayText, it.rawText, favorites.has(it.sk), pins.has(it.sk), !!it.isCustom, it.customId||null)}</div>`
     ).join('');
     html += `<button class="add-snip-btn" style="margin-top:4px" onclick="resetParaOrder('${path}')">↺ Reset order</button>`;
   } else {
@@ -1689,7 +1811,7 @@ function showSnippets(path) {
       const cards = rawParas.map((rawPara, pi) => {
         const sk = `${path}|s${si}|p${pi}`;
         const displayText = overrides[sk] || applyName(rawPara);
-        return buildParaCard(sk, displayText, rawPara, favorites.has(sk), pins.has(sk), snipCounts[sk]||0, false, null);
+        return buildParaCard(sk, displayText, rawPara, favorites.has(sk), pins.has(sk), false, null);
       });
       const pinned   = cards.filter((_, pi) => pins.has(`${path}|s${si}|p${pi}`));
       const unpinned = cards.filter((_, pi) => !pins.has(`${path}|s${si}|p${pi}`));
@@ -1698,16 +1820,24 @@ function showSnippets(path) {
     if (myCustoms.length) {
       html += `<div class="snippet-group"><div class="snip-label">✨ Custom</div>${myCustoms.map(c => {
         const sk = `${path}|c${c.id}`;
-        return buildParaCard(sk, applyName(c.text), c.text, favorites.has(sk), pins.has(sk), snipCounts[sk]||0, true, c.id);
+        return buildParaCard(sk, applyName(c.text), c.text, favorites.has(sk), pins.has(sk), true, c.id);
       }).join('')}</div>`;
     }
   }
 
+  const totalCount = getPathSnipCount(path);
   document.getElementById('contentBody').innerHTML = `
     ${bc}
-    <div class="content-title"><span class="icon">${icon}</span>${esc(title)}</div>
+    <div class="content-title">
+      <span class="icon">${icon}</span>${esc(title)}
+      <span class="ct-count">${totalCount} snippet${totalCount !== 1 ? 's' : ''} · tap to copy</span>
+    </div>
     ${html}
     <button class="add-snip-btn" onclick="openAddSnip('${path}')">＋ Add custom snippet</button>`;
+  // stagger card entry animation
+  document.querySelectorAll('.snip-para').forEach((el, i) => {
+    el.style.animationDelay = `${Math.min(i * 22, 180)}ms`;
+  });
 }
 
 // ═══════════════════════════════════════════════
@@ -1718,6 +1848,7 @@ function toggleFav(sk) {
   store.set('rf_favs', JSON.stringify([...favorites]));
   const btn = document.querySelector(`.snip-para[data-key="${sk}"] .snip-fav`);
   if (btn) btn.classList.toggle('active', favorites.has(sk));
+  renderTree();
   pushToServer();
 }
 
@@ -1809,15 +1940,38 @@ function deleteCustomPara(id) {
 function maybeFill(el) {
   const text = el.dataset.text;
   const seen = {}, placeholders = [];
-  let m; const re = /\[([^\]]+)\]/g;
-  while ((m = re.exec(text)) !== null) {
-    if (!seen[m[1]]) { seen[m[1]] = true; placeholders.push(m[1]); }
+  let m;
+  // [placeholder] format
+  const re1 = /\[([^\]]+)\]/g;
+  while ((m = re1.exec(text)) !== null) {
+    const token = m[0];
+    if (!seen[token]) { seen[token] = true; placeholders.push({ label: m[1], token, caseless: false }); }
+  }
+  // *INSERT ... HERE* / *INSERT ...* format
+  const re2 = /\*INSERT ([^*]+?)\*/gi;
+  while ((m = re2.exec(text)) !== null) {
+    const label = m[1].replace(/\s*HERE\s*$/i, '').trim();
+    const token = m[0];
+    if (!seen[token]) { seen[token] = true; placeholders.push({ label, token, caseless: false }); }
+  }
+  // xxx / XXX / xxxxxx bare placeholders (3+ x's, case-insensitive)
+  const re3 = /\bx{3,}\b/gi;
+  while ((m = re3.exec(text)) !== null) {
+    const key = m[0].toLowerCase();
+    if (!seen['xxx:' + key]) {
+      seen['xxx:' + key] = true;
+      placeholders.push({ label: key, token: key, caseless: true });
+    }
   }
   if (!placeholders.length) { copyPara(el); return; }
   fillCard = el;
-  document.getElementById('fillPreview').textContent = text.length > 150 ? text.slice(0,150) + '…' : text;
-  document.getElementById('fillFields').innerHTML = placeholders.map(p =>
-    `<div class="fill-field"><label>${esc(p)}</label><input type="text" data-ph="${escAttr(p)}" placeholder="Enter ${esc(p)}…" autocomplete="off" onkeydown="if(event.key==='Enter')confirmFill()"></div>`
+  const count = placeholders.length;
+  document.getElementById('fillSubtitle').textContent =
+    count === 1 ? '1 placeholder — fill it in and press Copy or Enter'
+                : `${count} placeholders — fill them in and press Copy or Enter`;
+  document.getElementById('fillPreview').textContent = text;
+  document.getElementById('fillFields').innerHTML = placeholders.map((p, i) =>
+    `<div class="fill-field"><label>${esc(p.label)}</label><input type="text" data-token="${escAttr(p.token)}" data-caseless="${p.caseless ? '1' : '0'}" placeholder="Enter ${esc(p.label)}…" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();${i === placeholders.length - 1 ? 'confirmFill()' : 'this.closest(\'.fill-field\').nextElementSibling?.querySelector(\'input\')?.focus()'}}"></div>`
   ).join('');
   document.getElementById('fillModal').dataset.origText = text;
   document.getElementById('fillModal').style.display = 'flex';
@@ -1826,13 +1980,19 @@ function maybeFill(el) {
 }
 
 function confirmFill() {
+  const card = fillCard; // capture before closeFillModal nulls it
   let text = document.getElementById('fillModal').dataset.origText;
   document.querySelectorAll('#fillFields input').forEach(inp => {
-    const val = inp.value.trim() || '[' + inp.dataset.ph + ']';
-    text = text.split('[' + inp.dataset.ph + ']').join(val);
+    const val = inp.value.trim() || inp.dataset.token;
+    if (inp.dataset.caseless === '1') {
+      const esc = inp.dataset.token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      text = text.replace(new RegExp('\\b' + esc + '\\b', 'gi'), val);
+    } else {
+      text = text.split(inp.dataset.token).join(val);
+    }
   });
   closeFillModal();
-  if (fillCard) { const orig = fillCard.dataset.text; fillCard.dataset.text = text; copyPara(fillCard); fillCard.dataset.text = orig; fillCard = null; }
+  if (card) { const orig = card.dataset.text; card.dataset.text = text; copyPara(card); card.dataset.text = orig; }
 }
 
 function closeFillModal() { document.getElementById('fillModal').style.display = 'none'; fillCard = null; }
@@ -1852,12 +2012,56 @@ function bumpCopyCount() {
   if (el) el.textContent = copyCount;
 }
 
+
 // ═══════════════════════════════════════════════
-// RECENT
+// RECENT SNIPPETS
 // ═══════════════════════════════════════════════
-function trackRecent(text) {
-  recentList = [text, ...recentList.filter(t => t !== text)].slice(0, 8);
-  store.set('rf_recent', JSON.stringify(recentList));
+function trackRecentSnip(sk, text) {
+  recentSnips = recentSnips.filter(r => r.text !== text);
+  recentSnips.unshift({ sk, text });
+  recentSnips = recentSnips.slice(0, RECENT_MAX);
+  store.set('rf_recent_snips', JSON.stringify(recentSnips));
+  renderTree();
+}
+function reCopy(idx) {
+  const r = recentSnips[idx];
+  if (!r) return;
+  recentSnips.splice(idx, 1);
+  recentSnips.unshift(r);
+  store.set('rf_recent_snips', JSON.stringify(recentSnips));
+  doCopy(r.text);
+}
+function removeRecent(idx) {
+  recentSnips.splice(idx, 1);
+  store.set('rf_recent_snips', JSON.stringify(recentSnips));
+  if (selPath === '__recent__') showRecentView(); else renderTree();
+}
+function clearRecent() {
+  recentSnips = [];
+  store.set('rf_recent_snips', '[]');
+  if (selPath === '__recent__') showRecentView(); else renderTree();
+}
+function showRecentView() {
+  selPath = '__recent__';
+  renderTree();
+  const cards = recentSnips.map((r, i) =>
+    `<div style="margin-bottom:8px">
+      <div class="snip-para has-actions" onclick="reCopy(${i})" data-text="${escAttr(r.text)}">
+        <div class="snip-text">${esc(r.text)}</div>
+        <div class="snip-actions">
+          <button class="sa-btn" style="color:#ef4444" onclick="event.stopPropagation();removeRecent(${i})" title="Remove">✕ Remove</button>
+        </div>
+      </div>
+    </div>`
+  ).join('');
+  document.getElementById('contentBody').innerHTML = `
+    <div class="content-title">
+      <span class="icon">⏱</span>Recently Copied
+      ${recentSnips.length ? `<button class="nav-footer-btn" style="margin-left:auto;width:auto;padding:4px 14px;font-size:0.72rem" onclick="clearRecent()">Clear all</button>` : ''}
+    </div>
+    ${recentSnips.length
+      ? `<div class="snip-grid">${cards}</div>`
+      : '<div class="welcome"><div class="big">⏱</div><p>Snippets you copy will appear here for quick re-use.</p></div>'}`;
 }
 
 // ═══════════════════════════════════════════════
@@ -1885,42 +2089,54 @@ function onSearch(q) {
   }
   const lq = q.toLowerCase();
   const results = [];
-  function scan(snips, pathLabel, icon) {
-    snips.forEach(s => {
-      const applied = applyName(s.text);
-      if (s.label.toLowerCase().includes(lq) || applied.toLowerCase().includes(lq))
-        results.push({ label: s.label, text: s.text, pathLabel, icon });
+
+  function scanSnips(snips, path, pathLabel) {
+    snips.forEach((s, si) => {
+      const rawParas = s.text.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+      rawParas.forEach((rawPara, pi) => {
+        const sk = `${path}|s${si}|p${pi}`;
+        const displayText = overrides[sk] || applyName(rawPara);
+        if (s.label.toLowerCase().includes(lq) || displayText.toLowerCase().includes(lq) || rawPara.toLowerCase().includes(lq))
+          results.push({ sk, displayText, rawText: rawPara, pathLabel, isFav: favorites.has(sk), isPinned: pins.has(sk) });
+      });
     });
   }
-  Object.entries(D).forEach(([,lob]) =>
-    Object.entries(lob.phases).forEach(([,ph]) => {
-      const base = `${lob.label} › ${ph.label}`;
-      if (ph.snippets) { scan(ph.snippets, base, ph.icon); return; }
-      Object.entries(ph.cases).forEach(([,c]) => {
-        const cp = `${base} › ${c.label}`;
-        if (c.snippets) { scan(c.snippets, cp, c.icon || '📌'); return; }
-        if (c.subcases) Object.entries(c.subcases).forEach(([,sc]) => scan(sc.snippets, `${cp} › ${sc.label}`, '📋'));
+
+  Object.entries(D).forEach(([lk, lob]) =>
+    Object.entries(lob.phases).forEach(([pk, ph]) => {
+      const basePath = `${lk}.${pk}`;
+      const baseLabel = `${lob.label} › ${ph.label}`;
+      if (ph.snippets) { scanSnips(ph.snippets, basePath, baseLabel); return; }
+      Object.entries(ph.cases).forEach(([ck, c]) => {
+        const casePath = `${basePath}.${ck}`;
+        const caseLabel = `${baseLabel} › ${c.label}`;
+        if (c._empty) return;
+        if (c.snippets) { scanSnips(c.snippets, casePath, caseLabel); return; }
+        if (c.subcases) Object.entries(c.subcases).forEach(([sk2, sc]) =>
+          scanSnips(sc.snippets, `${casePath}.${sk2}`, `${caseLabel} › ${sc.label}`)
+        );
       });
     })
   );
-  // Also search custom snippets
+
   customs.forEach(c => {
-    if (applyName(c.text).toLowerCase().includes(lq))
-      results.push({ label: 'Custom', text: c.text, pathLabel: c.pathKey, icon: '✨', isCustom: true });
+    const sk = `${c.pathKey}|c${c.id}`;
+    const displayText = applyName(c.text);
+    if (displayText.toLowerCase().includes(lq))
+      results.push({ sk, displayText, rawText: c.text, pathLabel: c.pathKey, isFav: favorites.has(sk), isPinned: pins.has(sk), isCustom: true, customId: c.id });
   });
 
   if (!results.length) {
     document.getElementById('contentBody').innerHTML = `<div class="no-results"><div class="big">🔍</div><p>No snippets found for "<strong>${esc(q)}</strong>"</p></div>`;
     return;
   }
-  document.getElementById('contentBody').innerHTML = results.map(r => {
-    const paras = applyName(r.text).split(/\n\n+/).map(p => p.trim()).filter(Boolean);
-    return `<div class="snippet-group">
+
+  document.getElementById('contentBody').innerHTML = results.map(r =>
+    `<div class="snippet-group">
       <div class="path-tag">${esc(r.pathLabel)}</div>
-      <div class="snip-label" style="margin-top:8px">${esc(r.label)}</div>
-      ${paras.map(p => `<div class="snip-para" onclick="copyPara(this)" data-text="${escAttr(p)}"><div class="snip-text">${hi(esc(p), lq)}</div></div>`).join('')}
-    </div>`;
-  }).join('');
+      ${buildParaCard(r.sk, r.displayText, r.rawText, r.isFav, r.isPinned, r.isCustom || false, r.customId || null, lq)}
+    </div>`
+  ).join('');
 }
 
 // ═══════════════════════════════════════════════
@@ -1975,19 +2191,8 @@ function copyPara(el) {
   const sk = el.dataset.key;
   el.classList.add('flashing');
   setTimeout(() => el.classList.remove('flashing'), 500);
-  trackRecent(text);
   bumpCopyCount();
-  if (sk) {
-    snipCounts[sk] = (snipCounts[sk] || 0) + 1;
-    store.set('rf_counts', JSON.stringify(snipCounts));
-    const badge = el.querySelector('.snip-count-badge');
-    const cnt = snipCounts[sk];
-    if (badge) badge.textContent = cnt + '×';
-    else {
-      const acts = el.querySelector('.snip-actions');
-      if (acts) { const nb = document.createElement('span'); nb.className = 'snip-count-badge'; nb.textContent = cnt + '×'; acts.insertBefore(nb, acts.querySelector('button.sa-btn[title="Delete"]') || null); }
-    }
-  }
+  trackRecentSnip(sk || '', text);
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => showToast());
   } else {
@@ -2005,7 +2210,7 @@ document.addEventListener('keydown', e => {
   const tag = document.activeElement.tagName;
   const inInput = tag === 'INPUT' || tag === 'TEXTAREA';
   if (e.key === 'Escape') {
-    closeFillModal(); closeAddSnip();
+    closeFillModal(); closeAddSnip(); closeContact();
     const sp = document.getElementById('scratchpadPanel');
     if (sp && sp.style.display !== 'none') { sp.style.display = 'none'; return; }
     if (inInput) document.activeElement.blur();
@@ -2013,6 +2218,8 @@ document.addEventListener('keydown', e => {
   }
   if (inInput) return;
   if (e.key === '/' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); document.getElementById('sideSearch').focus(); return; }
+  if (e.key === '?') { e.preventDefault(); toggleKbd(); return; }
+  if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleScratchpad(); return; }
   const cards = [...document.querySelectorAll('.snip-para')];
   if (!cards.length) return;
   const focused = document.querySelector('.snip-para.kbd-focus');
@@ -2034,16 +2241,20 @@ function showFavsView() {
   renderTree();
   const favItems = [];
   favorites.forEach(sk => {
-    const [dotpath, ref] = sk.split('|');
+    const parts = sk.split('|');
+    const dotpath = parts[0];
+    const sRef = parts[1];
+    const pRef = parts[2];
     let text = null;
     try {
-      if (ref && ref.startsWith('s')) {
-        const [si, pi] = ref.slice(1).split('p').map(Number);
+      if (sRef && sRef.startsWith('s')) {
+        const si = parseInt(sRef.slice(1), 10);
+        const pi = pRef ? parseInt(pRef.slice(1), 10) : 0;
         const { snips } = resolveSnips(dotpath);
         const rawText = snips[si]?.text.split(/\n\n+/).map(p => p.trim()).filter(Boolean)[pi];
         text = overrides[sk] || rawText;
-      } else if (ref && ref.startsWith('c')) {
-        const c = customs.find(x => x.id === ref.slice(1));
+      } else if (sRef && sRef.startsWith('c')) {
+        const c = customs.find(x => x.id === sRef.slice(1));
         text = c?.text;
       }
     } catch {}
@@ -2097,85 +2308,8 @@ function newCaseFor(idx) {
 // ═══════════════════════════════════════════════
 
 
-// ═══════════════════════════════════════════════
-// QUEUE
-// ═══════════════════════════════════════════════
-function addToQueue(btn) {
-  const card = btn.closest('.snip-para');
-  if (!card) return;
-  const text = card.dataset.text;
-  const preview = text.slice(0, 60) + (text.length > 60 ? '…' : '');
-  queue.push({ text, preview });
-  renderQueue();
-  showToast('Added to queue');
-  // Auto-open queue panel on first add
-  if (queue.length === 1) { const p = document.getElementById('queuePanel'); if (p) p.style.display = 'flex'; }
-}
-
-function removeFromQueue(i) {
-  queue.splice(i, 1);
-  if (queueCursor >= queue.length) queueCursor = Math.max(0, queue.length - 1);
-  renderQueue();
-}
-
-function copyNext() {
-  if (!queue.length) return;
-  const item = queue[queueCursor];
-  if (!item) return;
-  doCopy(item.text);
-  item._done = true;
-  queueCursor = Math.min(queueCursor + 1, queue.length - 1);
-  renderQueue();
-}
-
-function copyAllQueue() {
-  if (!queue.length) return;
-  doCopy(queue.map(q => q.text).join('\n\n'));
-  queue.forEach(q => q._done = true);
-  renderQueue();
-}
-
-function clearQueue() {
-  queue = []; queueCursor = 0;
-  renderQueue();
-  document.getElementById('queuePanel').style.display = 'none';
-  updateQueueBadge();
-}
-
-function toggleQueuePanel() {
-  const p = document.getElementById('queuePanel');
-  p.style.display = p.style.display === 'none' ? 'flex' : 'none';
-}
-
-function renderQueue() {
-  const list = document.getElementById('queueList');
-  if (!list) return;
-  if (!queue.length) {
-    list.innerHTML = '<div class="queue-empty">No snippets queued yet.<br>Hit <strong>＋ Queue</strong> on any snippet.</div>';
-  } else {
-    list.innerHTML = queue.map((q, i) =>
-      `<div class="queue-item${i === queueCursor && !q._done ? ' current' : ''}${q._done ? ' done' : ''}">
-        <span class="qi-num">${i + 1}</span>
-        <span class="qi-text">${esc(q.preview)}</span>
-        <button class="qi-del" onclick="removeFromQueue(${i})" title="Remove">✕</button>
-      </div>`
-    ).join('');
-  }
-  updateQueueBadge();
-}
-
-function updateQueueBadge() {
-  const badge = document.getElementById('queueBadge');
-  const btn = document.getElementById('queueHdrBtn');
-  if (!badge || !btn) return;
-  const n = queue.filter(q => !q._done).length;
-  badge.textContent = n;
-  badge.style.display = n > 0 ? '' : 'none';
-  btn.classList.toggle('has-items', n > 0);
-}
-
 function doCopy(text) {
-  trackRecent(text); bumpCopyCount();
+  bumpCopyCount();
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => showToast());
   } else {
@@ -2222,115 +2356,33 @@ function resetParaOrder(path) {
 }
 
 // ═══════════════════════════════════════════════
-// SEQUENCES
+// KEYBOARD MAP
 // ═══════════════════════════════════════════════
-function openSaveSeq() {
-  if (!queue.length) { showToast('Queue is empty'); return; }
-  document.getElementById('seqNameInput').value = '';
-  document.getElementById('saveSeqModal').style.display = 'flex';
-  setTimeout(() => document.getElementById('seqNameInput').focus(), 50);
+function toggleKbd() {
+  const m = document.getElementById('kbdModal');
+  m.style.display = m.style.display === 'none' ? 'flex' : 'none';
 }
-function closeSaveSeq() { document.getElementById('saveSeqModal').style.display = 'none'; }
-function confirmSaveSeq() {
-  const name = document.getElementById('seqNameInput').value.trim();
-  if (!name) return;
-  sequences.push({ id: Date.now().toString(), name, items: queue.map(q => ({ text: q.text, preview: q.preview })) });
-  store.set('rf_sequences', JSON.stringify(sequences));
-  closeSaveSeq();
-  renderTree();
-  showToast(`Sequence "${name}" saved!`);
-  pushToServer();
-}
-function deleteSequence(id) {
-  sequences = sequences.filter(s => s.id !== id);
-  store.set('rf_sequences', JSON.stringify(sequences));
-  if (selPath === `__seq__${id}`) { selPath = null; document.getElementById('contentBody').innerHTML = `<div class="welcome"><div class="big">👈</div><h2>Pick a section from the sidebar</h2><p>Select any category on the left to see your snippets.</p></div>`; }
-  renderTree();
-  pushToServer();
-}
-function playSequence(id) {
-  const seq = sequences.find(s => s.id === id);
-  if (!seq) return;
-  seqPlayIdx = 0;
-  selPath = `__seq__${id}`;
-  renderTree();
-  showSequenceView(seq);
-}
-function showSequenceView(seq) {
-  const total = seq.items.length;
-  const cards = seq.items.map((item, i) => {
-    const cls = i < seqPlayIdx ? 'snip-para seq-done' : i === seqPlayIdx ? 'snip-para seq-current has-actions' : 'snip-para has-actions';
-    const actions = i === seqPlayIdx ? `<div class="snip-actions"><button class="sa-btn" style="font-weight:800;color:var(--pink)" onclick="copySeqItem(${i},'${seq.id}')">▶ Copy &amp; Next</button></div>` : '';
-    return `<div class="${cls}" onclick="${i === seqPlayIdx ? `copySeqItem(${i},'${seq.id}')` : ''}" data-text="${escAttr(item.text)}">
-      <div class="snip-text">${esc(applyName(item.text))}</div>${actions}
-    </div>`;
-  }).join('');
-  document.getElementById('contentBody').innerHTML = `
-    <div class="seq-player-hdr">
-      <div class="content-title" style="margin:0;border:none;padding:0"><span class="icon">🎬</span>${esc(seq.name)}</div>
-      <span class="seq-step-badge">Step ${Math.min(seqPlayIdx + 1, total)} of ${total}</span>
-    </div>
-    <div class="snip-grid" style="margin-top:14px">${cards}</div>`;
-}
-function copySeqItem(i, seqId) {
-  const seq = sequences.find(s => s.id === seqId);
-  if (!seq || i >= seq.items.length) return;
-  doCopy(applyName(seq.items[i].text));
-  seqPlayIdx = i + 1;
-  if (seqPlayIdx >= seq.items.length) {
-    showToast('Sequence complete! 🎉');
-    seqPlayIdx = 0;
+function closeKbd() { document.getElementById('kbdModal').style.display = 'none'; }
+
+// ═══════════════════════════════════════════════
+// CONTACT
+// ═══════════════════════════════════════════════
+function openContact() { document.getElementById('contactModal').style.display = 'flex'; }
+function closeContact() { document.getElementById('contactModal').style.display = 'none'; }
+function copyContact(text, badgeId) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text);
+  } else {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
   }
-  showSequenceView(seq);
-}
-
-// ═══════════════════════════════════════════════
-// STATS DASHBOARD
-// ═══════════════════════════════════════════════
-function showStats() {
-  selPath = '__stats__';
-  renderTree();
-
-  // Compute top snippets
-  const sorted = Object.entries(snipCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
-
-  // Compute most used sections (group by dotpath before |)
-  const secCounts = {};
-  Object.entries(snipCounts).forEach(([key, cnt]) => {
-    const dotpath = key.split('|')[0];
-    secCounts[dotpath] = (secCounts[dotpath] || 0) + cnt;
-  });
-  const topSecs = Object.entries(secCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
-
-  const totalCopies = Object.values(snipCounts).reduce((a, b) => a + b, 0);
-  const today = new Date().toDateString();
-  const saved = JSON.parse(store.get('rf_copy_stats') || '{"date":"","count":0}');
-  const todayCount = saved.date === today ? saved.count : 0;
-
-  function getLabel(key) {
-    try {
-      const dotpath = key.split('|')[0];
-      const crumbs = buildBreadcrumb(dotpath);
-      return crumbs.join(' › ');
-    } catch { return key; }
-  }
-
-  document.getElementById('contentBody').innerHTML = `
-    <div class="content-title"><span class="icon">📊</span>Stats</div>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-num">${todayCount}</div><div class="stat-label">Copied today</div></div>
-      <div class="stat-card"><div class="stat-num">${totalCopies}</div><div class="stat-label">All-time copies</div></div>
-      <div class="stat-card"><div class="stat-num">${sequences.length}</div><div class="stat-label">Saved sequences</div></div>
-      <div class="stat-card"><div class="stat-num">${favorites.size}</div><div class="stat-label">Favorites</div></div>
-    </div>
-    ${sorted.length ? `<div class="stats-section-title">🔥 Most copied snippets</div>
-    ${sorted.map(([key, cnt]) => {
-      const text = (() => { try { const card = document.querySelector(`.snip-para[data-key="${key}"]`); return card ? card.dataset.raw || card.dataset.text : key; } catch { return key; } })();
-      const preview = text.slice(0, 70) + (text.length > 70 ? '…' : '');
-      return `<div class="stat-row">${esc(preview)}<span class="stat-row-count">${cnt}×</span></div>`;
-    }).join('')}` : ''}
-    ${topSecs.length ? `<div class="stats-section-title">📂 Most visited sections</div>
-    ${topSecs.map(([dotpath, cnt]) => `<div class="stat-row">${esc(getLabel(dotpath))}<span class="stat-row-count">${cnt}</span></div>`).join('')}` : ''}`;
+  const badge = document.getElementById(badgeId);
+  if (!badge) return;
+  const origColor = badge.style.color; // save before overwriting
+  badge.textContent = 'copied ✓';
+  badge.style.color = 'var(--pink)';
+  setTimeout(() => { badge.textContent = 'copy'; badge.style.color = origColor; }, 2000);
 }
 
 // ═══════════════════════════════════════════════
@@ -2368,11 +2420,8 @@ function pushToServer() {
         rf_customs:    JSON.stringify(customs),
         rf_pins:       JSON.stringify([...pins]),
         rf_overrides:  JSON.stringify(overrides),
-        rf_counts:     JSON.stringify(snipCounts),
-        rf_recent:     JSON.stringify(recentList),
         rf_para_order: JSON.stringify(paraOrder),
         rf_nav_order:  JSON.stringify(navOrder),
-        rf_sequences:  JSON.stringify(sequences),
         riseforce_agent_name: agentName,
         riseforce_theme:      isDark ? 'dark' : 'light',
         riseforce_color:      curColor,
@@ -2401,7 +2450,6 @@ function loadFromServer() {
       if (data.riseforce_scratch) { const ls = store.get('riseforce_scratch') || ''; if (!ls || data.riseforce_scratch.length > ls.length) store.set('riseforce_scratch', data.riseforce_scratch); }
       if (data.rf_para_order) { try { const sp = JSON.parse(data.rf_para_order); Object.keys(sp).forEach(k => { if (!paraOrder[k]) { paraOrder[k] = sp[k]; changed = true; } }); store.set('rf_para_order', JSON.stringify(paraOrder)); } catch {} }
       if (data.rf_nav_order) { try { const sn = JSON.parse(data.rf_nav_order); Object.keys(sn).forEach(k => { if (!navOrder[k]) { navOrder[k] = sn[k]; changed = true; } }); store.set('rf_nav_order', JSON.stringify(navOrder)); } catch {} }
-      if (data.rf_sequences) { try { const ss = JSON.parse(data.rf_sequences); const localIds = {}; sequences.forEach(s => localIds[s.id] = true); ss.forEach(s => { if (!localIds[s.id]) { sequences.push(s); changed = true; } }); if (changed) store.set('rf_sequences', JSON.stringify(sequences)); } catch {} }
       store.set('rf_favs', JSON.stringify([...favorites])); store.set('rf_customs', JSON.stringify(customs));
       setSyncStatus('ok');
       if (changed) { applyTheme(); updateHeaderName(); renderTree(); if (selPath) showSnippets(selPath); }
@@ -2459,11 +2507,13 @@ function toggleTheme() {
   isDark = !isDark;
   store.set('riseforce_theme', isDark ? 'dark' : 'light');
   applyTheme();
+  pushToServer();
 }
 function setColor(c) {
   curColor = c;
   store.set('riseforce_color', c);
   applyTheme();
+  pushToServer();
 }
 function toggleThemePanel(e) {
   e.stopPropagation();
@@ -2473,11 +2523,31 @@ document.addEventListener('click', () => document.getElementById('themePanel')?.
 document.getElementById('themePanel')?.addEventListener('click', e => e.stopPropagation());
 
 // ═══════════════════════════════════════════════
+// DEBOUNCED SEARCH
+// ═══════════════════════════════════════════════
+let _searchTimer = null;
+function debouncedSearch(q) {
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => onSearch(q), 180);
+}
+
+// ═══════════════════════════════════════════════
+// TIME-BASED WELCOME GREETING
+// ═══════════════════════════════════════════════
+function setWelcomeGreeting() {
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  const el = document.getElementById('welcomeGreeting');
+  if (el) el.textContent = agentName ? `${greet}, ${agentName}!` : `${greet}!`;
+}
+
+// ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
 loadCopyCount();
 applyTheme();
 updateHeaderName();
+setWelcomeGreeting();
 document.getElementById('copyCounter').textContent = copyCount;
 (function() {
   const EIGHT_HOURS = 8 * 60 * 60 * 1000;
